@@ -1,0 +1,43 @@
+{
+  "name": "shimanto-xyz",
+  "private": true,
+  "description": "shimanto.xyz — Personal Brand HQ / Owned Knowledge Hub",
+  "packageManager": "pnpm@11.5.3",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "turbo run dev --filter=@shimanto/web --filter=@shimanto/api --filter=@shimanto/admin --filter=@shimanto/portal",
+    "dev:all": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "infra:up": "docker compose up -d",
+    "infra:down": "docker compose down",
+    "clean": "turbo run clean && rm -rf node_modules .turbo",
+    "prepare": "husky",
+    "db:migrate": "pnpm --filter @shimanto/api db:migrate",
+    "db:deploy": "pnpm --filter @shimanto/api db:deploy",
+    "db:seed": "pnpm --filter @shimanto/api db:seed",
+    "db:reset": "pnpm --filter @shimanto/api db:reset",
+    "openapi": "pnpm --filter @shimanto/api openapi && pnpm --filter @shimanto/sdk generate"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
+    "@shimanto/config": "workspace:*",
+    "eslint": "^9.39.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.5.1",
+    "prettier": "^3.9.9",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "turbo": "^2.11.3",
+    "typescript": "~6.0.3"
+  }
+}

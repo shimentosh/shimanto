@@ -1,0 +1,40 @@
+{
+  "name": "@shimanto/sdk",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Typed API client for web, admin and portal. Generated from the API's OpenAPI spec from Phase 3 on.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "openapi.json"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "clean": "rm -rf dist .turbo",
+    "generate": "openapi-typescript openapi.json -o src/schema.ts"
+  },
+  "dependencies": {
+    "@shimanto/types": "workspace:*",
+    "openapi-fetch": "^0.17.0"
+  },
+  "devDependencies": {
+    "@shimanto/config": "workspace:*",
+    "@types/node": "^24.0.0",
+    "eslint": "^9.39.5",
+    "happy-dom": "^20.14.5",
+    "openapi-typescript": "7.13.0",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.1"
+  }
+}

@@ -1,0 +1,187 @@
+/*
+ * Component motion. Each effect has a static fallback:
+ *  - scroll-driven effects only run with `prefers-reduced-motion: no-preference` AND browser support;
+ *  - JS-armed effects (squiggle) render finished by default and only animate once a client script arms them.
+ */
+
+/* ── Squiggle underline ─────────────────────────────── */
+/* A left-to-right clip-path wipe. It is more robust than dash offsets on a non-uniformly scaled SVG. */
+[data-squiggle='armed'] .squiggle-svg {
+  clip-path: inset(-60% 100% -60% -5%);
+}
+[data-squiggle='drawing'] .squiggle-svg {
+  animation: squiggle-draw 1s cubic-bezier(0.65, 0, 0.35, 1) 0.15s both;
+}
+@keyframes squiggle-draw {
+  from {
+    clip-path: inset(-60% 100% -60% -5%);
+  }
+  to {
+    clip-path: inset(-60% -5% -60% -5%);
+  }
+}
+
+/* ── Marquee ────────────────────────────────────────── */
+.marquee-viewport {
+  mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
+}
+.marquee-track {
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
+}
+.marquee-row[data-direction='right'] .marquee-track {
+  animation-direction: reverse;
+}
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track,
+.marquee[data-paused='true'] .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Static: one copy, wrapped, fully readable. */
+  .marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: auto;
+  }
+  .marquee-viewport {
+    mask-image: none;
+  }
+  .marquee-dup,
+  .marquee-toggle {
+    display: none;
+  }
+}
+
+/* ── Section sheets + reveals (scroll-driven, progressive enhancement) ── */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .sheet-rise {
+      animation: sheet-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 5% entry 40%;
+    }
+    .parallax-slow {
+      animation: parallax linear both;
+      animation-timeline: view();
+    }
+  }
+}
+@keyframes sheet-rise {
+  from {
+    transform: translate3d(0, 72px, 0) scale(0.985);
+  }
+}
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 32px, 0);
+  }
+}
+@keyframes parallax {
+  from {
+    transform: translate3d(0, 12%, 0);
+  }
+  to {
+    transform: translate3d(0, -12%, 0);
+  }
+}
+
+/* ── Menu sheet / dialogs (Radix sets data-state) ───── */
+@media (prefers-reduced-motion: no-preference) {
+  .menu-sheet[data-state='open'] {
+    animation: sheet-in 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .menu-sheet[data-state='closed'] {
+    animation: sheet-out 0.3s ease-in forwards;
+  }
+  .dialog-pop[data-state='open'] {
+    animation: pop-in 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .overlay-fade[data-state='open'] {
+    animation: fade-in 0.2s ease-out;
+  }
+}
+@keyframes sheet-in {
+  from {
+    clip-path: circle(0% at calc(100% - 3rem) 3rem);
+  }
+  to {
+    clip-path: circle(150% at calc(100% - 3rem) 3rem);
+  }
+}
+@keyframes sheet-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0) scale(0.98);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ── Waveform bars (media play affordance) ──────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .wave-bar {
+    animation: wave 1.1s ease-in-out infinite alternate;
+    transform-origin: bottom;
+  }
+}
+@keyframes wave {
+  from {
+    transform: scaleY(0.35);
+  }
+}
+
+/* ── Theme toggle icons (no JS needed to show the right one) ── */
+.theme-icon-sun {
+  display: none;
+}
+:root[data-theme='dark'] .theme-icon-sun {
+  display: block;
+}
+:root[data-theme='dark'] .theme-icon-moon {
+  display: none;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .theme-icon-sun {
+    display: block;
+  }
+  :root:not([data-theme='light']) .theme-icon-moon {
+    display: none;
+  }
+}
+
+/* ── Illustrations (Spot, DeskScene) ─────────────── */
+/* A gentle bob for floating objects, off under reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .art-float {
+    animation: art-float 5s ease-in-out infinite;
+    transform-box: fill-box;
+  }
+  .art-float-slow {
+    animation-duration: 7s;
+    animation-delay: -2s;
+  }
+}
+@keyframes art-float {
+  50% {
+    translate: 0 -8px;
+  }
+}

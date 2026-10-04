@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="512" height="512">
+  <title>Shimanto</title>
+  <rect x=".5" y=".5" width="31" height="31" rx="8.5" fill="#1a1c17"/>
+  <path d="M9.5 10.5 15 16l-5.5 5.5" fill="none" stroke="#f3efe4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M17.5 21.5h5.5" fill="none" stroke="#8fd464" stroke-width="3" stroke-linecap="round"/>
+</svg>

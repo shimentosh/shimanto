@@ -1,0 +1,162 @@
+@import 'tailwindcss';
+@import '@shimanto/ui/styles.css';
+
+/* Let Tailwind see classes used inside the shared design-system package. */
+@source '../../../../packages/ui/src';
+
+/* Collaborate success confetti (CSS only, skipped under reduced motion). */
+@media (prefers-reduced-motion: no-preference) {
+  .confetti-bit {
+    animation: confetti-fall ease-in forwards;
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .confetti {
+    display: none;
+  }
+}
+@keyframes confetti-fall {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, -20px, 0) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--drift, 0), 420px, 0) rotate(var(--spin, 360deg));
+  }
+}
+
+/* Benefit map (/work/[slug]): dashes flow from the hub out to each benefit. */
+@media (prefers-reduced-motion: no-preference) {
+  .benefit-flow {
+    animation: benefit-flow 1.6s linear infinite;
+  }
+}
+@keyframes benefit-flow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+/* DisplayTitle motifs (components/page/title-motifs.tsx). Static under reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .motif-eq {
+    transform-origin: bottom;
+    animation: motif-eq 1.1s ease-in-out infinite;
+  }
+  .motif-block {
+    animation: motif-block 2.4s cubic-bezier(0.3, 1.4, 0.5, 1) infinite both;
+  }
+  .motif-dot {
+    animation: motif-dot 1.2s ease-in-out infinite;
+  }
+  .motif-caret {
+    animation: motif-caret 1.05s steps(1) infinite;
+  }
+  .motif-ping {
+    animation: motif-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+  .motif-wave {
+    animation: motif-wave 1.8s ease-in-out infinite;
+  }
+  .motif-spin {
+    animation: motif-spin 9s linear infinite;
+  }
+  .motif-shimmer {
+    animation: motif-shimmer 2.2s ease-in-out infinite;
+  }
+  .motif-strike {
+    stroke-dasharray: 260;
+    animation: motif-strike 0.9s 0.3s ease-out both;
+  }
+}
+@keyframes motif-eq {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+@keyframes motif-block {
+  0% {
+    opacity: 0;
+    transform: translateY(-0.4em);
+  }
+  15%,
+  85% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes motif-dot {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-0.12em);
+  }
+}
+@keyframes motif-caret {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes motif-ping {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3);
+  }
+}
+@keyframes motif-wave {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes motif-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+@keyframes motif-shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(200%);
+  }
+}
+@keyframes motif-strike {
+  from {
+    stroke-dashoffset: 260;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* App feel on touch screens: no grey tap flash, no double-tap zoom delay on controls. */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+a,
+button,
+[role='button'] {
+  touch-action: manipulation;
+}

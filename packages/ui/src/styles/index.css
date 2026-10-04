@@ -1,0 +1,46 @@
+/* Base layer shared by every app. Import after `tailwindcss`. */
+@import './tokens.css';
+@import './components.css';
+
+@layer base {
+  html {
+    background: var(--canvas);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 18px;
+    line-height: 1.55;
+    /* SectionSheet + WorldBackground tween this to the world colour of the section in view. */
+    background: var(--page-bg, var(--canvas));
+    transition: background-color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Bangla: +0.1 line-height and no tracking (brief §2.1). */
+  :lang(bn) {
+    font-family: var(--font-bangla);
+    line-height: 1.65;
+    letter-spacing: 0;
+  }
+
+  /* Signal-blue ring plus an ink halo: blue alone is only ~2.5:1 on cream; the halo keeps ≥3:1 on every surface. */
+  :focus-visible {
+    outline: 3px solid var(--signal);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 2px var(--ink);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

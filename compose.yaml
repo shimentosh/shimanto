@@ -1,0 +1,3 @@
+# Lets `docker compose up -d` work from the repo root. Services live in infra/.
+include:
+  - infra/docker-compose.yml

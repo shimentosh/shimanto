@@ -1,0 +1,711 @@
+// shimanto.xyz data model.
+// Page content lives in the web app's code. The database only holds what changes at runtime:
+// files, products for sale, orders and their delivery, customers, support, leads and admin accounts.
+//
+// Commerce in one line: Product → Checkout → Order (+ items, payment) → Fulfillment (Delivery rows:
+// R2 files and/or GitHub repository access) → Customer portal. The Order is the purchase.
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────── Enums ───────────────────────────────
+
+enum Role {
+  SUPER_ADMIN
+  EDITOR
+}
+
+enum Locale {
+  en
+  bn
+}
+
+enum ProductStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ProductType {
+  SOFTWARE
+  DIGITAL_PRODUCT
+  SOURCE_CODE
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  /// $0 orders: nothing to pay.
+  NOT_REQUIRED
+}
+
+enum FulfillmentStatus {
+  PENDING
+  PROCESSING
+  PARTIALLY_DELIVERED
+  DELIVERED
+  FAILED
+  COMPLETED
+}
+
+enum PaymentProvider {
+  /// $0 total: no gateway involved.
+  FREE
+  STRIPE
+  /// Created by an admin; any payment happened outside the store.
+  MANUAL
+}
+
+enum OrderSource {
+  CHECKOUT
+  ADMIN
+}
+
+enum DeliveryType {
+  R2
+  GITHUB
+}
+
+enum DeliveryStatus {
+  PENDING
+  /// The customer has to do something first (connect GitHub).
+  ACTION_REQUIRED
+  /// R2 files can be downloaded.
+  READY
+  INVITATION_SENT
+  ACCEPTED
+  EXPIRED
+  FAILED
+  REVOKED
+}
+
+enum CouponType {
+  PERCENT
+  FIXED
+}
+
+enum CustomerStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum CustomerTokenPurpose {
+  LOGIN_LINK
+  VERIFY_EMAIL
+  RESET_PASSWORD
+}
+
+enum TicketStatus {
+  OPEN
+  PENDING
+  RESOLVED
+  CLOSED
+}
+
+enum MessageAuthor {
+  CUSTOMER
+  ADMIN
+}
+
+enum EmailStatus {
+  QUEUED
+  SENT
+  FAILED
+}
+
+enum LeadIntent {
+  WORK_WITH_ME
+  BUILD_SOMETHING
+  BUSINESS_COLLABORATION
+  PRODUCT_COLLABORATION
+  CONSULTING
+  PARTNERSHIP
+  SPEAKING
+  SUPPORT
+  OTHER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  WON
+  LOST
+}
+
+// ─────────────────────────────── Admin identity ───────────────────────────────
+
+/// Admin panel accounts only. Buyers are `Customer`s.
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String?
+  passwordHash String
+  role         Role      @default(EDITOR)
+  disabledAt   DateTime?
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  refreshTokens   RefreshToken[]
+  assignedLeads   Lead[]           @relation("LeadAssignee")
+  leadNotes       LeadNote[]
+  auditLogs       AuditLog[]
+  media           Media[]
+  ordersCreated   Order[]
+  supportMessages SupportMessage[]
+}
+
+/// Rotating refresh tokens. Each login starts a family; every refresh replaces the token.
+/// Presenting an already-rotated token revokes the whole family (theft detection).
+model RefreshToken {
+  id           String    @id @default(cuid())
+  userId       String
+  familyId     String
+  tokenHash    String    @unique
+  expiresAt    DateTime
+  revokedAt    DateTime?
+  replacedById String?
+  userAgent    String?
+  createdAt    DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([familyId])
+  @@index([userId])
+}
+
+// ─────────────────────────────── Storage ───────────────────────────────
+
+/// A stored file. `media/…` keys are public (images for pages, product covers);
+/// `private/…` keys are deliverables and attachments, only reachable through short-lived signed URLs.
+model Media {
+  id           String   @id @default(cuid())
+  key          String   @unique
+  filename     String
+  mimeType     String
+  size         Int
+  width        Int?
+  height       Int?
+  /// Required for public images (enforced at upload).
+  alt          String?
+  /// Responsive variants for images: [{ key, width, height, format }]
+  variants     Json     @default("[]")
+  blurDataUrl  String?
+  uploadedById String?
+  createdAt    DateTime @default(now())
+
+  uploadedBy   User?            @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  productFiles ProductFile[]
+  coverOf      Product[]
+  attachments  SupportMessage[]
+}
+
+// ─────────────────────────────── Products ───────────────────────────────
+
+model Product {
+  id             String        @id @default(cuid())
+  /// URL slug. The sales page is built in the web app at /products/<slug>.
+  slug           String        @unique
+  name           String
+  /// Short description: checkout, receipts, portal.
+  summary        String?
+  /// Full description (plain text / light markdown).
+  description    String?
+  type           ProductType   @default(DIGITAL_PRODUCT)
+  status         ProductStatus @default(DRAFT)
+  /// Minor units (cents). 0 = free: still a normal order, with payment NOT_REQUIRED.
+  price          Int
+  /// Optional "was" price shown struck through.
+  compareAtPrice Int?
+  currency       String        @default("USD")
+  coverId        String?
+  features       String[]      @default([])
+  requirements   String[]      @default([])
+  version        String?
+  /// Delivery configuration: private R2 files, a GitHub repository, or both.
+  deliverFiles   Boolean       @default(false)
+  deliverGithub  Boolean       @default(false)
+  /// Trusted repository, set by an admin only. Never taken from customer input.
+  githubOwner    String?
+  githubRepo     String?
+  publishedAt    DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  cover      Media?          @relation(fields: [coverId], references: [id], onDelete: SetNull)
+  files      ProductFile[]
+  orderItems OrderItem[]
+  deliveries Delivery[]
+  coupons    Coupon[]        @relation("CouponProducts")
+  tickets    SupportTicket[]
+}
+
+/// Files a buyer receives (the product's R2 assets). Each links to a private Media object.
+model ProductFile {
+  id        String   @id @default(cuid())
+  productId String
+  mediaId   String
+  /// Label shown to buyers (defaults to the filename).
+  label     String
+  version   String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  media   Media   @relation(fields: [mediaId], references: [id], onDelete: Restrict)
+
+  @@unique([productId, mediaId])
+}
+
+// ─────────────────────────────── Customers ───────────────────────────────
+
+/// Buyers. One account per email. Password is optional: checkout can create an account that is
+/// claimed later with a set-password / sign-in link.
+model Customer {
+  id                String         @id @default(cuid())
+  email             String         @unique
+  name              String?
+  locale            Locale         @default(en)
+  status            CustomerStatus @default(ACTIVE)
+  passwordHash      String?
+  emailVerifiedAt   DateTime?
+  /// Bumped on password change / reset: older sessions stop working.
+  sessionVersion    Int            @default(0)
+  lastLoginAt       DateTime?
+  /// Connected GitHub identity (numeric id + login), used for repository delivery.
+  githubId          String?        @unique
+  githubLogin       String?
+  githubConnectedAt DateTime?
+  /// Where this customer first came from (first touch), kept from their first visit.
+  firstSource       String?
+  firstMedium       String?
+  firstCampaign     String?
+  firstContent      String?
+  firstTerm         String?
+  firstLandingPage  String?
+  firstReferrer     String?
+  anonymousId       String?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  orders      Order[]
+  tokens      CustomerToken[]
+  analytics   AnalyticsEvent[]
+  deliveries  Delivery[]
+  tickets     SupportTicket[]
+  emailEvents EmailEvent[]
+}
+
+/// Single-use, expiring tokens (stored hashed): email sign-in links, verification, password reset.
+model CustomerToken {
+  id         String               @id @default(cuid())
+  customerId String
+  purpose    CustomerTokenPurpose
+  tokenHash  String               @unique
+  expiresAt  DateTime
+  usedAt     DateTime?
+  createdAt  DateTime             @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId, purpose])
+}
+
+// ─────────────────────────────── Orders ───────────────────────────────
+
+model Coupon {
+  id          String     @id @default(cuid())
+  /// Stored upper-case.
+  code        String     @unique
+  type        CouponType
+  /// PERCENT: 1–100. FIXED: minor units in `currency`.
+  value       Int
+  currency    String?
+  description String?
+  active      Boolean    @default(true)
+  expiresAt   DateTime?
+  usageLimit  Int?
+  usedCount   Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  /// Empty = valid for every product.
+  products Product[] @relation("CouponProducts")
+  orders   Order[]
+}
+
+/// The purchase. Single source of truth for what a customer bought, paid and received.
+model Order {
+  id                String            @id @default(cuid())
+  /// Human-friendly number for receipts and support ("Order #1042").
+  number            Int               @unique @default(autoincrement())
+  customerId        String
+  source            OrderSource       @default(CHECKOUT)
+  status            OrderStatus       @default(PENDING)
+  paymentStatus     PaymentStatus     @default(PENDING)
+  fulfillmentStatus FulfillmentStatus @default(PENDING)
+  provider          PaymentProvider
+  currency          String
+  subtotal          Int
+  discount          Int               @default(0)
+  total             Int
+  couponId          String?
+  couponCode        String?
+  locale            Locale            @default(en)
+  /// utm_* and referrer captured at checkout (legacy raw copy).
+  utm               Json?
+  /// First- and last-touch attribution (marketing measurement, not money).
+  firstSource       String?
+  firstMedium       String?
+  firstCampaign     String?
+  firstContent      String?
+  firstTerm         String?
+  lastSource        String?
+  lastMedium        String?
+  lastCampaign      String?
+  lastContent       String?
+  lastTerm          String?
+  landingPage       String?
+  referrer          String?
+  /// Browser ids + consent for server-side conversion events: { anonymousId, sessionId,
+  /// gaClientId, fbp, fbc, userAgent, ip, consent }. Never shown to other customers.
+  tracking          Json?
+  /// Internal admin note.
+  note              String?
+  createdById       String?
+  paidAt            DateTime?
+  completedAt       DateTime?
+  cancelledAt       DateTime?
+  refundedAt        DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  customer   Customer         @relation(fields: [customerId], references: [id])
+  coupon     Coupon?          @relation(fields: [couponId], references: [id], onDelete: SetNull)
+  createdBy  User?            @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  items      OrderItem[]
+  payments   Payment[]
+  deliveries Delivery[]
+  tickets    SupportTicket[]
+  emails     EmailEvent[]
+  analytics  AnalyticsEvent[]
+
+  @@index([status, createdAt])
+  @@index([customerId])
+}
+
+/// A line of an order. Name and price are snapshots: later product edits never change history.
+model OrderItem {
+  id          String      @id @default(cuid())
+  orderId     String
+  productId   String
+  productName String
+  productSlug String
+  productType ProductType
+  unitPrice   Int
+  quantity    Int         @default(1)
+  discount    Int         @default(0)
+  total       Int
+  createdAt   DateTime    @default(now())
+
+  order      Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product    Product    @relation(fields: [productId], references: [id])
+  deliveries Delivery[]
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+/// A payment attempt for an order. Gateway references are stored for webhooks and refunds.
+model Payment {
+  id                String          @id @default(cuid())
+  orderId           String
+  provider          PaymentProvider
+  status            PaymentStatus   @default(PENDING)
+  amount            Int
+  currency          String
+  /// Checkout session id (Stripe cs_…).
+  providerRef       String?         @unique
+  /// Charge reference used for refunds (Stripe PaymentIntent pi_…).
+  providerPaymentId String?
+  failureReason     String?
+  paidAt            DateTime?
+  refundedAt        DateTime?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([providerPaymentId])
+}
+
+/// Gateway webhook events already processed. Gateways retry, so handling must be idempotent.
+model ProcessedWebhookEvent {
+  id          String   @id
+  type        String
+  provider    String   @default("stripe")
+  processedAt DateTime @default(now())
+}
+
+// ─────────────────────────────── Fulfillment ───────────────────────────────
+
+/// One delivery per order item and method (R2 files, GitHub repository access). Tracks delivery
+/// only: this is not a licence. The unique key makes fulfillment idempotent.
+model Delivery {
+  id                 String         @id @default(cuid())
+  orderId            String
+  orderItemId        String
+  customerId         String
+  productId          String
+  type               DeliveryType
+  status             DeliveryStatus @default(PENDING)
+  /// GitHub: repository snapshot from the product at fulfillment time.
+  githubOwner        String?
+  githubRepo         String?
+  githubUserId       String?
+  githubLogin        String?
+  githubInvitationId String?
+  attempts           Int            @default(0)
+  /// Internal only; customers see a friendly status.
+  lastError          String?
+  lastSyncedAt       DateTime?
+  deliveredAt        DateTime?
+  revokedAt          DateTime?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  order     Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderItem OrderItem @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  customer  Customer  @relation(fields: [customerId], references: [id])
+  product   Product   @relation(fields: [productId], references: [id])
+
+  @@unique([orderItemId, type])
+  @@index([customerId, type])
+  @@index([githubOwner, githubRepo, githubUserId])
+  @@index([status])
+}
+
+// ─────────────────────────────── Support ───────────────────────────────
+
+model SupportTicket {
+  id            String       @id @default(cuid())
+  number        Int          @unique @default(autoincrement())
+  customerId    String
+  subject       String
+  status        TicketStatus @default(OPEN)
+  productId     String?
+  orderId       String?
+  lastMessageAt DateTime     @default(now())
+  resolvedAt    DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  customer Customer         @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  product  Product?         @relation(fields: [productId], references: [id], onDelete: SetNull)
+  order    Order?           @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  messages SupportMessage[]
+  emails   EmailEvent[]
+
+  @@index([status, lastMessageAt])
+  @@index([customerId])
+}
+
+model SupportMessage {
+  id           String        @id @default(cuid())
+  ticketId     String
+  authorType   MessageAuthor
+  userId       String?
+  body         String
+  attachmentId String?
+  createdAt    DateTime      @default(now())
+
+  ticket     SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user       User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  attachment Media?        @relation(fields: [attachmentId], references: [id], onDelete: SetNull)
+
+  @@index([ticketId, createdAt])
+}
+
+// ─────────────────────────────── Email ───────────────────────────────
+
+/// Every transactional email. `idempotencyKey` makes repeated events (webhook retries) send once.
+model EmailEvent {
+  id                String      @id @default(cuid())
+  type              String
+  recipient         String
+  subject           String
+  customerId        String?
+  orderId           String?
+  ticketId          String?
+  idempotencyKey    String      @unique
+  status            EmailStatus @default(QUEUED)
+  provider          String?
+  providerMessageId String?
+  failureReason     String?
+  sentAt            DateTime?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  customer Customer?      @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  order    Order?         @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  ticket   SupportTicket? @relation(fields: [ticketId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([customerId])
+  @@index([orderId])
+}
+
+// ─────────────────────────────── Settings ───────────────────────────────
+
+/// Non-secret store settings edited in the admin. Secrets live in environment variables only.
+model Setting {
+  key         String   @id
+  value       Json
+  updatedById String?
+  updatedAt   DateTime @updatedAt
+}
+
+// ─────────────────────────────── Leads ───────────────────────────────
+
+model Lead {
+  id           String     @id @default(cuid())
+  intent       LeadIntent
+  name         String
+  email        String
+  company      String?
+  budgetRange  String?
+  timeline     String?
+  message      String
+  /// Page the form was submitted from.
+  source       String?
+  utm          Json?
+  locale       Locale     @default(en)
+  status       LeadStatus @default(NEW)
+  /// Position within its kanban column.
+  position     Int        @default(0)
+  assignedToId String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  assignedTo User?      @relation("LeadAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  notes      LeadNote[]
+
+  @@index([status, position])
+  @@index([createdAt])
+}
+
+model LeadNote {
+  id        String   @id @default(cuid())
+  leadId    String
+  authorId  String?
+  body      String
+  createdAt DateTime @default(now())
+
+  lead   Lead  @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  author User? @relation(fields: [authorId], references: [id], onDelete: SetNull)
+}
+
+// ─────────────────────────────── Audit ───────────────────────────────
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  /// "user" | "customer" | "stripe" | "github" | "system"
+  actorType String
+  action    String
+  entity    String
+  entityId  String?
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([entity, entityId])
+  @@index([createdAt])
+}
+
+enum AnalyticsDeliveryStatus {
+  PENDING
+  SENT
+  FAILED
+  SKIPPED
+}
+
+/// One analytics event, stored once (unique eventId) whatever the providers do. Internal reports
+/// read these for traffic and funnels; money always comes from Order and Payment.
+model AnalyticsEvent {
+  id          String   @id @default(cuid())
+  name        String
+  /// Deterministic for business events (purchase_<orderId>), shared with browser pixels.
+  eventId     String   @unique
+  /// `server` (business events) or `browser` (collector).
+  origin      String   @default("server")
+  customerId  String?
+  anonymousId String?
+  sessionId   String?
+  orderId     String?
+  productId   String?
+  /// Minor units.
+  value       Int?
+  currency    String?
+  source      String?
+  medium      String?
+  campaign    String?
+  content     String?
+  term        String?
+  referrer    String?
+  landingPage String?
+  pageUrl     String?
+  /// Event-specific extras (items, coupon, file id…). No secrets, no raw PII.
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  customer   Customer?           @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  order      Order?              @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  deliveries AnalyticsDelivery[]
+
+  @@index([name, createdAt])
+  @@index([createdAt])
+  @@index([productId, name])
+  @@index([anonymousId])
+  @@index([customerId])
+}
+
+/// Delivery of one event to one external provider (GA4, Meta CAPI…), with retries.
+model AnalyticsDelivery {
+  id        String                  @id @default(cuid())
+  eventId   String
+  provider  String
+  status    AnalyticsDeliveryStatus @default(PENDING)
+  attempts  Int                     @default(0)
+  lastError String?
+  sentAt    DateTime?
+  createdAt DateTime                @default(now())
+  updatedAt DateTime                @updatedAt
+
+  event AnalyticsEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, provider])
+  @@index([status])
+}

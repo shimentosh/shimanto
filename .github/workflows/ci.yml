@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Format · Lint · Typecheck · Test · Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      # API e2e tests run against a real Postgres (they create and migrate `<db>_test`).
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: shimanto
+          POSTGRES_PASSWORD: shimanto
+          POSTGRES_DB: shimanto
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U shimanto -d shimanto"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      TURBO_TELEMETRY_DISABLED: 1
+      NEXT_TELEMETRY_DISABLED: 1
+      DATABASE_URL: postgresql://shimanto:shimanto@localhost:5432/shimanto?schema=public
+    steps:
+      - uses: actions/checkout@v7
+
+      # Version comes from "packageManager" in package.json.
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm test:e2e
+      - run: pnpm build
+
+  docker:
+    name: Docker images build
+    runs-on: ubuntu-latest
+    needs: verify
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        app: [api, web]
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build ${{ matrix.app }} image
+        run: docker build -f infra/docker/${{ matrix.app }}.Dockerfile -t shimanto-${{ matrix.app }}:ci .

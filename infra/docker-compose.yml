@@ -1,0 +1,61 @@
+# Local backing services for shimanto.xyz. Start from repo root: `docker compose up -d`.
+# Host ports can be overridden in the root .env (see .env.example) when a native service already uses them.
+# Credentials here are dev-only defaults that match apps/api/.env.example.
+name: shimanto
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: shimanto
+      POSTGRES_PASSWORD: shimanto
+      POSTGRES_DB: shimanto
+    ports: ['${POSTGRES_HOST_PORT:-5432}:5432']
+    # Postgres 18+ keeps versioned data dirs under /var/lib/postgresql.
+    volumes: ['postgres-data:/var/lib/postgresql']
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U shimanto -d shimanto']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:8-alpine
+    restart: unless-stopped
+    command: ['redis-server', '--appendonly', 'yes']
+    ports: ['${REDIS_HOST_PORT:-6379}:6379']
+    volumes: ['redis-data:/data']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # S3-compatible object storage for media uploads.
+  # MinIO no longer publishes community images, so local dev uses RustFS (Apache-2.0, S3 API
+  # compatible). The API only speaks S3, so production can point at Cloudflare R2 / AWS S3.
+  storage:
+    image: rustfs/rustfs:latest
+    restart: unless-stopped
+    environment:
+      RUSTFS_ACCESS_KEY: shimanto
+      RUSTFS_SECRET_KEY: shimanto-dev-secret
+      RUSTFS_CONSOLE_ENABLE: 'true'
+    ports:
+      - '9000:9000' # S3 API
+      - '9001:9001' # web console
+    volumes: ['storage-data:/data']
+
+  # Local SMTP catcher: every email the API sends in dev lands in the inbox at http://localhost:8025.
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - '1025:1025' # SMTP
+      - '8025:8025' # web inbox
+
+volumes:
+  postgres-data:
+  redis-data:
+  storage-data:

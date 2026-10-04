@@ -1,0 +1,13 @@
+pnpm-lock.yaml
+dist
+.next
+.turbo
+coverage
+node_modules
+docs/PROJECT_BRIEF.md
+docs/PHASES.md
+
+# Generated
+**/src/generated/**
+packages/sdk/openapi.json
+packages/sdk/src/schema.ts

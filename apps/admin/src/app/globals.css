@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+@import '@shimanto/ui/styles.css';
+
+/* Classes used inside packages/ui. */
+@source '../../../../packages/ui/src';

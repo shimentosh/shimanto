@@ -1,0 +1,110 @@
+/*
+ * shimanto.xyz design tokens (brief §2.1).
+ * Raw values live on :root so they can be themed; @theme inline exposes them to Tailwind v4
+ * as utilities (bg-canvas, text-ink, bg-build, rounded-card …).
+ */
+:root {
+  --canvas: #f3efe4;
+  --canvas-2: #e6e0d3;
+  --ink: #2c2e2a;
+  --ink-soft: #5b5e57;
+  --paper: #ffffff;
+  --night: #0e0f0c;
+
+  --build: #8fd464;
+  --create: #ff7059;
+  --spark: #f4e311;
+  --signal: #2e9bf7;
+  --idea: #e6c3f5;
+
+  color-scheme: light;
+}
+
+/* Dark: night canvas, cream text, accents stay saturated. System preference unless the user chose. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --canvas: #0e0f0c;
+    --canvas-2: #1a1c17;
+    --ink: #f3efe4;
+    --ink-soft: #b9b4a7;
+    --paper: #1f211c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  --canvas: #0e0f0c;
+  --canvas-2: #1a1c17;
+  --ink: #f3efe4;
+  --ink-soft: #b9b4a7;
+  --paper: #1f211c;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-canvas-2: var(--canvas-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-paper: var(--paper);
+  --color-night: #0e0f0c;
+  --color-cream: #f3efe4;
+  /* Text on any accent world is always dark ink, in both themes (contrast-tested). */
+  --color-on-world: #2c2e2a;
+
+  --color-build: var(--build);
+  --color-create: var(--create);
+  --color-spark: var(--spark);
+  --color-signal: var(--signal);
+  --color-idea: var(--idea);
+
+  --radius-card: 16px;
+  --radius-sheet: 24px;
+  --radius-pill: 999px;
+  --radius-button: 10px;
+
+  /* One content width for nav, sections and footer (`max-w-site`). Includes the side gutters. */
+  --container-site: 72rem;
+
+  /* Scaled to the site container (below), not the viewport edge: a personal site reads narrower. */
+  --text-hero: clamp(52px, 8.5vw, 120px);
+  --text-hero--line-height: 0.92;
+  --text-hero--letter-spacing: -0.06em;
+  --text-h2: clamp(38px, 5.2vw, 72px);
+  --text-h2--line-height: 0.95;
+  --text-h2--letter-spacing: -0.05em;
+
+  --font-sans: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+  --font-bangla: var(--font-noto-bengali), var(--font-inter-tight), sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --font-logo: var(--font-unbounded), var(--font-inter-tight), ui-sans-serif, sans-serif;
+}
+
+/* `dark:` follows the explicit toggle first, then the system preference. */
+@custom-variant dark {
+  &:where([data-theme='dark'], [data-theme='dark'] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme='light']), :root:not([data-theme='light']) *) {
+      @slot;
+    }
+  }
+}
+
+/*
+ * World surfaces are "light islands": accents keep their saturated colour in dark mode, so any
+ * text or card on them re-scopes to light-theme tokens. Muted ink is not muted on accents,
+ * because #5B5E57 fails 4.5:1 on lilac, coral and blue (see contrast tests). Hierarchy there
+ * comes from size and weight instead. In @layer base so utilities on the same element still win.
+ */
+@layer base {
+  .on-world {
+    --ink: #2c2e2a;
+    --ink-soft: #2c2e2a;
+    --paper: #ffffff;
+    --canvas: #f3efe4;
+    --canvas-2: #e6e0d3;
+    color: var(--ink);
+    color-scheme: light;
+  }
+}
