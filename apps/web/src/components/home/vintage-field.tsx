@@ -5,12 +5,11 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
 /*
- * The background at the top of every page: a line-art brain (the "CEO mind") crowning the home
- * portrait, centred on its orbit ring (behind the title elsewhere). Its folds are contour lines of
- * a warped noise field, and thoughts flare across it in the brand world colours. The rest stays
- * empty so text reads clearly, under old-film grain, dust, a vignette and a warm light leak. The
- * cursor lights the folds it passes and a click sends a ring of light through the brain.
- * One raw WebGL fragment shader, no library.
+ * The background at the top of every page. On the home page, a Siri-style glow hugs the hero
+ * lens (found through data-hero-orbit): soft layers in the brand colours flow around its rim,
+ * two "bunny ear" flares rise from the top and sway, the glow leans toward the cursor, and a
+ * click on the lens sends a pulse outward. Everywhere, old-film grain, dust, a vignette and a
+ * warm light leak. One raw WebGL fragment shader, no library.
  * Pauses offscreen and in hidden tabs, draws one still frame under reduced motion, follows the
  * theme, and renders nothing when WebGL is unavailable.
  */
@@ -30,10 +29,9 @@ uniform vec2 uRes;
 uniform float uDpr;
 uniform float uTime;
 uniform float uDark;
-uniform float uMask;
 uniform vec2 uSun;
 uniform float uR;
-uniform vec3 uBuild;
+uniform float uAnchor;
 uniform vec3 uSignal;
 uniform vec3 uIdea;
 uniform vec2 uMouse;
@@ -54,30 +52,29 @@ float noise(vec2 p) {
 // Composite premultiplied colour b over a.
 vec4 over(vec4 a, vec4 b) { return b + a * (1.0 - b.a); }
 
-float fbm(vec2 p) {
-  float v = 0.0, a = 0.5;
-  for (int i = 0; i < 4; i++) { v += a * noise(p); p = p * 2.03 + 17.0; a *= 0.5; }
-  return v;
-}
+const float PI = 3.14159265;
 
-float ellipse(vec2 p, vec2 c, vec2 r) { return (length((p - c) / r) - 1.0) * min(r.x, r.y); }
-float capsule(vec2 p, vec2 a, vec2 b, float r) {
-  vec2 pa = p - a, ba = b - a;
-  return length(pa - ba * clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0)) - r;
-}
-float smin(float a, float b, float k) {
-  float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
-  return mix(b, a, h) - k * h * (1.0 - h);
-}
-
-// A brain in side view, facing left, in units of its half-width: cerebrum, temporal lobe,
-// cerebellum and brainstem, blended into one outline.
-float brain(vec2 q) {
-  float d = ellipse(q, vec2(0.0, -0.06), vec2(1.0, 0.64));
-  d = smin(d, ellipse(q, vec2(-0.12, 0.3), vec2(0.66, 0.3)), 0.12);
-  d = smin(d, ellipse(q, vec2(0.6, 0.44), vec2(0.36, 0.23)), 0.1);
-  d = smin(d, capsule(q, vec2(0.28, 0.42), vec2(0.36, 0.98), 0.1), 0.08);
+// Signed distance between two angles, wrapped to [-PI, PI].
+float angleDiff(float a, float b) {
+  float d = mod(a - b + PI, 2.0 * PI) - PI;
   return d;
+}
+
+// How far the glow reaches out from the rim at this angle (in units of R): a calm base that
+// breathes, noise flowing around the circle, and two "bunny ear" flares on top that sway.
+float reach(float ang, float layer, float t) {
+  vec2 around = vec2(cos(ang), sin(ang));
+  float flow = noise(around * 1.7 + vec2(t * 0.35 + layer * 3.1, -t * 0.25 + layer * 1.7));
+  float r = 0.05 + 0.09 * flow * flow + 0.015 * sin(t * 1.6 + layer * 2.0);
+  float sway = 0.07 * sin(t * 0.9 + layer);
+  for (int k = 0; k < 2; k++) {
+    float side = k == 0 ? -1.0 : 1.0;
+    float centre = -PI * 0.5 + side * (0.42 + sway * side);
+    float e = angleDiff(ang, centre) / (0.15 + 0.03 * layer);
+    float ear = exp(-e * e) * (0.45 + 0.08 * sin(t * 1.3 + side + layer));
+    r += ear;
+  }
+  return r;
 }
 
 void main() {
@@ -88,75 +85,61 @@ void main() {
   float R = uR / uDpr;
   vec2 mouse = vec2(uMouse.x, uRes.y - uMouse.y) / uDpr;
   vec2 click = vec2(uClick.x, uRes.y - uClick.y) / uDpr;
+  float t = uTime;
 
-  // Brain space: centred a little above the orbit ring's centre, so the lobes crown the head.
-  float S = R * 1.62;
-  vec2 q = (css - (sun + vec2(0.0, -R * 0.28))) / S;
-  float d = brain(q) + (noise(q * 9.0) - 0.5) * 0.035;
-  float inside = 1.0 - smoothstep(-0.015, 0.0, d);
-  float dl = d / 0.012;
-  float outline = exp(-dl * dl);
+  vec2 dc = css - sun;
+  float dist = length(dc);
+  float ang = atan(dc.y, dc.x);
+  float out_ = (dist - R) / R;
 
-  // Folds: tightly packed, meandering stripes (strong domain warp) read as gyri and sulci.
-  vec2 p = q * 2.4;
-  vec2 w = vec2(fbm(p + vec2(0.0, uTime * 0.012)), fbm(p + vec2(5.2, 1.3)));
-  w += 0.5 * vec2(fbm(p * 2.1 + w * 2.0 + 3.7), fbm(p * 2.1 + w * 2.0 + 8.1));
-  float f = fbm(p + w * 2.6);
-  float fold = smoothstep(0.55, 0.95, sin(f * 6.2832 * 13.0));
+  // The cursor pulls the glow toward itself; a click sends a pulse out from the rim.
+  float mouseAng = atan(mouse.y - sun.y, mouse.x - sun.x);
+  float toward = angleDiff(ang, mouseAng) / 0.5;
+  float near = uMouseOn * exp(-toward * toward) * (1.0 - smoothstep(R * 0.6, R * 3.0, distance(mouse, sun) - R));
+  float age = t - uClick.z;
+  float clicked = step(0.0, age) * step(distance(click, sun), R * 1.6);
+  float pr = (out_ - age * 0.9) / 0.05;
+  float pulse = clicked * exp(-pr * pr) * exp(-age * 1.8);
 
-  // The lateral (Sylvian) fissure and the central sulcus, as gentle curves.
-  float fis = min(capsule(q, vec2(-0.52, 0.22), vec2(-0.18, 0.1), 0.0),
-              min(capsule(q, vec2(-0.18, 0.1), vec2(0.14, 0.04), 0.0),
-                  capsule(q, vec2(0.14, 0.04), vec2(0.4, -0.1), 0.0)));
-  float cs = min(capsule(q, vec2(0.08, -0.66), vec2(0.0, -0.42), 0.0),
-                 capsule(q, vec2(0.0, -0.42), vec2(-0.06, -0.1), 0.0));
-  float fl = fis / 0.016;
-  float cl = cs / 0.012;
-  float fissure = exp(-fl * fl) + 0.6 * exp(-cl * cl);
-  fold *= smoothstep(0.02, 0.05, min(fis, cs));
-
-  // Thoughts: hotspots that drift, flare and fade, each in a brand world colour.
-  vec3 glowCol = vec3(0.0);
-  float glow = 0.0;
-  for (int i = 0; i < 4; i++) {
+  // Siri-style glow: three soft layers, each colour sliding around the rim at its own pace.
+  vec3 col = vec3(0.0);
+  float a = 0.0;
+  for (int i = 0; i < 3; i++) {
     float fi = float(i);
-    vec2 c = vec2(noise(vec2(uTime * 0.12, fi * 9.1)) * 1.5 - 0.8,
-                  noise(vec2(fi * 4.7, uTime * 0.1)) * 0.9 - 0.5);
-    float flare = pow(0.5 + 0.5 * sin(uTime * 0.8 + fi * 1.9), 5.0);
-    vec2 dq = q - c;
-    float g = flare * exp(-dot(dq, dq) / 0.07);
-    vec3 col = i == 0 ? uBuild : i == 1 ? uSignal : i == 2 ? uCreate : uIdea;
-    glowCol += col * g;
-    glow += g;
+    float r = reach(ang, fi, t) * (1.0 + near * 0.6);
+    float g = exp(-pow(max(out_, 0.0) / r, 1.35)) * smoothstep(-0.02, 0.0, out_);
+    float hue = fract(ang / (2.0 * PI) + t * (0.04 + fi * 0.025) + fi * 0.33);
+    vec3 c = mix(uSignal, uIdea, smoothstep(0.0, 0.33, hue));
+    c = mix(c, uCreate, smoothstep(0.33, 0.66, hue));
+    c = mix(c, uSpark, smoothstep(0.66, 0.85, hue) * 0.8);
+    c = mix(c, uSignal, smoothstep(0.85, 1.0, hue));
+    float w = g * (0.75 - fi * 0.15);
+    col += c * w;
+    a += w;
   }
+  // A thin bright rim right at the edge, and the click pulse.
+  float rimL = out_ / 0.012;
+  float rim = exp(-rimL * rimL) * smoothstep(-0.02, 0.0, out_);
+  col += vec3(1.0) * rim * 0.18 + mix(uIdea, uSignal, 0.5) * pulse;
+  a += rim * 0.18 + pulse;
 
-  // Cursor lights the folds it passes; a click sends a ring of light through the brain.
-  float dm = distance(css, mouse) / 120.0;
-  float lamp = uMouseOn * exp(-dm * dm);
-  float age = uTime - uClick.z;
-  float rr = (distance(css, click) - age * 340.0) / 30.0;
-  float ring = step(0.0, age) * exp(-rr * rr) * exp(-age * 1.2);
-  glowCol += uBuild * (lamp + ring);
-  glow += lamp + ring;
-
-  float lit = clamp(glow, 0.0, 1.0);
-  vec3 col = mix(uInk, glowCol / max(glow, 0.001), lit);
-  float side = mix(1.0, mix(0.15, 1.0, smoothstep(0.32, 0.6, uv.x)), uMask);
-  float breathe = 0.92 + 0.08 * sin(uTime * 1.1);
-  float a = (inside * (fold * (0.16 + 0.7 * lit) + fissure * 0.35) + outline * (0.3 + 0.5 * lit)) * side * breathe;
-  a = min(a * (uDark > 0.5 ? 1.0 : 1.25), 1.0);
-  vec4 outc = vec4(col * a, a);
+  // Average the layers' colours instead of summing them, so overlaps stay saturated, not white.
+  float strength = uAnchor * (uDark > 0.5 ? 1.0 : 0.85);
+  vec3 hueMix = col / max(a, 0.001);
+  a = clamp(a * strength * 0.7, 0.0, 0.8);
+  col = hueMix * a;
+  vec4 outc = vec4(col, a);
 
   // Old film: a warm light leak in the corner, vignette, dust and grain.
   float leak = exp(-length((uv - vec2(1.05, 1.08)) * vec2(1.4, 1.8)) * 2.6);
-  leak *= 0.12 * (0.85 + 0.15 * noise(vec2(uTime * 0.7, 9.0)));
+  leak *= 0.12 * (0.85 + 0.15 * noise(vec2(t * 0.7, 9.0)));
   outc = over(outc, vec4(mix(uCreate, uSpark, 0.35), 1.0) * leak);
   float vig = smoothstep(0.4, 1.1, length((uv - 0.5) * vec2(1.1, 1.3)));
   vec3 vigCol = uDark > 0.5 ? vec3(0.0) : mix(uInk, uCreate, 0.2);
   outc = over(outc, vec4(vigCol, 1.0) * vig * (uDark > 0.5 ? 0.5 : 0.12));
-  float speck = step(0.9994, hash(floor(px / uDpr / 5.0) + floor(uTime * 12.0) * 1.7));
+  float speck = step(0.9994, hash(floor(px / uDpr / 5.0) + floor(t * 12.0) * 1.7));
   outc = over(outc, vec4(uInk, 1.0) * speck * 0.3);
-  float grain = hash(px + fract(uTime * 7.0) * 113.0);
+  float grain = hash(px + fract(t * 7.0) * 113.0);
   outc = over(outc, vec4(uInk, 1.0) * grain * grain * 0.06);
 
   gl_FragColor = outc;
@@ -214,9 +197,9 @@ export function VintageField({ className }: { className?: string }) {
     const uRes = u('uRes');
     const uDpr = u('uDpr');
     const uTime = u('uTime');
-    const uMask = u('uMask');
     const uSun = u('uSun');
     const uR = u('uR');
+    const uAnchor = u('uAnchor');
     const uMouse = u('uMouse');
     const uMouseOn = u('uMouseOn');
     const uClick = u('uClick');
@@ -237,7 +220,6 @@ export function VintageField({ className }: { className?: string }) {
       gl.uniform3fv(u('uInk'), readColor(styles, '--ink'));
       gl.uniform3fv(u('uSpark'), readColor(styles, '--spark'));
       gl.uniform3fv(u('uCreate'), readColor(styles, '--create'));
-      gl.uniform3fv(u('uBuild'), readColor(styles, '--build'));
       gl.uniform3fv(u('uSignal'), readColor(styles, '--signal'));
       gl.uniform3fv(u('uIdea'), readColor(styles, '--idea'));
     };
@@ -262,16 +244,22 @@ export function VintageField({ className }: { className?: string }) {
       const orbit = home ? document.querySelector('[data-hero-orbit]') : null;
       const ring = orbit?.getBoundingClientRect();
       if (ring && ring.width > 0) {
-        // The inner ring in the 100x100 viewBox: centre (50, 38), radius 30.
-        const cx = ring.left + ring.width * 0.5;
-        const cy = ring.top + ring.height * 0.38;
+        // data-hero-orbit="cx,cy,r" as fractions of the element's width/height (default: the
+        // portrait's inner orbit ring, centre (50, 38) radius 30 in its 100x100 viewBox).
+        const [fx = 0.5, fy = 0.38, fr = 0.3] = (orbit?.getAttribute('data-hero-orbit') || '')
+          .split(',')
+          .filter((part) => part.trim() !== '')
+          .map(Number);
+        const cx = ring.left + ring.width * fx;
+        const cy = ring.top + ring.height * fy;
         gl.uniform2f(uSun, (cx - box.left) * dpr, (box.bottom - cy) * dpr);
-        gl.uniform1f(uR, ring.width * 0.3 * dpr);
+        gl.uniform1f(uR, ring.width * fr * dpr);
+        gl.uniform1f(uAnchor, 1);
       } else {
         gl.uniform2f(uSun, canvas.width * 0.5, canvas.height * 0.9);
         gl.uniform1f(uR, Math.min(canvas.width, canvas.height) * 0.16);
+        gl.uniform1f(uAnchor, 0);
       }
-      gl.uniform1f(uMask, home && box.width >= 1024 ? 1 : 0);
     };
 
     const draw = (time: number) => {

@@ -5,11 +5,69 @@ import { site } from '@/lib/site';
 import photo from '../../../public/me/shimanto.png';
 
 /** A four-point sparkle, filled with a world colour. */
-function Sparkle({ className }: { className?: string }) {
+export function Sparkle({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
       <path d="M12 1c.6 5.2 2.8 7.4 11 11-8.2 3.6-10.4 5.8-11 11-.6-5.2-2.8-7.4-11-11 8.2-3.6 10.4-5.8 11-11Z" />
     </svg>
+  );
+}
+
+/** "Online since 2012": where the journey started. */
+export function OnlineSinceChip() {
+  return (
+    <div className="bg-paper/60 flex items-center gap-3 rounded-2xl p-2.5 pr-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.25),0_24px_40px_-22px_rgb(0_0_0/0.65)] ring-1 ring-white/15 backdrop-blur-xl">
+      <span className="relative grid size-11 shrink-0 place-items-center">
+        <span aria-hidden="true" className="bg-signal/60 absolute inset-0 rounded-xl blur-md" />
+        <span className="bg-signal on-world relative grid size-11 place-items-center rounded-xl">
+          <Icon name="globe" className="size-5" />
+          {/* A slow orbit around the globe. */}
+          <span
+            aria-hidden="true"
+            className="motif-spin absolute inset-1 rounded-full border border-dashed border-current opacity-45"
+          />
+        </span>
+      </span>
+      <span className="leading-tight">
+        <span className="block text-lg font-semibold tracking-tight">
+          Online since {home.hero.journey.since}
+        </span>
+        <span className="text-ink-soft block text-xs">
+          Started at {home.hero.journey.startedAtAge} years old
+        </span>
+      </span>
+    </div>
+  );
+}
+
+/** What's being built right now, with a work-in-progress shimmer. */
+export function NowBuildingChip() {
+  return (
+    <div className="bg-night/70 text-cream flex items-center gap-3 rounded-2xl p-2.5 pr-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.18),0_24px_40px_-22px_rgb(0_0_0/0.7)] ring-1 ring-white/15 backdrop-blur-xl">
+      <span className="relative grid size-10 shrink-0 place-items-center">
+        <span aria-hidden="true" className="bg-build/60 absolute inset-0 rounded-xl blur-md" />
+        <span className="bg-build on-world relative grid size-10 place-items-center rounded-xl">
+          <Icon name="rocket" className="size-[18px]" />
+        </span>
+      </span>
+      <span className="min-w-[7.5rem] leading-tight">
+        <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.14em] text-white/60 uppercase">
+          <span aria-hidden="true" className="relative grid size-1.5 place-items-center">
+            <span className="motif-ping bg-build absolute inset-0 rounded-full" />
+            <span className="bg-build relative size-1.5 rounded-full" />
+          </span>
+          Now building
+        </span>
+        <span className="mt-0.5 block text-sm font-medium">{home.now.building[1]?.label}</span>
+        {/* Work in progress: a light sweeping along a track. */}
+        <span
+          aria-hidden="true"
+          className="mt-1.5 block h-1 overflow-hidden rounded-full bg-white/10"
+        >
+          <span className="motif-shimmer via-build block h-full w-1/2 rounded-full bg-linear-to-r from-transparent to-transparent" />
+        </span>
+      </span>
+    </div>
   );
 }
 
@@ -95,27 +153,7 @@ export function HeroPortrait() {
 
       {/* Where it started. On phones there's no room beside the arch, so it sits above the head. */}
       <div className="art-float absolute top-[2%] left-0 sm:top-[30%] sm:-left-[10%]">
-        <div className="bg-paper/60 flex items-center gap-3 rounded-2xl p-2.5 pr-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.25),0_24px_40px_-22px_rgb(0_0_0/0.65)] ring-1 ring-white/15 backdrop-blur-xl">
-          <span className="relative grid size-11 shrink-0 place-items-center">
-            <span aria-hidden="true" className="bg-signal/60 absolute inset-0 rounded-xl blur-md" />
-            <span className="bg-signal on-world relative grid size-11 place-items-center rounded-xl">
-              <Icon name="globe" className="size-5" />
-              {/* A slow orbit around the globe. */}
-              <span
-                aria-hidden="true"
-                className="motif-spin absolute inset-1 rounded-full border border-dashed border-current opacity-45"
-              />
-            </span>
-          </span>
-          <span className="leading-tight">
-            <span className="block text-lg font-semibold tracking-tight">
-              Online since {home.hero.journey.since}
-            </span>
-            <span className="text-ink-soft block text-xs">
-              Started at {home.hero.journey.startedAtAge} years old
-            </span>
-          </span>
-        </div>
+        <OnlineSinceChip />
       </div>
 
       {/* Now building */}
@@ -123,31 +161,7 @@ export function HeroPortrait() {
         className="art-float absolute right-0 bottom-[14%] sm:-right-[8%]"
         style={{ animationDelay: '-2.5s' }}
       >
-        <div className="bg-night/70 text-cream flex items-center gap-3 rounded-2xl p-2.5 pr-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.18),0_24px_40px_-22px_rgb(0_0_0/0.7)] ring-1 ring-white/15 backdrop-blur-xl">
-          <span className="relative grid size-10 shrink-0 place-items-center">
-            <span aria-hidden="true" className="bg-build/60 absolute inset-0 rounded-xl blur-md" />
-            <span className="bg-build on-world relative grid size-10 place-items-center rounded-xl">
-              <Icon name="rocket" className="size-[18px]" />
-            </span>
-          </span>
-          <span className="min-w-[7.5rem] leading-tight">
-            <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.14em] text-white/60 uppercase">
-              <span aria-hidden="true" className="relative grid size-1.5 place-items-center">
-                <span className="motif-ping bg-build absolute inset-0 rounded-full" />
-                <span className="bg-build relative size-1.5 rounded-full" />
-              </span>
-              Now building
-            </span>
-            <span className="mt-0.5 block text-sm font-medium">{home.now.building[1]?.label}</span>
-            {/* Work in progress: a light sweeping along a track. */}
-            <span
-              aria-hidden="true"
-              className="mt-1.5 block h-1 overflow-hidden rounded-full bg-white/10"
-            >
-              <span className="motif-shimmer via-build block h-full w-1/2 rounded-full bg-linear-to-r from-transparent to-transparent" />
-            </span>
-          </span>
-        </div>
+        <NowBuildingChip />
       </div>
 
       {/* Hand-drawn note */}

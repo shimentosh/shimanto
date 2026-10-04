@@ -21,7 +21,7 @@ import { getStoreProducts, isStoreOpen } from '@/lib/store';
 import { type Accent, Icon, type IconName, accentBg, cn } from '@shimanto/ui';
 import { MusicPlayer } from '@/components/home/music-player';
 import { OnlineCounter, YearProgress } from '@/components/home/now-live';
-import { HeroPortrait } from '@/components/home/portrait';
+import { HeroLens } from '@/components/home/hero-lens';
 
 const pillarStyle: Record<string, { icon: IconName; world: Accent }> = {
   Builds: { icon: 'rocket', world: 'build' },
@@ -51,6 +51,46 @@ function More({ href, children }: { href: string; children: string }) {
 }
 
 /** ① Hero: eyebrow, headline, sub, CTAs, a proof row and the disciplines. */
+/** One headline word in its rising mask; nouns can take a turn in a world colour. */
+function KineticWord({
+  i,
+  children,
+  accent,
+  turn,
+  tile,
+}: {
+  i: number;
+  children: string;
+  accent?: Accent;
+  turn?: number;
+  /** Icon tile before the word; it pops in, then flips and fills when the word is lit. */
+  tile?: IconName;
+}) {
+  const vars = {
+    '--i': i,
+    '--c': accent ? `var(--${accent})` : undefined,
+    '--d': `${(turn ?? 0) * 2.5}s`,
+  } as React.CSSProperties;
+  return (
+    <span className="kw">
+      <span className="kw-in" style={vars}>
+        {tile && (
+          <span aria-hidden="true" className="kw-tile" data-turn={turn ?? 0} data-icon={tile}>
+            <Icon name={tile} className="kw-tile-icon" strokeWidth={2} />
+          </span>
+        )}
+        {accent ? (
+          <span className="kw-cycle" data-turn={turn ?? 0}>
+            {children}
+          </span>
+        ) : (
+          children
+        )}
+      </span>
+    </span>
+  );
+}
+
 export function HeroSection() {
   const { hero } = home;
   const proof = [
@@ -61,26 +101,39 @@ export function HeroSection() {
     { value: String(ventures.length), label: 'ventures built' },
   ];
   return (
-    <section className="pt-24 md:pt-28">
-      <Container className="grid items-center gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-12">
-        <div className="min-w-0 lg:pb-14">
+    <section className="pt-24 pb-6 md:pt-28">
+      <Container className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12">
+        <div className="min-w-0">
           <p className="text-ink-soft flex items-center gap-2 text-sm font-medium">
             <span aria-hidden="true" className="bg-build size-2 rounded-full" />
             {hero.eyebrow}
           </p>
-          <h1 className="mt-6 max-w-[14ch] text-[clamp(40px,4.6vw,66px)] leading-[1.02] font-medium tracking-[-0.045em]">
-            I build businesses, software and <Squiggle world="build">systems</Squiggle>.
+          <h1 className="mt-6 text-[clamp(40px,5vw,80px)] leading-[0.95] font-medium tracking-[-0.055em]">
+            <KineticWord i={0}>I</KineticWord> <KineticWord i={1}>build</KineticWord>
+            <br />
+            <KineticWord i={2} accent="build" turn={0} tile="briefcase">
+              businesses,
+            </KineticWord>
+            <br />
+            <KineticWord i={3} accent="signal" turn={1} tile="code">
+              software
+            </KineticWord>{' '}
+            <KineticWord i={4}>&amp;</KineticWord>
+            <br />
+            <KineticWord i={5} accent="create" turn={2} tile="gear">
+              systems.
+            </KineticWord>
           </h1>
-          <p className="text-ink-soft mt-6 max-w-[40ch] text-lg leading-relaxed md:text-xl md:leading-relaxed">
+          <p className="text-ink-soft mt-8 max-w-[40ch] text-lg leading-relaxed md:text-xl md:leading-relaxed">
             At the intersection of business, marketing, technology, AI and automation.
           </p>
-          <div className="mt-12 flex flex-wrap items-center gap-3">
+          <div className="mt-10 flex flex-wrap items-center gap-3">
             <Button href={hero.primaryCta.href}>{hero.primaryCta.label}</Button>
             <Button href={hero.secondaryCta.href} variant="secondary">
               {hero.secondaryCta.label}
             </Button>
           </div>
-          <dl className="mt-12 flex flex-wrap gap-x-8 gap-y-5 md:mt-14">
+          <dl className="mt-10 flex flex-wrap gap-x-8 gap-y-5 md:mt-12">
             {proof.map((item, i) => (
               <div
                 key={item.label}
@@ -92,9 +145,8 @@ export function HeroSection() {
             ))}
           </dl>
         </div>
-        {/* Bottom-aligned so the portrait stands on the manifesto panel below. */}
-        <div className="relative z-10 mx-auto w-full max-w-md self-end lg:max-w-none">
-          <HeroPortrait />
+        <div className="relative z-10 w-full px-6 sm:px-10 lg:px-0">
+          <HeroLens />
         </div>
       </Container>
     </section>
@@ -248,7 +300,53 @@ export function WorkSection() {
   );
 }
 
-/** ④ Three products from the store. */
+/** The store's empty slot: the categories still in the workshop, linking to the store. */
+function MoreComing({ href, categories }: { href: string; categories: readonly string[] }) {
+  return (
+    <Link href={href} data-cursor="View" className="group flex h-full flex-col">
+      <div className="rounded-card border-ink/15 group-hover:border-ink/30 relative flex aspect-4/3 flex-col justify-between overflow-hidden border border-dashed p-5 transition-colors">
+        <span
+          aria-hidden="true"
+          className="bg-signal/10 absolute -top-1/3 -right-1/4 size-2/3 rounded-full blur-3xl"
+        />
+        <span className="text-ink-soft relative flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] uppercase">
+          <span className="relative grid size-1.5 place-items-center" aria-hidden="true">
+            <span className="motif-ping bg-signal absolute inset-0 rounded-full" />
+            <span className="bg-signal relative size-1.5 rounded-full" />
+          </span>
+          In the workshop
+        </span>
+        <ul className="relative flex flex-wrap gap-2">
+          {categories.map((category, i) => (
+            <li
+              key={category}
+              className="border-ink/10 bg-paper rounded-pill flex items-center gap-2 border py-1 pr-3 pl-1.5 text-sm font-medium"
+            >
+              <span
+                aria-hidden="true"
+                className={cn('size-2.5 rounded-full', accentBg[toneFor(i)])}
+              />
+              {category}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <span className="text-ink-soft mt-4 text-sm">More on the way</span>
+      <h3 className="mt-1 text-xl leading-snug font-medium tracking-[-0.02em] group-hover:underline">
+        The rest of the store
+      </h3>
+      <p className="text-ink-soft mt-1 line-clamp-2">
+        {new Intl.ListFormat('en', { type: 'conjunction' }).format(
+          categories.map((category, i) => (i === 0 ? category : category.toLowerCase())),
+        )}
+        , as they ship.
+      </p>
+      <p className="mt-3 text-lg font-medium">See what&apos;s coming →</p>
+    </Link>
+  );
+}
+
+/** ④ Three products from the store; an empty slot shows what's still on the way. */
 export async function ProductsSection() {
   const { products } = home;
   const all = await getStoreProducts();
@@ -273,6 +371,17 @@ export async function ProductsSection() {
             <ProductCard product={product} />
           </li>
         ))}
+        {/* Fill the row's empty slot (only where there is one) with what's on the way. */}
+        {picks.length % 3 !== 0 && (
+          <li
+            className={cn(
+              picks.length % 2 === 0 ? 'hidden lg:block' : 'sm:col-span-2 lg:col-span-1',
+              picks.length % 3 === 1 && 'lg:col-span-2',
+            )}
+          >
+            <MoreComing href={products.cta.href} categories={products.categories} />
+          </li>
+        )}
       </ul>
     </Section>
   );
