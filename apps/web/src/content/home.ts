@@ -35,6 +35,11 @@ export const home = {
     eyebrow: 'Selected work',
     cta: { label: 'All builds', href: '/work' },
   },
+  tools: {
+    eyebrow: 'Free tools',
+    cta: { label: 'All tools', href: '/tools' },
+    suggest: { label: 'Suggest a tool', href: '/collaborate?intent=OTHER' },
+  },
   products: {
     eyebrow: 'Products',
     categories: ['Software', 'Ebooks', 'Templates', 'Source code', 'Courses', 'Services'],

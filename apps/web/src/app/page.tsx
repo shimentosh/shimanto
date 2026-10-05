@@ -5,6 +5,7 @@ import {
   NowSection,
   ProductsSection,
   SocialSection,
+  ToolsSection,
   WorkSection,
   WritingSection,
 } from '@/components/home/sections';
@@ -20,6 +21,7 @@ export default function HomePage() {
       <HeroSection />
       <ManifestoSection />
       <WorkSection />
+      <ToolsSection />
       <ProductsSection />
       <WritingSection />
       <NowSection />

@@ -1,11 +1,13 @@
-import { Button, Chip, Container, Icon, accentBg, cn } from '@shimanto/ui';
+import { Button, Chip, Container, Icon, type IconName, accentBg, cn } from '@shimanto/ui';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Breadcrumbs } from '@/components/page/breadcrumbs';
 import { JsonLd } from '@/components/page/json-ld';
 import { Section, SectionTitle } from '@/components/page/section';
+import { ScreenshotSlider } from '@/components/page/screenshot-slider';
 import { ToolCard } from '@/components/page/tool-card';
+import { EnginesSection, FaqSection, ToolboxSection } from '@/components/page/toolbox';
 import { priceLabel, tools } from '@/content/tools';
 import { pageMetadata } from '@/lib/seo';
 import { absoluteUrl, site } from '@/lib/site';
@@ -33,6 +35,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     : meta;
 }
 
+/** Icons for the hero's fact cards and tag chips, keyed by their label. */
+const factIcons: Record<string, IconName> = {
+  Price: 'tag',
+  'Works on': 'monitor',
+  'Works in': 'globe',
+  Licence: 'code',
+  'Account needed': 'user',
+  Exports: 'download',
+};
+
+const tagIcons: Record<string, IconName> = {
+  'Open source': 'code',
+  'Video editing': 'video',
+  'Local AI': 'cpu',
+  Creators: 'users',
+  ChatGPT: 'chat',
+  AI: 'spark',
+  Automation: 'repeat',
+  Instagram: 'heart',
+  'Data export': 'download',
+  'Marketing research': 'chart',
+};
+
 /** The external "get it" link, styled like the primary button. */
 function GetIt({ href, children }: { href: string; children: string }) {
   return (
@@ -49,11 +74,26 @@ function GetIt({ href, children }: { href: string; children: string }) {
   );
 }
 
+/** The repo link for an open-source tool, styled like the secondary button. */
+function SourceLink({ href }: { href: string }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="border-ink/20 text-ink hover:border-ink/50 rounded-pill inline-flex items-center gap-2 border px-6 py-3 text-lg font-medium transition-colors"
+    >
+      <Icon name="github" className="size-5" />
+      <span>View source</span>
+      <span className="sr-only">(opens in a new tab)</span>
+    </a>
+  );
+}
+
 export default async function ToolPage({ params }: Props) {
   const { slug } = await params;
   const tool = tools.find((t) => t.slug === slug);
   if (!tool) notFound();
-  const [hero, ...gallery] = tool.screenshots;
   const others = tools.filter((t) => t.slug !== tool.slug);
   const facts = [{ term: 'Price', value: priceLabel(tool) }, ...tool.facts];
 
@@ -66,15 +106,17 @@ export default async function ToolPage({ params }: Props) {
           name: tool.name,
           description: tool.tagline,
           url: absoluteUrl(`/tools/${tool.slug}`),
-          applicationCategory: 'BrowserApplication',
-          operatingSystem: 'Chrome',
+          applicationCategory:
+            tool.kind === 'Chrome extension' ? 'BrowserApplication' : 'MultimediaApplication',
+          operatingSystem: tool.os ?? 'Chrome',
+          ...(tool.source && { codeRepository: tool.source }),
           image: absoluteUrl(tool.logo.src),
           author: { '@type': 'Person', name: site.name },
           offers: { '@type': 'Offer', price: tool.price ? tool.price.replace(/[^\d.]/g, '') : '0' },
         }}
       />
 
-      <section className="pt-28 pb-12 md:pt-36 md:pb-16">
+      <section className="pt-24 pb-12 md:pt-32 md:pb-16">
         <Container>
           <Breadcrumbs
             items={[
@@ -82,7 +124,7 @@ export default async function ToolPage({ params }: Props) {
               { label: tool.name, href: `/tools/${tool.slug}` },
             ]}
           />
-          <div className="mt-10 grid items-center gap-10 lg:grid-cols-[1fr_1.15fr] lg:gap-14">
+          <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center lg:gap-12">
             <div className="min-w-0">
               <div className="flex items-center gap-4">
                 <Image
@@ -91,114 +133,112 @@ export default async function ToolPage({ params }: Props) {
                   width={72}
                   height={72}
                   priority
-                  className="size-16 rounded-2xl md:size-18"
+                  className="size-14 rounded-2xl md:size-16"
                 />
-                <div>
-                  <p className="text-ink-soft text-sm font-medium">{tool.kind}</p>
-                  <Chip variant="status" tone={tool.price ? 'spark' : 'build'}>
-                    {priceLabel(tool)}
-                  </Chip>
+                <div className="min-w-0">
+                  <h1 className="text-[clamp(36px,4.4vw,56px)] leading-none font-medium tracking-tighter">
+                    {tool.name}
+                  </h1>
+                  <p className="text-ink-soft mt-2 flex items-center gap-3 text-sm font-medium">
+                    {tool.kind}
+                    <Chip variant="status" tone={tool.price ? 'spark' : 'build'}>
+                      {priceLabel(tool)}
+                    </Chip>
+                  </p>
                 </div>
               </div>
-              <h1 className="mt-6 text-[clamp(38px,5.4vw,68px)] leading-[1.02] font-medium tracking-[-0.045em] text-balance">
-                {tool.name}
-              </h1>
-              <p className="mt-5 max-w-[46ch] text-xl leading-relaxed md:text-2xl">
-                {tool.tagline}
-              </p>
-              <p className="text-ink-soft mt-4 max-w-[52ch] text-lg leading-relaxed">
-                {tool.intro}
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-4">
+              <p className="mt-6 text-xl leading-snug text-balance md:text-2xl">{tool.tagline}</p>
+              <div className="mt-6 flex flex-wrap items-center gap-3">
                 <GetIt href={tool.href}>{tool.cta}</GetIt>
-                <Button href="/tools" variant="secondary">
-                  All tools
-                </Button>
+                {tool.source ? (
+                  <SourceLink href={tool.source} />
+                ) : (
+                  <Button href="/tools" variant="secondary">
+                    All tools
+                  </Button>
+                )}
               </div>
-              <ul aria-label="Tags" className="mt-8 flex flex-wrap gap-2">
+              <dl className="border-ink/10 mt-8 grid grid-cols-2 overflow-hidden rounded-2xl border">
+                {facts.map((fact, i) => (
+                  <div
+                    key={fact.term}
+                    className={cn(
+                      'border-ink/10 flex items-center gap-3 px-4 py-4',
+                      i % 2 === 1 && 'border-l',
+                      i >= 2 && 'border-t',
+                    )}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="bg-ink/[0.06] text-ink grid size-9 shrink-0 place-items-center rounded-lg"
+                    >
+                      <Icon name={factIcons[fact.term] ?? 'info'} className="size-[18px]" />
+                    </span>
+                    <div className="min-w-0">
+                      <dt className="text-ink-soft text-xs">{fact.term}</dt>
+                      <dd className="mt-0.5 font-medium">{fact.value}</dd>
+                    </div>
+                  </div>
+                ))}
+              </dl>
+              <ul aria-label="Tags" className="mt-5 flex flex-wrap gap-2">
                 {tool.tags.map((tag) => (
                   <li key={tag}>
-                    <Chip>{tag}</Chip>
+                    <Chip className="gap-1.5 py-1 pl-2">
+                      <Icon
+                        name={tagIcons[tag] ?? 'tag'}
+                        className="text-ink-soft size-3.5"
+                        strokeWidth={2}
+                      />
+                      {tag}
+                    </Chip>
                   </li>
                 ))}
               </ul>
             </div>
-            {hero && (
-              <div className="border-ink/10 rounded-card overflow-hidden border shadow-[0_32px_64px_-32px_rgb(0_0_0/0.45)]">
-                <Image
-                  src={hero.src}
-                  alt={hero.alt}
-                  width={hero.width}
-                  height={hero.height}
-                  priority
-                  sizes="(min-width: 1024px) 55vw, 100vw"
-                  className="h-auto w-full"
+
+            {tool.screenshots.length > 0 && (
+              <div className="relative min-w-0">
+                <div
+                  aria-hidden="true"
+                  className={cn(
+                    'absolute inset-x-[8%] top-[4%] bottom-[30%] rounded-full opacity-25 blur-[90px]',
+                    accentBg[tool.tone],
+                  )}
                 />
+                <ScreenshotSlider shots={tool.screenshots} />
               </div>
             )}
           </div>
-
-          <dl className="border-ink/10 mt-14 grid grid-cols-2 gap-6 border-t pt-8 md:grid-cols-4">
-            {facts.map((fact) => (
-              <div key={fact.term}>
-                <dt className="text-ink-soft text-sm">{fact.term}</dt>
-                <dd className="mt-1 text-lg font-medium">{fact.value}</dd>
-              </div>
-            ))}
-          </dl>
         </Container>
       </section>
 
-      <Section divided labelledBy="does-title">
-        <SectionTitle id="does-title" eyebrow="What it does" title="Everything in one click." />
-        <ul className="mt-10 grid gap-x-10 gap-y-2 sm:grid-cols-2 lg:grid-cols-4">
-          {tool.capabilities.map((item) => (
-            <li key={item.title} className="border-ink/10 border-t py-6">
-              <span
-                aria-hidden="true"
-                className={cn(
-                  'text-on-world grid size-10 place-items-center rounded-full',
-                  accentBg[tool.tone],
-                )}
-              >
-                <Icon name={item.icon} />
-              </span>
-              <h3 className="mt-4 text-lg font-medium">{item.title}</h3>
-              <p className="text-ink-soft mt-1">{item.body}</p>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      {gallery.length > 0 && (
-        <Section divided labelledBy="shots-title">
-          <SectionTitle id="shots-title" eyebrow="Screenshots" title="See it in action." />
-          <ul className="mt-10 grid gap-6 md:grid-cols-2">
-            {gallery.map((shot, i) => (
-              <li
-                key={shot.src}
-                className={cn(
-                  'border-ink/10 rounded-card overflow-hidden border',
-                  i === 0 && gallery.length % 2 === 1 && 'md:col-span-2',
-                )}
-              >
-                <Image
-                  src={shot.src}
-                  alt={shot.alt}
-                  width={shot.width}
-                  height={shot.height}
-                  sizes={
-                    i === 0 && gallery.length % 2 === 1
-                      ? '(min-width: 768px) 80vw, 100vw'
-                      : '(min-width: 768px) 45vw, 100vw'
-                  }
-                  className="h-auto w-full"
-                />
+      {tool.toolbox ? (
+        <ToolboxSection tool={tool} groups={tool.toolbox} />
+      ) : (
+        <Section divided labelledBy="does-title">
+          <SectionTitle id="does-title" eyebrow="What it does" title="Everything in one click." />
+          <ul className="mt-10 grid gap-x-10 gap-y-2 sm:grid-cols-2 lg:grid-cols-4">
+            {tool.capabilities.map((item) => (
+              <li key={item.title} className="border-ink/10 border-t py-6">
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    'text-on-world grid size-10 place-items-center rounded-full',
+                    accentBg[tool.tone],
+                  )}
+                >
+                  <Icon name={item.icon} />
+                </span>
+                <h3 className="mt-4 text-lg font-medium">{item.title}</h3>
+                <p className="text-ink-soft mt-1">{item.body}</p>
               </li>
             ))}
           </ul>
         </Section>
       )}
+
+      {tool.engines && <EnginesSection engines={tool.engines} tone={tool.tone} />}
 
       <Section divided labelledBy="details-title">
         <div className="grid gap-12 md:grid-cols-2 md:gap-16">
@@ -254,6 +294,8 @@ export default async function ToolPage({ params }: Props) {
         </Section>
       )}
 
+      {tool.faq && <FaqSection faq={tool.faq} />}
+
       <Section className={cn(others.length === 0 && 'pb-32 md:pb-40')}>
         <div className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
           <div>
@@ -263,7 +305,9 @@ export default async function ToolPage({ params }: Props) {
             <p className="text-ink-soft mt-3 text-lg">
               {tool.price
                 ? `${tool.price}, straight from the store.`
-                : 'No signup and no catch. Install it and start in a minute.'}
+                : tool.source
+                  ? 'Open source, no signup and no catch. Install it and start in a minute.'
+                  : 'No signup and no catch. Install it and start in a minute.'}
             </p>
           </div>
           <GetIt href={tool.href}>{tool.cta}</GetIt>

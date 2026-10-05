@@ -16,12 +16,14 @@ import { MoreBuildsNote, VentureRow } from '@/components/page/venture-card';
 import { ProductCard } from '@/components/store/product-card';
 import { musicChannel, signatureWin, toneFor, ventures } from '@/content/catalog';
 import { home } from '@/content/home';
+import { tools } from '@/content/tools';
 import { sortedPosts } from '@/lib/blog';
 import { getStoreProducts, isStoreOpen } from '@/lib/store';
 import { type Accent, Icon, type IconName, accentBg, cn } from '@shimanto/ui';
 import { MusicPlayer } from '@/components/home/music-player';
 import { OnlineCounter, YearProgress } from '@/components/home/now-live';
 import { HeroLens } from '@/components/home/hero-lens';
+import { ToolSpotlight, ToolTile } from '@/components/home/tool-tiles';
 
 const pillarStyle: Record<string, { icon: IconName; world: Accent }> = {
   Builds: { icon: 'rocket', world: 'build' },
@@ -300,6 +302,81 @@ export function WorkSection() {
   );
 }
 
+/**
+ * ④ Free tools: the newest one as a big spotlight, the next two stacked beside it, and a strip of
+ * plain facts about all of them underneath.
+ */
+export function ToolsSection() {
+  const { tools: copy } = home;
+  const [spotlight, ...rest] = tools;
+  if (!spotlight) return null;
+  const others = rest.slice(0, 2);
+  const stats = [
+    { value: String(tools.length), label: tools.length === 1 ? 'tool' : 'tools' },
+    { value: String(tools.filter((t) => !t.price).length), label: 'free forever' },
+    { value: String(tools.filter((t) => t.source).length), label: 'open source' },
+    { value: '0', label: 'signups needed' },
+  ];
+  return (
+    <Section divided labelledBy="tools-title">
+      <SectionTitle
+        eyebrow={copy.eyebrow}
+        id="tools-title"
+        title={<Squiggle world="create">Made</Squiggle>}
+        motif={<Blocks tone="create" />}
+        rest="for me. Free for you."
+        action={<More href={copy.cta.href}>{copy.cta.label}</More>}
+      />
+      <ul className={cn('mt-10 grid gap-6', others.length > 0 && 'lg:grid-cols-[1.35fr_1fr]')}>
+        <li>
+          <ToolSpotlight tool={spotlight} />
+        </li>
+        {others.length > 0 && (
+          <li>
+            <ul className="grid h-full gap-6 sm:grid-cols-2 lg:grid-cols-1">
+              {others.map((tool) => (
+                <li key={tool.slug}>
+                  <ToolTile tool={tool} />
+                </li>
+              ))}
+            </ul>
+          </li>
+        )}
+      </ul>
+      <div className="border-ink/15 rounded-card mt-6 flex flex-col gap-6 border border-dashed p-5 sm:p-6 md:flex-row md:items-center md:justify-between">
+        <dl className="flex flex-wrap gap-x-8 gap-y-4">
+          {stats.map((stat, i) => (
+            <div
+              key={stat.label}
+              className={cn(
+                'flex flex-row-reverse items-baseline justify-end gap-2',
+                i > 0 && 'sm:border-ink/10 sm:border-l sm:pl-8',
+              )}
+            >
+              <dt className="text-ink-soft text-sm">{stat.label}</dt>
+              <dd className="text-2xl font-medium tracking-tighter">{stat.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <Link
+          href={copy.suggest.href}
+          className="group text-ink inline-flex items-center gap-2 font-medium"
+        >
+          <span
+            aria-hidden="true"
+            className="bg-create on-world grid size-8 place-items-center rounded-full transition-transform duration-300 motion-safe:group-hover:rotate-90"
+          >
+            <Icon name="plus" className="size-4" />
+          </span>
+          <span className="underline decoration-1 underline-offset-[6px] group-hover:decoration-2">
+            {copy.suggest.label}
+          </span>
+        </Link>
+      </div>
+    </Section>
+  );
+}
+
 /** The store's empty slot: the categories still in the workshop, linking to the store. */
 function MoreComing({ href, categories }: { href: string; categories: readonly string[] }) {
   return (
@@ -346,7 +423,7 @@ function MoreComing({ href, categories }: { href: string; categories: readonly s
   );
 }
 
-/** ④ Three products from the store; an empty slot shows what's still on the way. */
+/** ⑤ Three products from the store; an empty slot shows what's still on the way. */
 export async function ProductsSection() {
   const { products } = home;
   const all = await getStoreProducts();
