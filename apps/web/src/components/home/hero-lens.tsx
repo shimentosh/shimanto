@@ -228,6 +228,7 @@ export function HeroLens() {
       <div
         ref={glass}
         data-hero-orbit="0.5,0.5,0.5"
+        data-no-lightbox
         data-cursor={zoomed ? 'Drag' : 'Zoom'}
         className={`absolute inset-[4%] touch-pan-y overflow-hidden rounded-full shadow-[0_40px_90px_-30px_rgb(0_0_0/0.8)] ring-1 ring-white/10 select-none ${zoomed ? 'cursor-grab' : 'cursor-zoom-in'}`}
       >

@@ -363,3 +363,13 @@ button,
     filter: blur(10px);
   }
 }
+
+/* Site-wide lightbox (components/page/lightbox.tsx): fade the backdrop, pop the media in. */
+@media (prefers-reduced-motion: no-preference) {
+  .lightbox[open]::backdrop {
+    animation: fade-in 0.2s ease-out;
+  }
+  .lightbox-media {
+    animation: pop-in 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}

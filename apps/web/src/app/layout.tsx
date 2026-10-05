@@ -12,6 +12,7 @@ import {
 } from '@/content/navigation';
 import { AnalyticsProvider } from '@/components/analytics/analytics';
 import { VintageField } from '@/components/home/vintage-field';
+import { Lightbox } from '@/components/page/lightbox';
 import { SiteCommandPalette } from '@/components/page/site-command-palette';
 import { site, siteUrl } from '@/lib/site';
 import { getStoreProducts, isStoreOpen } from '@/lib/store';
@@ -117,6 +118,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           )}
         />
         <SiteCommandPalette />
+        <Lightbox />
         <GrainOverlay />
         <CustomCursor />
         <AnalyticsProvider config={tracking} />
