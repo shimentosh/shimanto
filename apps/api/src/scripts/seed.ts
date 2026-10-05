@@ -4,13 +4,15 @@
  * so this is the only data the database needs to start.
  *
  * Idempotent: an existing account is left untouched (its password is never overwritten).
+ * Compiled with the API, so the production image runs it on every start (dist/scripts/seed.js);
+ * with ADMIN_EMAIL / ADMIN_PASSWORD unset it does nothing.
  *
  *   pnpm db:seed
  */
 import 'dotenv/config';
 import { hash } from '@node-rs/argon2';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '../src/generated/prisma/client.js';
+import { PrismaClient } from '../generated/prisma/client.js';
 
 const prisma = new PrismaClient({
   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }),

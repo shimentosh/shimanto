@@ -1,0 +1,153 @@
+# Production stack for shimanto.xyz on Dokploy (Docker Compose project, compose path:
+# ./docker-compose.prod.yml). See docs/DEPLOY.md.
+#
+# Postgres and Redis are NOT here: they run as separate Dokploy database services and are reached
+# over `dokploy-network` through DATABASE_URL / REDIS_URL. File storage is Cloudflare R2 (S3 API).
+# Ports are not published on the host: Dokploy's Traefik routes each domain to a service's port.
+#
+# Every ${VAR} below comes from the Dokploy "Environment" tab (written to .env next to this file).
+# `:?` marks a required value: the deploy stops with that message when it is missing.
+
+x-next-build: &next-build
+  context: .
+  dockerfile: infra/docker/next.Dockerfile
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: infra/docker/api.Dockerfile
+    restart: unless-stopped
+    expose: ['4000']
+    networks:
+      default:
+        # Unique name for in-stack calls (web → api); `api` alone can clash on dokploy-network.
+        aliases: [shimanto-api]
+      dokploy-network:
+    environment:
+      NODE_ENV: production
+      API_PORT: 4000
+      TRUST_PROXY: 'true'
+      CORS_ORIGINS: ${SITE_URL:-https://shimanto.xyz},https://www.shimanto.xyz,${ADMIN_URL:-https://admin.shimanto.xyz},${PORTAL_URL:-https://my.shimanto.xyz}
+      COOKIE_DOMAIN: ${COOKIE_DOMAIN:-.shimanto.xyz}
+      SITE_URL: ${SITE_URL:-https://shimanto.xyz}
+      ADMIN_URL: ${ADMIN_URL:-https://admin.shimanto.xyz}
+      PORTAL_URL: ${PORTAL_URL:-https://my.shimanto.xyz}
+      API_PUBLIC_URL: ${API_PUBLIC_URL:-https://api.shimanto.xyz}
+      WEB_REVALIDATE_URL: http://shimanto-web:3000/api/revalidate
+
+      DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL (Dokploy Postgres internal URL)}
+      REDIS_URL: ${REDIS_URL:?set REDIS_URL (Dokploy Redis internal URL)}
+      JOBS_DRIVER: bullmq
+
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?set JWT_ACCESS_SECRET (openssl rand -base64 48)}
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:?set REVALIDATE_SECRET (openssl rand -base64 48)}
+      ACCESS_TOKEN_TTL_SECONDS: ${ACCESS_TOKEN_TTL_SECONDS:-900}
+      REFRESH_TOKEN_TTL_DAYS: ${REFRESH_TOKEN_TTL_DAYS:-30}
+      CUSTOMER_SESSION_DAYS: ${CUSTOMER_SESSION_DAYS:-30}
+      TURNSTILE_SECRET_KEY: ${TURNSTILE_SECRET_KEY:?set TURNSTILE_SECRET_KEY (Cloudflare Turnstile)}
+      LEADS_RATE_LIMIT_PER_MINUTE: ${LEADS_RATE_LIMIT_PER_MINUTE:-5}
+
+      S3_ENDPOINT: ${S3_ENDPOINT:-}
+      S3_REGION: ${S3_REGION:-auto}
+      S3_BUCKET: ${S3_BUCKET:-shimanto-media}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY:-}
+      S3_SECRET_KEY: ${S3_SECRET_KEY:-}
+      S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-true}
+      MEDIA_PUBLIC_URL: ${MEDIA_PUBLIC_URL:-https://media.shimanto.xyz}
+      FILE_UPLOAD_MAX_MB: ${FILE_UPLOAD_MAX_MB:-250}
+
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      # Without Resend, `json` only logs emails instead of trying an SMTP server that isn't there.
+      SMTP_URL: ${SMTP_URL:-json}
+      MAIL_FROM: ${MAIL_FROM:-Shimanto <no-reply@shimanto.xyz>}
+      MAIL_REPLY_TO: ${MAIL_REPLY_TO:-}
+      NOTIFY_EMAIL: ${NOTIFY_EMAIL:-}
+
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+
+      GA4_MEASUREMENT_ID: ${GA4_MEASUREMENT_ID:-}
+      GA4_API_SECRET: ${GA4_API_SECRET:-}
+      GTM_CONTAINER_ID: ${GTM_CONTAINER_ID:-}
+      META_PIXEL_ID: ${META_PIXEL_ID:-}
+      META_ACCESS_TOKEN: ${META_ACCESS_TOKEN:-}
+      META_API_VERSION: ${META_API_VERSION:-v21.0}
+      GOOGLE_ADS_CONVERSION_ID: ${GOOGLE_ADS_CONVERSION_ID:-}
+      GOOGLE_ADS_CONVERSION_LABEL: ${GOOGLE_ADS_CONVERSION_LABEL:-}
+
+      GITHUB_APP_ID: ${GITHUB_APP_ID:-}
+      GITHUB_APP_PRIVATE_KEY: ${GITHUB_APP_PRIVATE_KEY:-}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      GITHUB_WEBHOOK_SECRET: ${GITHUB_WEBHOOK_SECRET:-}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+
+      # First super admin, created on start when it doesn't exist yet (never overwritten).
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+
+  web:
+    build:
+      <<: *next-build
+      args:
+        APP: web
+        HEALTH_PATH: /api/health
+        NEXT_PUBLIC_SITE_URL: ${SITE_URL:-https://shimanto.xyz}
+        NEXT_PUBLIC_API_URL: ${API_PUBLIC_URL:-https://api.shimanto.xyz}
+        NEXT_PUBLIC_PORTAL_URL: ${PORTAL_URL:-https://my.shimanto.xyz}
+        NEXT_PUBLIC_COOKIE_DOMAIN: ${COOKIE_DOMAIN:-.shimanto.xyz}
+        NEXT_PUBLIC_OWN_HOSTS: ${OWN_HOSTS:-shimanto.xyz,www.shimanto.xyz,my.shimanto.xyz}
+        NEXT_PUBLIC_CONTACT_EMAIL: ${CONTACT_EMAIL:-}
+        NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:?set TURNSTILE_SITE_KEY (Cloudflare Turnstile)}
+        NEXT_PUBLIC_GA4_MEASUREMENT_ID: ${GA4_MEASUREMENT_ID:-}
+        NEXT_PUBLIC_GTM_CONTAINER_ID: ${GTM_CONTAINER_ID:-}
+        NEXT_PUBLIC_META_PIXEL_ID: ${META_PIXEL_ID:-}
+        NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_ID: ${GOOGLE_ADS_CONVERSION_ID:-}
+        NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL: ${GOOGLE_ADS_CONVERSION_LABEL:-}
+    restart: unless-stopped
+    expose: ['3000']
+    networks:
+      default:
+        aliases: [shimanto-web]
+      dokploy-network:
+    environment:
+      # Server-side calls (products, collaborate form, tracking) stay inside the stack.
+      API_URL: http://shimanto-api:4000
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:?set REVALIDATE_SECRET}
+
+  admin:
+    build:
+      <<: *next-build
+      args:
+        APP: admin
+        HEALTH_PATH: /login
+        NEXT_PUBLIC_SITE_URL: ${SITE_URL:-https://shimanto.xyz}
+        NEXT_PUBLIC_API_URL: ${API_PUBLIC_URL:-https://api.shimanto.xyz}
+        NEXT_PUBLIC_PORTAL_URL: ${PORTAL_URL:-https://my.shimanto.xyz}
+    restart: unless-stopped
+    expose: ['3000']
+    networks: [default, dokploy-network]
+
+  portal:
+    build:
+      <<: *next-build
+      args:
+        APP: portal
+        HEALTH_PATH: /login
+        NEXT_PUBLIC_SITE_URL: ${SITE_URL:-https://shimanto.xyz}
+        NEXT_PUBLIC_API_URL: ${API_PUBLIC_URL:-https://api.shimanto.xyz}
+        NEXT_PUBLIC_COOKIE_DOMAIN: ${COOKIE_DOMAIN:-.shimanto.xyz}
+        NEXT_PUBLIC_OWN_HOSTS: ${OWN_HOSTS:-shimanto.xyz,www.shimanto.xyz,my.shimanto.xyz}
+        NEXT_PUBLIC_GA4_MEASUREMENT_ID: ${GA4_MEASUREMENT_ID:-}
+        NEXT_PUBLIC_GTM_CONTAINER_ID: ${GTM_CONTAINER_ID:-}
+        NEXT_PUBLIC_META_PIXEL_ID: ${META_PIXEL_ID:-}
+        NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_ID: ${GOOGLE_ADS_CONVERSION_ID:-}
+        NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL: ${GOOGLE_ADS_CONVERSION_LABEL:-}
+    restart: unless-stopped
+    expose: ['3000']
+    networks: [default, dokploy-network]
+
+networks:
+  dokploy-network:
+    external: true

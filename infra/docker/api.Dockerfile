@@ -25,6 +25,7 @@ RUN addgroup -S app && adduser -S app -G app
 COPY --from=builder --chown=app:app /prod/api .
 USER app
 EXPOSE 4000
-HEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://127.0.0.1:4000/health || exit 1
-# Applies pending migrations (advisory-locked, safe with several replicas), then starts the API.
-CMD ["sh", "-c", "node_modules/.bin/prisma migrate deploy && node dist/main.js"]
+HEALTHCHECK --interval=30s --timeout=3s --start-period=30s   CMD wget -qO /dev/null http://127.0.0.1:4000/health || exit 1
+# Applies pending migrations (advisory-locked, safe with several replicas), creates the first
+# super admin when ADMIN_EMAIL / ADMIN_PASSWORD are set (idempotent), then starts the API.
+CMD ["sh", "-c", "node_modules/.bin/prisma migrate deploy && node dist/scripts/seed.js && exec node dist/main.js"]

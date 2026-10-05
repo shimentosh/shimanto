@@ -36,7 +36,7 @@ Store setup (Resend, R2, Stripe, GitHub App) is in [`docs/COMMERCE.md`](docs/COM
 | `packages/types`  | Shared zod schemas and enums                           |                                       |
 | `packages/sdk`    | Typed API client, generated from the OpenAPI spec      |                                       |
 | `packages/config` | ESLint, TypeScript and Prettier presets                |                                       |
-| `infra/`          | Docker Compose services, Dockerfiles                   |                                       |
+| `infra/`          | Docker Compose dev services, Dockerfiles               |                                       |
 
 Local services (`docker compose up -d`):
 
@@ -106,7 +106,11 @@ stripe listen --forward-to localhost:4000/v1/webhooks/stripe   # prints STRIPE_W
 
 ```bash
 docker build -f infra/docker/api.Dockerfile -t shimanto-api .
-docker build -f infra/docker/web.Dockerfile -t shimanto-web .
+docker build -f infra/docker/next.Dockerfile --build-arg APP=web -t shimanto-web .   # or APP=admin / APP=portal
 ```
 
-Both images use `turbo prune` for lean builds, run as a non-root user, and have healthchecks (`/health` and `/api/health`). The API container applies pending migrations on start.
+All images use `turbo prune` for lean builds, run as a non-root user and have healthchecks. The API container applies pending migrations and creates the first super admin (when `ADMIN_EMAIL` / `ADMIN_PASSWORD` are set) on start.
+
+## Deploy
+
+Production runs on a Dokploy VPS from [`docker-compose.prod.yml`](docker-compose.prod.yml), with Postgres and Redis as Dokploy database services. Steps, domains and every environment variable: [`docs/DEPLOY.md`](docs/DEPLOY.md).

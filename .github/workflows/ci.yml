@@ -59,8 +59,13 @@ jobs:
     timeout-minutes: 20
     strategy:
       matrix:
-        app: [api, web]
+        app: [api, web, admin, portal]
     steps:
       - uses: actions/checkout@v7
       - name: Build ${{ matrix.app }} image
-        run: docker build -f infra/docker/${{ matrix.app }}.Dockerfile -t shimanto-${{ matrix.app }}:ci .
+        run: |
+          if [ "${{ matrix.app }}" = api ]; then
+            docker build -f infra/docker/api.Dockerfile -t shimanto-api:ci .
+          else
+            docker build -f infra/docker/next.Dockerfile --build-arg APP=${{ matrix.app }}               -t shimanto-${{ matrix.app }}:ci .
+          fi
