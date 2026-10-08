@@ -80,6 +80,161 @@ export const priceLabel = (tool: Tool) => tool.price ?? 'Free';
 /** Newest first. */
 export const tools: Tool[] = [
   {
+    slug: 'minions',
+    name: 'Minions',
+    kind: 'Web app',
+    tagline:
+      'A free, self-hosted password manager and secrets vault, end-to-end encrypted, for passwords, API keys, .env files and 2FA codes.',
+    intro:
+      'Logins, API keys, .env files, SSH keys, servers, databases, 2FA codes, cards and private notes, in one vault you run on your own server. Everything is encrypted on your device before it reaches the server, and you organise it the way you work: by project, collection and tag. Open source under the AGPL-3.0 licence.',
+    href: 'https://github.com/shimentosh/minions#quick-start',
+    cta: 'Self-host it free',
+    source: 'https://github.com/shimentosh/minions',
+    os: 'Web, Chrome, Windows',
+    logo: {
+      src: '/tools/minions/icon.png',
+      alt: 'Minions logo',
+      width: 256,
+      height: 256,
+    },
+    screenshots: [
+      {
+        src: '/tools/minions/vault-table.png',
+        alt: 'Minions vault: logins, API keys, cloud credentials and cards, grouped by project and collection',
+        width: 1440,
+        height: 900,
+      },
+      {
+        src: '/tools/minions/vault-detail.png',
+        alt: 'Item details next to the vault table, showing a login with its website, username and hidden password',
+        width: 1440,
+        height: 900,
+      },
+      {
+        src: '/tools/minions/security.png',
+        alt: 'Security Center with a health score and a list of reused, weak and expired passwords',
+        width: 1440,
+        height: 900,
+      },
+      {
+        src: '/tools/minions/bulk-move.png',
+        alt: 'Three logins ticked in the vault with the bulk bar: project, collection, tag, favourite, trash',
+        width: 1440,
+        height: 900,
+      },
+      {
+        src: '/tools/minions/reports.png',
+        alt: 'Reports with security health, items that need attention, projects and recent activity',
+        width: 1440,
+        height: 900,
+      },
+      {
+        src: '/tools/minions/vault-dark.png',
+        alt: 'The Minions vault table in dark mode',
+        width: 1440,
+        height: 900,
+      },
+    ],
+    tone: 'spark',
+    tags: ['Open source', 'Security', 'Self-hosted', 'Developers'],
+    capabilities: [
+      {
+        title: 'End-to-end encrypted',
+        body: 'Argon2id and AES-256-GCM on your device. Your master password never leaves it, and the server stores only ciphertext.',
+        icon: 'lock',
+      },
+      {
+        title: 'Every kind of secret',
+        body: 'Logins, API keys, .env files, servers, SSH keys, databases, cloud credentials, cards, licences and notes.',
+        icon: 'key',
+      },
+      {
+        title: 'Organised by project',
+        body: 'Group what each product or client depends on, then filter by project, collection, tag and type.',
+        icon: 'layers',
+      },
+      {
+        title: 'Paste anything',
+        body: 'Paste a .env, card details, label: value lines or a 2FA QR screenshot, and the fields fill themselves in.',
+        icon: 'paperclip',
+      },
+      {
+        title: 'Security Center',
+        body: 'Weak, reused, old and expired passwords and accounts without 2FA, with a health score that explains itself.',
+        icon: 'shield',
+      },
+      {
+        title: 'Built-in authenticator',
+        body: 'Live 2FA codes, with QR import that includes Google Authenticator’s export.',
+        icon: 'clock',
+      },
+      {
+        title: 'Share safely',
+        body: 'Share items by email, run team workspaces with roles, or send one-time links that expire.',
+        icon: 'users',
+      },
+      {
+        title: 'Autofill in Chrome',
+        body: 'The extension fills logins on matching sites and offers to save new ones, with phishing-resistant matching.',
+        icon: 'globe',
+      },
+    ],
+    features: [
+      'Self-host with Docker: one public web service and an API',
+      'Web app for desktop and mobile, a Chrome extension and a Windows desktop app',
+      'Import from Bitwarden, Chrome, Edge, Firefox, Notion and CSV/JSON, with duplicate detection',
+      'Encrypted version history for every change',
+      'Encrypted backups that only your master password can open',
+      'Two-factor sign-in, passkeys, auto-lock and a full activity log',
+      'Bulk move, tag, star or trash, and every move can be undone',
+      'Vault-key rotation that re-encrypts everything on your device',
+      'Optional AI organising that only ever sees names and websites',
+      'Light and dark themes',
+    ],
+    audience: [
+      'Developers keeping API keys, .env files and server logins out of chat and notes',
+      'Freelancers and agencies with credentials for many clients',
+      'Small teams that want shared secrets without a per-seat bill',
+      'Anyone who wants a password manager they host and control',
+    ],
+    privacy:
+      'Secrets are encrypted on your device with keys from your master password, which is never sent. The server cannot decrypt your vault. Some metadata, like item names, websites and tags, stays readable so search and the Security Center work.',
+    disclaimer:
+      'Minions has had an internal security review but no independent audit yet. Keep your own encrypted backups.',
+    facts: [
+      { term: 'Runs on', value: 'Your own server (Docker)' },
+      { term: 'Apps', value: 'Web, Chrome, Windows' },
+      { term: 'Licence', value: 'AGPL-3.0, open source' },
+      { term: 'Price', value: 'Free, no seats' },
+    ],
+    faq: [
+      {
+        q: 'Is it really free?',
+        a: 'Yes. It’s open source under the AGPL-3.0 licence, and you run it on your own server.',
+      },
+      {
+        q: 'Is it a Bitwarden, 1Password or LastPass alternative?',
+        a: 'It covers the same everyday needs: encrypted logins, autofill, 2FA codes, sharing and import from Bitwarden and browsers. It adds a vault for developer secrets like API keys, .env files, servers and SSH keys, organised by project.',
+      },
+      {
+        q: 'Can the server owner read my passwords?',
+        a: 'No. Secrets are encrypted on your device and your master password is never sent. The server can see some metadata, such as item names and websites.',
+      },
+      {
+        q: 'What if I forget my master password?',
+        a: 'The vault can’t be recovered, not even by the server owner. That’s the price of end-to-end encryption, so keep an encrypted backup and store your master password somewhere safe.',
+      },
+      {
+        q: 'Does the AI see my passwords?',
+        a: 'No. AI organising is optional and off without an API key. It only receives names and websites, and financial items are never sent.',
+      },
+      {
+        q: 'Can I use it with a team?',
+        a: 'Yes. Team workspaces have members, roles and per-item access, and you can share single items with people by email.',
+      },
+    ],
+  },
+  {
     slug: 'shotmate',
     name: 'ShotMate',
     kind: 'Desktop app',
