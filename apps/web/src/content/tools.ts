@@ -205,7 +205,6 @@ export const tools: Tool[] = [
       { term: 'Runs on', value: 'Your own server (Docker)' },
       { term: 'Apps', value: 'Web, Chrome, Windows' },
       { term: 'Licence', value: 'AGPL-3.0, open source' },
-      { term: 'Price', value: 'Free, no seats' },
     ],
     faq: [
       {
@@ -322,8 +321,7 @@ export const tools: Tool[] = [
     privacy:
       'ShotMate has no network code at all. Screenshots go only to your clipboard, or to a folder you choose. There is no account and no analytics.',
     facts: [
-      { term: 'Works on', value: 'macOS 14 Sonoma or later' },
-      { term: 'Chips', value: 'Apple Silicon and Intel' },
+      { term: 'Works on', value: 'macOS 14+, Apple Silicon and Intel' },
       { term: 'Licence', value: 'MIT, open source' },
       { term: 'Account needed', value: 'None' },
     ],
