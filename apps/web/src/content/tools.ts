@@ -80,6 +80,122 @@ export const priceLabel = (tool: Tool) => tool.price ?? 'Free';
 /** Newest first. */
 export const tools: Tool[] = [
   {
+    slug: 'shotmate',
+    name: 'ShotMate',
+    kind: 'Desktop app',
+    tagline:
+      'A free screenshot app for Mac: press a hotkey, select, mark it up and paste it anywhere with ⌘V.',
+    intro:
+      'I built it for myself because I take screenshots all day. One shortcut freezes the screen, you drag over what matters, add an arrow, a box or a note, and press Enter. The annotated screenshot is on your clipboard, ready for Slack, ChatGPT, Notion or Mail. It lives in the menu bar, takes under 1 MB and never uploads anything. Open source under the MIT licence.',
+    href: 'https://github.com/shimentosh/ShotMate/releases/latest/download/ShotMate.dmg',
+    cta: 'Download for Mac',
+    source: 'https://github.com/shimentosh/ShotMate',
+    os: 'macOS',
+    logo: {
+      src: '/tools/shotmate/icon.png',
+      alt: 'ShotMate logo',
+      width: 256,
+      height: 256,
+    },
+    screenshots: [
+      {
+        src: '/tools/shotmate/capture.png',
+        alt: 'ShotMate capture overlay: a selected area with an arrow, a red box and a text note, and the floating annotation toolbar',
+        width: 1600,
+        height: 1000,
+      },
+    ],
+    tone: 'idea',
+    tags: ['Open source', 'macOS', 'Screenshots', 'Productivity'],
+    capabilities: [
+      {
+        title: 'Instant capture',
+        body: 'One global shortcut (⇧⌘S by default) freezes the screen right away.',
+        icon: 'bolt',
+      },
+      {
+        title: 'Precise selection',
+        body: 'Drag to select, then move, resize with handles or nudge with the arrow keys, with a live size readout.',
+        icon: 'target',
+      },
+      {
+        title: 'Simple markup',
+        body: 'Pen, arrow, rectangle and text, in 6 colours and 3 thicknesses, with undo.',
+        icon: 'pen',
+      },
+      {
+        title: 'Copy to clipboard',
+        body: 'Press Enter and paste anywhere. No file in between, and it takes you back to the app you were in.',
+        icon: 'copy',
+      },
+      {
+        title: 'Save as PNG',
+        body: 'Optional: a save dialog that remembers your last folder, or automatic saving.',
+        icon: 'download',
+      },
+      {
+        title: 'Retina and multi-monitor',
+        body: 'Captures at native pixel density on every display, with no blur or offset.',
+        icon: 'monitor',
+      },
+      {
+        title: 'Your shortcut',
+        body: 'Change it in one click. It warns you about clashes with macOS and other apps.',
+        icon: 'key',
+      },
+      {
+        title: 'Private by design',
+        body: 'No account, no network, no analytics. Screenshots never leave your Mac.',
+        icon: 'lock',
+      },
+    ],
+    features: [
+      'Lives in the menu bar, under 1 MB on disk',
+      'Native Swift, AppKit and SwiftUI on ScreenCaptureKit, no third-party code',
+      'Keyboard first: P, A, R and T switch tools, ⌘Z undoes, Esc cancels',
+      'Click without dragging to capture the whole display',
+      'After capture: copy, save to file, or both',
+      'Launches at login (you can turn it off)',
+      'Universal build for Apple Silicon and Intel',
+    ],
+    audience: [
+      'Developers pasting screenshots into VS Code, ChatGPT or a pull request',
+      'Designers and PMs pointing at exactly what needs to change',
+      'Support teams answering with an annotated screenshot',
+      'Anyone on a Mac who misses Lightshot',
+    ],
+    privacy:
+      'ShotMate has no network code at all. Screenshots go only to your clipboard, or to a folder you choose. There is no account and no analytics.',
+    facts: [
+      { term: 'Works on', value: 'macOS 14 Sonoma or later' },
+      { term: 'Chips', value: 'Apple Silicon and Intel' },
+      { term: 'Licence', value: 'MIT, open source' },
+      { term: 'Account needed', value: 'None' },
+    ],
+    faq: [
+      {
+        q: 'Is it really free?',
+        a: 'Yes. It’s open source under the MIT licence, with no account, subscription or ads.',
+      },
+      {
+        q: 'Is it a good Lightshot alternative for Mac?',
+        a: 'Yes. It keeps Lightshot’s select, mark and copy flow, but it’s a native Mac app with Retina-sharp captures, multi-monitor support, a custom hotkey and no cloud upload.',
+      },
+      {
+        q: 'macOS says it can’t verify the app. Is it safe?',
+        a: 'ShotMate isn’t notarized by Apple yet, so macOS asks once. Go to System Settings › Privacy & Security, scroll down and click Open Anyway. Or build it yourself from the source.',
+      },
+      {
+        q: 'Why does it need Screen Recording permission?',
+        a: 'macOS asks for it for any app that captures the screen. Without it, ShotMate can only see your wallpaper. The capture happens entirely on your Mac.',
+      },
+      {
+        q: 'Does it work on Windows?',
+        a: 'No, ShotMate is Mac only. It needs macOS 14 Sonoma or later, on Apple Silicon or Intel.',
+      },
+    ],
+  },
+  {
     slug: 'dotmate',
     name: 'DotMate',
     kind: 'Desktop app',
