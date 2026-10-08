@@ -8,8 +8,7 @@ import { useEffect, useRef } from 'react';
  * The background at the top of every page. On the home page, a Siri-style glow hugs the hero
  * lens (found through data-hero-orbit): soft layers in the brand colours flow around its rim,
  * two "bunny ear" flares rise from the top and sway, the glow leans toward the cursor, and a
- * click on the lens sends a pulse outward. Everywhere, old-film grain, dust, a vignette and a
- * warm light leak. One raw WebGL fragment shader, no library.
+ * click on the lens sends a pulse outward. Everywhere, a vignette and a warm light leak. One raw WebGL fragment shader, no library.
  * Pauses offscreen and in hidden tabs, draws one still frame under reduced motion, follows the
  * theme, and renders nothing when WebGL is unavailable.
  */
@@ -130,17 +129,13 @@ void main() {
   col = hueMix * a;
   vec4 outc = vec4(col, a);
 
-  // Old film: a warm light leak in the corner, vignette, dust and grain.
+  // Old film: a warm light leak in the corner and a vignette.
   float leak = exp(-length((uv - vec2(1.05, 1.08)) * vec2(1.4, 1.8)) * 2.6);
   leak *= 0.12 * (0.85 + 0.15 * noise(vec2(t * 0.7, 9.0)));
   outc = over(outc, vec4(mix(uCreate, uSpark, 0.35), 1.0) * leak);
   float vig = smoothstep(0.4, 1.1, length((uv - 0.5) * vec2(1.1, 1.3)));
   vec3 vigCol = uDark > 0.5 ? vec3(0.0) : mix(uInk, uCreate, 0.2);
   outc = over(outc, vec4(vigCol, 1.0) * vig * (uDark > 0.5 ? 0.5 : 0.12));
-  float speck = step(0.9994, hash(floor(px / uDpr / 5.0) + floor(t * 12.0) * 1.7));
-  outc = over(outc, vec4(uInk, 1.0) * speck * 0.3);
-  float grain = hash(px + fract(t * 7.0) * 113.0);
-  outc = over(outc, vec4(uInk, 1.0) * grain * grain * 0.06);
 
   gl_FragColor = outc;
 }

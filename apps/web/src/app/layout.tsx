@@ -1,4 +1,4 @@
-import { CustomCursor, FloatingNav, Footer, GrainOverlay, Logo, ThemeScript } from '@shimanto/ui';
+import { CustomCursor, FloatingNav, Footer, Logo, ThemeScript } from '@shimanto/ui';
 import type { Metadata, Viewport } from 'next';
 import { Inter_Tight, JetBrains_Mono, Noto_Sans_Bengali, Unbounded } from 'next/font/google';
 import {
@@ -119,7 +119,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         />
         <SiteCommandPalette />
         <Lightbox />
-        <GrainOverlay />
         <CustomCursor />
         <AnalyticsProvider config={tracking} />
       </body>
