@@ -80,6 +80,123 @@ export const priceLabel = (tool: Tool) => tool.price ?? 'Free';
 /** Newest first. */
 export const tools: Tool[] = [
   {
+    slug: 'cookie-migrator',
+    name: 'Cookie Migrator',
+    kind: 'Chrome extension',
+    tagline:
+      'Move your logged-in sessions to another computer: export every cookie to a JSON file, import it on the other side.',
+    intro:
+      'New laptop, new OS or a fresh Chrome profile usually means logging in to every site again. Cookie Migrator copies your cookies, and with them your sessions, to the new browser in two clicks. No account, no server, no tracking: about 100 lines of open source JavaScript you can read in a few minutes.',
+    href: 'https://github.com/shimentosh/cookie-migrator#-installation',
+    cta: 'Get it on GitHub',
+    source: 'https://github.com/shimentosh/cookie-migrator',
+    os: 'Chrome, Edge, Brave, Opera, Vivaldi, Arc',
+    logo: {
+      src: '/tools/cookie-migrator/icon.png',
+      alt: 'Cookie Migrator logo',
+      width: 128,
+      height: 128,
+    },
+    screenshots: [
+      {
+        src: '/tools/cookie-migrator/export.png',
+        alt: 'Cookie Migrator popup after exporting 1,284 cookies to a JSON file',
+        width: 1280,
+        height: 800,
+      },
+      {
+        src: '/tools/cookie-migrator/import.png',
+        alt: 'Cookie Migrator popup in dark mode after importing the cookies on a new computer',
+        width: 1280,
+        height: 800,
+      },
+    ],
+    tone: 'signal',
+    tags: ['Cookies', 'Browser', 'Open source'],
+    capabilities: [
+      {
+        title: 'One-click export',
+        body: 'Every cookie from every site, saved to a single cookies-backup-YYYY-MM-DD.json file.',
+        icon: 'download',
+      },
+      {
+        title: 'One-click import',
+        body: 'Pick the file on the other computer, reload your tabs, and you are signed in again.',
+        icon: 'upload',
+      },
+      {
+        title: 'Attributes kept',
+        body: 'Domain, path, secure, httpOnly, sameSite and expiry all come across intact.',
+        icon: 'check',
+      },
+      {
+        title: 'Session cookies done right',
+        body: 'Host-only and session cookies stay that way, instead of turning domain-wide or permanent.',
+        icon: 'key',
+      },
+      {
+        title: 'Any OS, any Chromium',
+        body: 'Windows, macOS, Linux and ChromeOS. Export from Chrome, import into Edge or Brave.',
+        icon: 'globe',
+      },
+      {
+        title: '100% local',
+        body: 'No network requests, no analytics, no remote code. The file goes where you save it.',
+        icon: 'shield',
+      },
+    ],
+    features: [
+      'Manifest V3',
+      'No build step, no dependencies',
+      'About 100 lines of readable JavaScript',
+      'Plain JSON export you can inspect',
+      'Skipped cookies are listed in the console with the reason',
+      'Light and dark mode popup',
+      'MIT licensed',
+    ],
+    audience: [
+      'Setting up a new laptop without logging in to everything again',
+      'Switching between Windows, macOS and Linux',
+      'Moving to a fresh Chrome profile or another Chromium browser',
+      'Backing up your sessions before a reinstall',
+    ],
+    privacy:
+      'Cookie Migrator collects, sends and stores nothing. Cookies are read from the browser into a file you choose, and read back from a file you pick. The code makes no network requests.',
+    disclaimer:
+      'The exported file holds live session cookies: anyone who gets it can sign in as you, often without your password or 2FA. Move it over a channel you trust (USB, AirDrop), never email or upload it, and delete it once imported.',
+    facts: [
+      { term: 'Works in', value: 'Chrome and every Chromium browser' },
+      { term: 'Install', value: 'Load unpacked from GitHub' },
+      { term: 'Licence', value: 'MIT, open source' },
+    ],
+    faq: [
+      {
+        q: 'How do I move cookies from one computer to another?',
+        a: 'Install Cookie Migrator on both computers. Click Export all cookies on the old one, move the JSON file to the new one, and click Import cookies from file. Reload your tabs and you are logged in.',
+      },
+      {
+        q: 'Is it on the Chrome Web Store?',
+        a: 'Not yet. Download the repo from GitHub, open chrome://extensions, turn on Developer mode and click Load unpacked. It takes about a minute.',
+      },
+      {
+        q: 'Does it work in Edge, Brave, Opera, Vivaldi or Arc?',
+        a: 'Yes, in any Chromium browser that supports Manifest V3. You can even export from Chrome and import into Edge. Firefox and Safari are not supported yet.',
+      },
+      {
+        q: 'Why does a site still ask me to log in?',
+        a: 'Some services, like banks and Google, tie a session to your IP address, device or local storage as well as cookies. Logging in again on those is normal.',
+      },
+      {
+        q: 'Does it move passwords, local storage or extensions?',
+        a: 'No, only cookies. Use your browser’s sync or a password manager for the rest.',
+      },
+      {
+        q: 'Is the export file encrypted?',
+        a: 'No. It is plain JSON so you can see exactly what is in it, which is why you should move it privately and delete it afterwards. Password-protected exports are on the roadmap.',
+      },
+    ],
+  },
+  {
     slug: 'minions',
     name: 'Minions',
     kind: 'Web app',
