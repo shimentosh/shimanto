@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { caseStudyReports } from '@/content/case-study-report';
 import { experiments, playbooks, posts, ventures } from '@/content/catalog';
 import { tools } from '@/content/tools';
 import { absoluteUrl } from '@/lib/site';
@@ -11,6 +12,7 @@ const staticRoutes = [
   '/products',
   '/tools',
   '/blog',
+  '/case-studies',
   '/playbooks',
   '/resources',
   '/experiments',
@@ -42,6 +44,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...playbooks.map((p) => ({
       url: absoluteUrl(`/playbooks/${p.slug}`),
       lastModified: p.updatedAt ?? p.publishedAt,
+    })),
+    ...caseStudyReports.map((r) => ({
+      url: absoluteUrl(`/case-studies/${r.slug}`),
+      lastModified: r.updatedAt ?? r.publishedAt,
     })),
     ...experiments.map((e) => ({
       url: absoluteUrl(`/experiments/${e.slug}`),

@@ -5,6 +5,7 @@ import { ArticleLayout } from '@/components/page/article';
 import { JsonLd } from '@/components/page/json-ld';
 import { FollowAlong } from '@/components/page/social-reach';
 import { posts } from '@/content/catalog';
+import { publishingOsCovers } from '@/content/publishing-os';
 import { issueNumber, relatedPosts, sortedPosts, worldFor } from '@/lib/blog';
 import { pageMetadata } from '@/lib/seo';
 import { absoluteUrl, site } from '@/lib/site';
@@ -21,6 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = posts.find((p) => p.slug === slug);
   if (!post) return {};
+  const cover = publishingOsCovers[post.slug];
   return {
     ...pageMetadata({ title: post.title, description: post.summary, path: `/blog/${post.slug}` }),
     openGraph: {
@@ -31,6 +33,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       publishedTime: post.publishedAt,
       authors: [site.name],
       tags: post.tags,
+      ...(cover && {
+        images: [{ url: cover.src, width: cover.width, height: cover.height, alt: cover.alt }],
+      }),
     },
   };
 }

@@ -1,8 +1,10 @@
 import type { Entry } from './catalog';
+import { publishingOsPosts } from './publishing-os';
 
 /**
  * Blog posts, newest first. Written in Shimanto's voice from what the brief states; they make no
  * claims about metrics or events beyond it. Phase 5 moves them into the CMS.
+ * Posts published from Publishing OS live in ./publishing-os and are appended below.
  */
 export const posts: Entry[] = [
   {
@@ -367,4 +369,5 @@ export const posts: Entry[] = [
       },
     ],
   },
+  ...publishingOsPosts,
 ];

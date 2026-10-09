@@ -8,6 +8,7 @@ import type { Block, Entry } from '@/content/catalog';
 import { site } from '@/lib/site';
 import authorPhoto from '../../../public/me/shimanto.png';
 import { Breadcrumbs, type Crumb } from './breadcrumbs';
+import { InlineText, plainText } from './inline-text';
 import { Toc } from './toc';
 
 const WORDS_PER_MINUTE = 230;
@@ -18,13 +19,13 @@ export function blocksToText(blocks: Block[]): string {
     .map((b) => {
       switch (b.type) {
         case 'list':
-          return b.items.join(' ');
+          return b.items.map(plainText).join(' ');
         case 'code':
           return b.code;
         case 'callout':
-          return `${b.title ?? ''} ${b.text}`;
+          return `${b.title ?? ''} ${plainText(b.text)}`;
         default:
-          return b.text;
+          return plainText(b.text);
       }
     })
     .join(' ');
@@ -118,7 +119,7 @@ export function ArticleBody({ blocks, tone = 'build' }: { blocks: Block[]; tone?
                         )}
                       />
                     )}
-                    {item}
+                    <InlineText text={item} />
                   </li>
                 ))}
               </ListTag>
@@ -156,7 +157,9 @@ export function ArticleBody({ blocks, tone = 'build' }: { blocks: Block[]; tone?
                 )}
               >
                 {block.title && <p className="font-medium">{block.title}</p>}
-                <p className={cn('text-ink-soft', block.title && 'mt-1')}>{block.text}</p>
+                <p className={cn('text-ink-soft', block.title && 'mt-1')}>
+                  <InlineText text={block.text} />
+                </p>
               </aside>
             );
           case 'code':
@@ -171,7 +174,7 @@ export function ArticleBody({ blocks, tone = 'build' }: { blocks: Block[]; tone?
           default:
             return (
               <p key={i} className={cn(i === firstParagraph && 'text-[21px]')}>
-                {block.text}
+                <InlineText text={block.text} />
               </p>
             );
         }
