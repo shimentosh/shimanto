@@ -80,6 +80,143 @@ export const priceLabel = (tool: Tool) => tool.price ?? 'Free';
 /** Newest first. */
 export const tools: Tool[] = [
   {
+    slug: 'dotcontent',
+    name: 'dotcontent',
+    kind: 'Web app',
+    tagline:
+      'A free, self-hosted AI content studio: turn any topic into blog posts, social posts, captions, first comments, newsletters and video scripts from one template.',
+    intro:
+      'Describe a piece of content once, as a template: what it is for, the rules it follows and the sections it is made of. Then every topic you add, whether a keyword, a product, a link or a video, becomes the whole set in one click, written in your brand voice by Claude, ChatGPT, Gemini or a local Ollama model. Self-hosted, built for teams, MIT licensed.',
+    href: 'https://github.com/shimentosh/dotcontent#quick-start',
+    cta: 'Self-host it free',
+    source: 'https://github.com/shimentosh/dotcontent',
+    os: 'Web, Windows, macOS, Linux',
+    logo: {
+      src: '/tools/dotcontent/icon.png',
+      alt: 'dotcontent logo',
+      width: 256,
+      height: 256,
+    },
+    screenshots: [
+      {
+        src: '/tools/dotcontent/templates.png',
+        alt: 'Template library with seven AI content templates: SEO blog post, social media post pack, product review, newsletter email, repurpose a video, product launch campaign and website shorts',
+        width: 1584,
+        height: 905,
+      },
+      {
+        src: '/tools/dotcontent/template.png',
+        alt: 'Social Media Post Pack template with sections for Facebook posts, Instagram caption, LinkedIn post, X thread, first comments and hashtags',
+        width: 1584,
+        height: 905,
+      },
+      {
+        src: '/tools/dotcontent/builder.png',
+        alt: 'Template builder with steps for article, social post, script, caption, email, first comment, hook, title, description, hashtags and CTA',
+        width: 1584,
+        height: 905,
+      },
+      {
+        src: '/tools/dotcontent/content.png',
+        alt: 'Content list with topics grouped by template: website shorts, newsletter email and SEO blog post',
+        width: 1584,
+        height: 905,
+      },
+      {
+        src: '/tools/dotcontent/integrations.png',
+        alt: 'Integrations page listing Claude, ChatGPT, Gemini and Ollama and how each model is reached',
+        width: 1584,
+        height: 905,
+      },
+    ],
+    tone: 'create',
+    tags: ['AI writing', 'Content', 'Self-hosted', 'Open source'],
+    capabilities: [
+      {
+        title: 'Template builder',
+        body: 'Drag in sections (article, social post, script, caption, email, first comment, hashtags) and write each one’s instruction. No code.',
+        icon: 'layers',
+      },
+      {
+        title: 'One click, a whole package',
+        body: 'Sections run in dependency order: research before the article, posts before the first comments under them.',
+        icon: 'bolt',
+      },
+      {
+        title: 'The AI you already pay for',
+        body: 'Written by the Claude Code, Codex or Gemini CLI on your computer, billed to your subscription. Or an API key, or local Ollama.',
+        icon: 'cpu',
+      },
+      {
+        title: 'One workspace per brand',
+        body: 'Each brand or client gets its own voice, languages, goal and model. Same template, different voice.',
+        icon: 'megaphone',
+      },
+      {
+        title: 'Video and web pages as sources',
+        body: 'Paste a YouTube, Reels or TikTok link and it is downloaded and transcribed, so the content is written from the source.',
+        icon: 'video',
+      },
+      {
+        title: 'Built for teams',
+        body: 'The console runs on one server; teammates’ laptops claim jobs from a queue. Close the tab and the run carries on.',
+        icon: 'users',
+      },
+    ],
+    features: [
+      'Seven example templates included',
+      'Placeholders like {{topic}} and {{series}}',
+      'Rewrite a single failed section on its own',
+      'Templates export and import as JSON',
+      'Writes in any language the model writes well',
+      'API keys encrypted with AES-256-GCM',
+      'Docker Compose or Dokploy deploy',
+      'Optional Windows desktop app',
+      'MIT licensed',
+    ],
+    audience: [
+      'Bloggers and SEO writers',
+      'Social media managers posting every day',
+      'Agencies with a voice per client',
+      'Creators and podcasters repurposing video',
+      'Affiliate and e-commerce review sites',
+      'Small marketing teams running launches',
+    ],
+    privacy:
+      'dotcontent runs on your own server. Topics, prompts and content stay in your own Postgres, and the writing happens on your own machines or the model you choose. Nothing is sent to dotcontent.',
+    facts: [
+      { term: 'Models', value: 'Claude, ChatGPT, Gemini, Ollama' },
+      { term: 'Install', value: 'Self-host with Docker' },
+      { term: 'Licence', value: 'MIT, open source' },
+    ],
+    faq: [
+      {
+        q: 'What kinds of content can dotcontent write?',
+        a: 'Any text content: blog posts, social media posts, captions, first comments, hashtags, newsletters and emails, video and podcast scripts, product reviews, ad copy, and YouTube titles and descriptions. It does not generate images or audio.',
+      },
+      {
+        q: 'Is dotcontent free?',
+        a: 'Yes. It is open source under the MIT License, free to use, change and self-host, including commercially. You pay only for the model you choose, and with a CLI you already subscribe to there is no extra cost.',
+      },
+      {
+        q: 'Do I need an OpenAI or Anthropic API key?',
+        a: 'No. By default sections are written by the claude, codex or gemini CLI signed in on a teammate’s computer. An API key is optional, useful on a server or as a fallback.',
+      },
+      {
+        q: 'Can I run it fully offline with a local model?',
+        a: 'Yes. Point a workspace at Ollama and the writing, including whisper.cpp transcription, runs on your own hardware.',
+      },
+      {
+        q: 'Can I write my own templates?',
+        a: 'Yes, that is the point. Start from scratch in the builder or copy one of the examples. Templates export and import as JSON files, so a team can share them.',
+      },
+      {
+        q: 'Does it post to Facebook, Instagram or my blog for me?',
+        a: 'Not yet. dotcontent writes the content and you publish it with the tools you already use.',
+      },
+    ],
+  },
+  {
     slug: 'cookie-migrator',
     name: 'Cookie Migrator',
     kind: 'Chrome extension',
