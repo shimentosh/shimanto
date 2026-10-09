@@ -68,14 +68,32 @@ export interface ProductContent {
 
 const realProducts: ProductContent[] = [
   {
-    slug: 'dot-content',
-    name: 'Dot Content',
-    kind: 'system',
-    tagline: 'The first product in the store.',
-    summary: 'Built for my own work first, now being packaged for launch.',
+    slug: 'clientdesk',
+    name: 'Clientdesk',
+    kind: 'saas',
+    tagline: 'The client portal for agencies that sell productized services.',
+    summary:
+      'Sell services through order forms, deliver them in a branded client portal and get paid on time, with the CRM, helpdesk and subscriptions an agency needs in one place.',
     world: 'signal',
-    highlights: ['Built from real use', 'Launching soon', 'Early access list open'],
-    ventureSlug: 'dot-content',
+    highlights: ['Order forms', 'Branded client portal', 'Helpdesk and subscriptions'],
+    features: [
+      {
+        title: 'Order forms',
+        body: 'Sell a service like a product: tiers, add-ons and coupons, with the brief collected at checkout.',
+      },
+      {
+        title: 'Client portal',
+        body: 'Orders, approvals, invoices and messages under your logo, so clients see progress instead of asking for it.',
+      },
+      {
+        title: 'Delivery and helpdesk',
+        body: 'Every deliverable moves through clear stages, and tickets stay tied to the order they are about.',
+      },
+      {
+        title: 'Margin per order',
+        body: 'Cost of delivery against price on every line, not just revenue per month.',
+      },
+    ],
     featured: true,
   },
   {

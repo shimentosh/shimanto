@@ -60,9 +60,9 @@ export const home = {
         tone: 'build',
       },
       {
-        label: 'Dot Content',
-        note: 'The first product in the store.',
-        href: '/products/dot-content',
+        label: 'dotcontent',
+        note: 'Now free and open source.',
+        href: '/tools/dotcontent',
         icon: 'box',
         tone: 'signal',
       },

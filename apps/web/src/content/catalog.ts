@@ -461,7 +461,7 @@ export const skills: Skill[] = [
     tone: 'create',
     summary: 'Writing, video and publishing systems that compound instead of disappearing.',
     links: [
-      { label: 'Dot Content', href: '/products/dot-content' },
+      { label: 'dotcontent', href: '/tools/dotcontent' },
       { label: 'Writing', href: '/blog' },
     ],
   },
