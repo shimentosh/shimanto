@@ -80,6 +80,159 @@ export const priceLabel = (tool: Tool) => tool.price ?? 'Free';
 /** Newest first. */
 export const tools: Tool[] = [
   {
+    slug: 'google-drive-backup-downloader',
+    name: 'Google Drive Backup Downloader',
+    kind: 'Desktop app',
+    tagline:
+      'A free Google Takeout alternative for Windows: download your entire Google Drive to your PC or an external hard drive, with every folder kept.',
+    intro:
+      'Google Takeout hands you a stack of zip files to download and extract by hand, and starts from scratch every time. This app copies your whole Drive straight into an ordinary folder on your PC, an external hard drive or a NAS, laid out exactly as it is in Drive. Interrupted files resume from the byte where they stopped, and the next run only fetches what is new or changed. Read-only, no telemetry, MIT licensed.',
+    href: 'https://github.com/shimentosh/google-drive-backup-downloader/releases/latest',
+    cta: 'Download for Windows',
+    source: 'https://github.com/shimentosh/google-drive-backup-downloader',
+    os: 'Windows',
+    logo: {
+      src: '/tools/google-drive-backup-downloader/icon.png',
+      alt: 'Google Drive Backup Downloader logo',
+      width: 256,
+      height: 256,
+    },
+    screenshots: [
+      {
+        src: '/tools/google-drive-backup-downloader/overview.png',
+        alt: 'Overview of a 684.5 GB Google Drive: 12,483 files in 1,274 folders, a breakdown by file type and the backup folder on drive D',
+        width: 1280,
+        height: 900,
+      },
+      {
+        src: '/tools/google-drive-backup-downloader/backup.png',
+        alt: 'A backup at 76% with speed, time remaining, the files downloading now and the download queue',
+        width: 1280,
+        height: 900,
+      },
+      {
+        src: '/tools/google-drive-backup-downloader/setup.png',
+        alt: 'Full Drive Backup setup with the file count, total size, free space on the destination and options like keeping the folder structure',
+        width: 1280,
+        height: 900,
+      },
+      {
+        src: '/tools/google-drive-backup-downloader/welcome-setup.png',
+        alt: 'First-run screen walking through the five-minute Google Cloud setup, with an Open button for each step',
+        width: 1280,
+        height: 900,
+      },
+      {
+        src: '/tools/google-drive-backup-downloader/settings-light.png',
+        alt: 'Settings in the light theme: destination, concurrent downloads, retries, chunk size and Google Workspace export formats',
+        width: 1280,
+        height: 900,
+      },
+    ],
+    tone: 'signal',
+    tags: ['Backup', 'Google Drive', 'Windows', 'Open source'],
+    capabilities: [
+      {
+        title: 'The whole Drive, one click',
+        body: 'Back Up Entire Drive copies every folder and file. No picking folders one by one, no zips to split or extract.',
+        icon: 'download',
+      },
+      {
+        title: 'Folders exactly as in Drive',
+        body: 'Videos/YouTube/2026 in Drive lands in the same folders on your disk. Nothing is flattened.',
+        icon: 'layers',
+      },
+      {
+        title: 'Resumes where it stopped',
+        body: 'If the network drops, the PC restarts or you pause, a half-downloaded file continues from the exact byte it reached.',
+        icon: 'repeat',
+      },
+      {
+        title: 'Only what changed',
+        body: 'Run it again next week against the same folder and it downloads only new and modified files.',
+        icon: 'clock',
+      },
+      {
+        title: 'Every file verified',
+        body: 'Size always, plus the MD5 checksum Drive publishes for stored files. A file is only put in place once it passes.',
+        icon: 'check',
+      },
+      {
+        title: 'Docs, Sheets and Slides too',
+        body: 'Google Workspace files are exported: Docs to DOCX or PDF, Sheets to XLSX or CSV, Slides to PPTX or PDF.',
+        icon: 'file',
+      },
+      {
+        title: 'Any disk you like',
+        body: 'Your PC, an external HDD or SSD, a USB drive or a NAS. It checks free space first and pauses safely if the drive is unplugged.',
+        icon: 'archive',
+      },
+      {
+        title: 'Read-only and private',
+        body: 'It asks Google for read-only access, so it can’t change or delete anything in your Drive, and it talks to no server but Google’s.',
+        icon: 'shield',
+      },
+    ],
+    features: [
+      'Shared drives and files shared with you, both optional',
+      'Streams big files: a 40 GB video uses the same memory as a 40 KB one',
+      'Never deletes your local files, even when they disappear from Drive',
+      'One failed file never stops the run, and failures can be retried',
+      'Keeps the PC awake during a backup and tells you when it finishes',
+      '1 to 16 downloads at once, inside Google’s rate limits',
+      'Guided five-minute Google setup, with a guide in English and Bangla',
+      'Portable .exe, nothing to install',
+      'Dark and light themes',
+      'MIT licensed',
+    ],
+    audience: [
+      'Anyone who has given up on Google Takeout’s zip files',
+      'Keeping an offline copy of your Drive on an external hard drive or NAS',
+      'Photographers and video creators with hundreds of GB in Drive',
+      'Leaving a job, a school or a Google account and taking your files with you',
+      'A weekly backup that only downloads what changed',
+    ],
+    privacy:
+      'Your files go from Google straight to the folder you choose, and nowhere else. The app asks only for read-only access, you sign in on Google’s own page, the sign-in token is kept in Windows Credential Manager, and there is no telemetry.',
+    disclaimer:
+      'You need your own free Google Cloud OAuth client, a one-time setup of about five minutes that the app walks you through. Not affiliated with or endorsed by Google.',
+    facts: [
+      { term: 'Works on', value: 'Windows 10 and 11' },
+      { term: 'Drive access', value: 'Read-only' },
+      { term: 'Licence', value: 'MIT, open source' },
+    ],
+    faq: [
+      {
+        q: 'How do I download my entire Google Drive at once?',
+        a: 'Do the one-time Google setup, click Connect Google Drive, pick a destination folder and click Back Up Entire Drive. Every file and folder is copied, with the folder structure kept.',
+      },
+      {
+        q: 'Is it a good Google Takeout alternative?',
+        a: 'For regular backups, yes. Takeout makes 2 GB or 50 GB zips that you download and extract by hand, and starts over every time. This app downloads into a normal folder tree, resumes interrupted files and only fetches what changed on later runs.',
+      },
+      {
+        q: 'Can it delete or change my Google Drive files?',
+        a: 'No. It asks only for read-only access, so Google itself stops it from changing, moving or deleting anything. It never deletes files from your backup folder either.',
+      },
+      {
+        q: 'Does it back up Google Docs, Sheets and Slides?',
+        a: 'Yes, exported to DOCX or PDF, XLSX or CSV, and PPTX or PDF. Google Forms, Sites and My Maps have no export format, so they are listed with that reason instead of being skipped silently.',
+      },
+      {
+        q: 'Why do I need my own Google Cloud credentials?',
+        a: 'The app talks to Google directly from your PC, with no server in the middle, so your sign-in belongs to a project only you control. It’s free, needs no credit card and takes about five minutes, and the welcome screen walks you through it.',
+      },
+      {
+        q: 'Windows says it protected my PC. Is it safe?',
+        a: 'The .exe isn’t code-signed yet, so SmartScreen asks once. Click More info, then Run anyway. Or build it yourself from the source.',
+      },
+      {
+        q: 'Does it work on Mac or Linux?',
+        a: 'The Python source runs on macOS and Linux, but the ready-made download and the testing are for Windows 10 and 11.',
+      },
+    ],
+  },
+  {
     slug: 'dotcontent',
     name: 'dotcontent',
     kind: 'Web app',
