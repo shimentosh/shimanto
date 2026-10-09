@@ -80,6 +80,166 @@ export const priceLabel = (tool: Tool) => tool.price ?? 'Free';
 /** Newest first. */
 export const tools: Tool[] = [
   {
+    slug: 'financeos',
+    name: 'FinanceOS',
+    kind: 'Web app',
+    tagline:
+      'A free, self-hosted AI finance app for personal and business money: expenses, subscriptions, projects, payroll, investments and net worth in one ledger.',
+    intro:
+      'Most money apps make you choose between a budgeting app that can’t handle a side business and accounting software that’s overkill for your own life. FinanceOS keeps both on one double-entry ledger, in separate personal and business workspaces. AI reads your receipts, takes entries in Bangla or English and answers questions from your own numbers, but nothing touches the books until you confirm it. Self-hosted, open source under the AGPL-3.0 licence.',
+    href: 'https://github.com/shimentosh/financeos#quick-start',
+    cta: 'Self-host it free',
+    source: 'https://github.com/shimentosh/financeos',
+    os: 'Web, Windows',
+    logo: {
+      src: '/tools/financeos/icon.png',
+      alt: 'FinanceOS logo',
+      width: 256,
+      height: 256,
+    },
+    screenshots: [
+      {
+        src: '/tools/financeos/dashboard.png',
+        alt: 'Personal overview with net worth, cash, income and spending this month, a 12-month income and spending chart, goals and AI insights',
+        width: 1920,
+        height: 1200,
+      },
+      {
+        src: '/tools/financeos/inbox.png',
+        alt: 'AI Inbox with two receipt drafts to review, each with a confidence score, and unusual spending flagged with the transactions behind it',
+        width: 1920,
+        height: 1200,
+      },
+      {
+        src: '/tools/financeos/transactions.png',
+        alt: 'Transactions across bKash, card, bank and cash accounts, with categories and AI drafts marked Needs Review',
+        width: 1920,
+        height: 1200,
+      },
+      {
+        src: '/tools/financeos/subscriptions.png',
+        alt: 'Subscription tracker with the monthly total, renewals due in the next 30 days and a Mark paid button on each',
+        width: 1920,
+        height: 1200,
+      },
+      {
+        src: '/tools/financeos/forecast.png',
+        alt: '90-day cash forecast with the projected balance, its likely range and the payments scheduled in the window',
+        width: 1920,
+        height: 1200,
+      },
+      {
+        src: '/tools/financeos/net-worth.png',
+        alt: 'Net worth over 12 months, with what you own and what you owe broken down by accounts, investments, assets and loans',
+        width: 1920,
+        height: 1200,
+      },
+      {
+        src: '/tools/financeos/business-dashboard.png',
+        alt: 'Business workspace overview with revenue, costs, monthly burn, receivables and AI insights on unusual spending',
+        width: 1920,
+        height: 1200,
+      },
+    ],
+    tone: 'build',
+    tags: ['Finance', 'AI', 'Self-hosted', 'Open source'],
+    capabilities: [
+      {
+        title: 'Personal and business, one app',
+        body: 'Separate workspaces for your own money and your company, on one double-entry ledger. Salary and client payments, Netflix and AWS.',
+        icon: 'layers',
+      },
+      {
+        title: 'AI drafts, you decide',
+        body: 'Snap a receipt or type “lunch 450 bkash” in Bangla or English. AI fills it in, and nothing posts until you confirm.',
+        icon: 'receipt',
+      },
+      {
+        title: 'Ask your books',
+        body: 'The Copilot answers questions like what you spent on AI tools this quarter, and every figure links to its transactions.',
+        icon: 'chat',
+      },
+      {
+        title: 'Subscriptions and bills',
+        body: 'Renewals, price-change detection, and rent, salary and loan schedules on one payment calendar, with reminders.',
+        icon: 'calendar',
+      },
+      {
+        title: 'Projects and payroll',
+        body: 'Revenue, cost, burn and runway for each project, and salaries paid month by month with proof.',
+        icon: 'briefcase',
+      },
+      {
+        title: 'Net worth and investments',
+        body: 'Assets, investments with realised and unrealised gains, loans and receivables, and net worth over time.',
+        icon: 'chart',
+      },
+      {
+        title: 'Cash-flow forecast',
+        body: '30, 60 and 90-day projections from your real schedules, so you see the low point before you reach it.',
+        icon: 'clock',
+      },
+      {
+        title: 'Any AI, or none',
+        body: 'Claude, OpenAI, Gemini, DeepSeek and more, or a local model with Ollama or LM Studio. Without a key, the built-in parser and rules still work.',
+        icon: 'cpu',
+      },
+    ],
+    features: [
+      'bKash, Nagad and Rocket alongside banks, cards, Wise, Payoneer and Stripe',
+      'Multi-currency, keeping the original amount and the FX rate used',
+      'Budgets with pace warnings before you overspend',
+      'Savings goals with the monthly amount needed',
+      'Weekly, monthly and quarterly reports',
+      'CSV and Excel import, a Stripe connector, webhooks and a public API',
+      'An MCP server so other AI agents can use your books safely',
+      'Team roles, email invites and two-factor sign-in',
+      'An audit record on every financial change',
+      'Self-host with Docker, with files on disk, S3 or Cloudflare R2',
+      'Windows desktop app',
+    ],
+    audience: [
+      'Freelancers and solo founders who mix personal and business money',
+      'Small agencies and startups tracking project profit, burn and payroll',
+      'Families who want budgets, subscriptions, goals and net worth in one place',
+      'Anyone paying with bKash, Nagad and Rocket who wants Bangla input to just work',
+      'Self-hosters who want a finance app they control',
+    ],
+    privacy:
+      'FinanceOS runs on your own server, and your ledger stays in your own PostgreSQL. You choose the AI provider, or run a local model so nothing leaves your machine. API keys and integration secrets are encrypted with AES-256-GCM and never returned by the API.',
+    facts: [
+      { term: 'Runs on', value: 'Your own server (Docker)' },
+      { term: 'AI', value: 'Claude, OpenAI, Gemini, Ollama and more' },
+      { term: 'Licence', value: 'AGPL-3.0, open source' },
+    ],
+    faq: [
+      {
+        q: 'Is FinanceOS free?',
+        a: 'Yes. It’s open source under the AGPL-3.0 licence. Self-host it at no cost, and with billing off, the default when you self-host, every feature is available.',
+      },
+      {
+        q: 'Can I use it without AI?',
+        a: 'Yes. The ledger, budgets, subscriptions, reports, forecasts and the Bangla and English quick-entry parser all work without an AI key.',
+      },
+      {
+        q: 'Can the AI change my numbers?',
+        a: 'No. Every AI output is a draft until you, or a rule you wrote, confirms it. The Copilot reads your ledger only through read-only queries, and the figures beside its answers come from those queries, not from the model’s text.',
+      },
+      {
+        q: 'How is it different from a budgeting app or accounting software?',
+        a: 'Budgeting apps usually stop at categories and can’t handle projects, payroll or receivables. Accounting software is built for accountants and rarely covers personal goals, subscriptions or net worth. FinanceOS runs one ledger under both, with personal and business workspaces on top.',
+      },
+      {
+        q: 'Does it support bKash, Nagad and Bangladeshi Taka?',
+        a: 'Yes. Mobile-wallet accounts, BDT and Bangla natural-language input are built in, alongside any other currency.',
+      },
+      {
+        q: 'Can I try it with sample data?',
+        a: 'Yes. One command creates a demo account with a year of personal and business activity. It’s the same data you see in these screenshots.',
+      },
+    ],
+  },
+  {
     slug: 'google-drive-backup-downloader',
     name: 'Google Drive Backup Downloader',
     kind: 'Desktop app',
