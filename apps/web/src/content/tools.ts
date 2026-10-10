@@ -80,6 +80,158 @@ export const priceLabel = (tool: Tool) => tool.price ?? 'Free';
 /** Newest first. */
 export const tools: Tool[] = [
   {
+    slug: 'scalekit',
+    name: 'ScaleKit',
+    kind: 'Desktop app',
+    tagline:
+      'Sharp 125%, 150% and 175% HiDPI scaling for ultrawide and 1440p monitors on Mac: bigger text without the blur, and still 120 Hz.',
+    intro:
+      'I built it for myself. On my new 34″ ultrawide, text on my Mac mini was tiny at 100%, and every larger size in System Settings made it blurry. The only sharp option, 200%, made everything huge. ScaleKit adds the sizes in between, 125%, 150% and 175%, rendered at 2× and scaled down so text stays crisp, with your refresh rate kept. Every change is a trial that reverts by itself unless you keep it. No admin rights, no SIP changes, MIT licensed.',
+    href: 'https://github.com/shimentosh/scalekit/releases',
+    cta: 'Download for Mac',
+    source: 'https://github.com/shimentosh/scalekit',
+    os: 'macOS',
+    logo: {
+      src: '/tools/scalekit/icon.png',
+      alt: 'ScaleKit logo',
+      width: 256,
+      height: 256,
+    },
+    screenshots: [
+      {
+        src: '/tools/scalekit/main-dark.png',
+        alt: 'ScaleKit main window: 125% verified on an ASUS 3440 × 1440 ultrawide, looks like 2752 × 1152, HiDPI 2×, 120 Hz',
+        width: 1440,
+        height: 1138,
+      },
+      {
+        src: '/tools/scalekit/preview-dark.png',
+        alt: 'Scaling preview: an illustrative mock-up of the desktop at 125%, drawn in a window without touching the display',
+        width: 1440,
+        height: 1058,
+      },
+      {
+        src: '/tools/scalekit/advanced-dark.png',
+        alt: 'Advanced window listing every display mode macOS reports, with backing size, scale, refresh rate and rendering path',
+        width: 1440,
+        height: 1070,
+      },
+      {
+        src: '/tools/scalekit/main-light.png',
+        alt: 'ScaleKit main window in the light theme',
+        width: 1440,
+        height: 1138,
+      },
+      {
+        src: '/tools/scalekit/settings-dark.png',
+        alt: 'Settings: preferred refresh rate, confirmation timeout and open at login',
+        width: 1440,
+        height: 1167,
+      },
+    ],
+    tone: 'spark',
+    tags: ['Open source', 'macOS', 'Displays', 'Productivity'],
+    capabilities: [
+      {
+        title: 'The missing sizes',
+        body: '125%, 150% and 175% on monitors macOS won’t offer them for, alongside native 100% and 200%.',
+        icon: 'monitor',
+      },
+      {
+        title: 'Sharp, not blurry',
+        body: 'The desktop is rendered at 2× above your panel’s resolution and scaled down, the same way a Retina Mac does it.',
+        icon: 'eye',
+      },
+      {
+        title: 'Keeps 120 Hz',
+        body: 'Your preferred refresh rate is kept and pinned. Anything that would lower it needs your explicit OK.',
+        icon: 'bolt',
+      },
+      {
+        title: 'Every change is a trial',
+        body: 'Review the change, then a countdown appears on every screen. Don’t press Keep Changes and it reverts by itself.',
+        icon: 'repeat',
+      },
+      {
+        title: 'Can’t get stuck',
+        body: 'Scaling lasts only while ScaleKit runs. Quit, crash or force-quit, and macOS restores your monitor.',
+        icon: 'shield',
+      },
+      {
+        title: 'Honest labels',
+        body: 'Every size is Verified, Available, Experimental or Unsupported. It never quietly switches you to a blurry mode.',
+        icon: 'check',
+      },
+      {
+        title: 'Preview first',
+        body: 'See what each size looks like in a window before changing anything on your display.',
+        icon: 'search',
+      },
+      {
+        title: 'Layout kept',
+        body: 'Monitors next to the scaled one stay where they were, and it repairs itself after sleep, wake or reconnecting.',
+        icon: 'layers',
+      },
+    ],
+    features: [
+      'No admin rights, no SIP changes, no kernel extensions or drivers',
+      'A watchdog helper reverts everything if the app ever hangs during a trial',
+      'A transparent 100-point recommendation with the reason for each part',
+      'Per-app zoom guide for VS Code, browsers and terminals',
+      'Every mode macOS reports, with rendering path and refresh rate',
+      'Exportable diagnostics report and a command-line tool',
+      'Menu bar icon to switch sizes or turn scaling off',
+      'Opens at login so your size comes back after a restart',
+      'Native SwiftUI, dark and light',
+      '236 automated tests, MIT licensed',
+    ],
+    audience: [
+      'Anyone whose text looks tiny on a 34″ 3440 × 1440 ultrawide',
+      'Mac users with a 27″ 1440p monitor who find Larger Text blurry',
+      'Developers who want readable code without giving up workspace',
+      'Gamers and designers who don’t want to lose 120 Hz or 144 Hz',
+    ],
+    privacy:
+      'ScaleKit has no network access, no account and no analytics. Diagnostic reports are written to your disk only when you export them.',
+    disclaimer:
+      'The 125%, 150% and 175% sizes use a virtual display through one private macOS API, the same one BetterDisplay and DeskPad use. If a future macOS removes it, ScaleKit shows those sizes as unavailable instead of breaking.',
+    facts: [
+      { term: 'Works on', value: 'macOS 14+, Apple silicon' },
+      { term: 'Admin rights', value: 'None needed' },
+      { term: 'Licence', value: 'MIT, open source' },
+    ],
+    faq: [
+      {
+        q: 'Why is text blurry on my external monitor on a Mac?',
+        a: 'At the Larger Text sizes on a non-Retina monitor, macOS renders a smaller desktop at 1× and stretches it up to the panel, so every letter is scaled by an odd factor and looks soft. ScaleKit renders at 2× above the panel’s resolution and scales down, which stays sharp.',
+      },
+      {
+        q: 'How do I get 125% or 150% scaling on a 1440p or ultrawide monitor?',
+        a: 'macOS only offers sharp in-between sizes on displays it considers high density, and a 34″ 3440 × 1440 or 27″ 2560 × 1440 panel is about 109 PPI, so it doesn’t qualify. ScaleKit adds those sizes through a virtual HiDPI display. Pick a size, click Apply, try it and keep it.',
+      },
+      {
+        q: 'Will I lose 120 Hz or 144 Hz?',
+        a: 'No. ScaleKit keeps your preferred refresh rate and pins the monitor to it while scaling. Any change that would lower it asks you first.',
+      },
+      {
+        q: 'Does it need SIP disabled or admin rights?',
+        a: 'No, neither. It doesn’t touch system files and installs no drivers.',
+      },
+      {
+        q: 'Why does scaling stop when I quit ScaleKit?',
+        a: 'The virtual display belongs to the app, so quitting always restores your monitor. That’s the safety net. Turn on Open ScaleKit at login to keep your size.',
+      },
+      {
+        q: 'How is it different from BetterDisplay?',
+        a: 'BetterDisplay is a powerful, general-purpose display tool. ScaleKit does one thing, comfortable and sharp interface sizes on an external monitor, with a review, trial and keep flow and open source code you can read.',
+      },
+      {
+        q: 'macOS says it can’t verify the app. Is it safe?',
+        a: 'ScaleKit isn’t notarized by Apple yet, so macOS blocks it once. Go to System Settings › Privacy & Security, scroll down and click Open Anyway. Or build it yourself from the source.',
+      },
+    ],
+  },
+  {
     slug: 'financeos',
     name: 'FinanceOS',
     kind: 'Web app',
