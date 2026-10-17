@@ -27,6 +27,7 @@ export function GET() {
       cta: t.cta,
       logo: absoluteUrl(t.logo.src),
       image: t.screenshots[0] ? absoluteUrl(t.screenshots[0].src) : null,
+      video: t.youtubeId ? `https://youtu.be/${t.youtubeId}` : null,
       tags: t.tags,
     })),
   };

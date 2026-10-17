@@ -43,6 +43,8 @@ export interface Tool {
   /** Where people get it (store listing, live app, repo). */
   href: string;
   cta: string;
+  /** The tool's YouTube video (the ID from youtu.be/<id>), shown on its page. */
+  youtubeId?: string;
   /** Public source code, for an open-source tool. */
   source?: string;
   /** What it runs on, for search engines. Defaults to 'Chrome'. */
@@ -89,6 +91,7 @@ export const tools: Tool[] = [
       'I built it for myself. On my new 34″ ultrawide, text on my Mac mini was tiny at 100%, and every larger size in System Settings made it blurry. The only sharp option, 200%, made everything huge. ScaleKit adds the sizes in between, 125%, 150% and 175%, rendered at 2× and scaled down so text stays crisp, with your refresh rate kept. Every change is a trial that reverts by itself unless you keep it. No admin rights, no SIP changes, MIT licensed.',
     href: 'https://github.com/shimentosh/scalekit/releases',
     cta: 'Download for Mac',
+    youtubeId: '_cxdOH4wKOg',
     source: 'https://github.com/shimentosh/scalekit',
     os: 'macOS',
     logo: {
@@ -241,6 +244,7 @@ export const tools: Tool[] = [
       'Most money apps make you choose between a budgeting app that can’t handle a side business and accounting software that’s overkill for your own life. FinanceOS keeps both on one double-entry ledger, in separate personal and business workspaces. AI reads your receipts, takes entries in Bangla or English and answers questions from your own numbers, but nothing touches the books until you confirm it. Self-hosted, open source under the AGPL-3.0 licence.',
     href: 'https://github.com/shimentosh/financeos#quick-start',
     cta: 'Self-host it free',
+    youtubeId: 'ZpeNk6ukJpg',
     source: 'https://github.com/shimentosh/financeos',
     os: 'Web, Windows',
     logo: {
@@ -401,6 +405,7 @@ export const tools: Tool[] = [
       'Google Takeout hands you a stack of zip files to download and extract by hand, and starts from scratch every time. This app copies your whole Drive straight into an ordinary folder on your PC, an external hard drive or a NAS, laid out exactly as it is in Drive. Interrupted files resume from the byte where they stopped, and the next run only fetches what is new or changed. Read-only, no telemetry, MIT licensed.',
     href: 'https://github.com/shimentosh/google-drive-backup-downloader/releases/latest',
     cta: 'Download for Windows',
+    youtubeId: 'Dw99IVMUDHE',
     source: 'https://github.com/shimentosh/google-drive-backup-downloader',
     os: 'Windows',
     logo: {
@@ -554,6 +559,7 @@ export const tools: Tool[] = [
       'Describe a piece of content once, as a template: what it is for, the rules it follows and the sections it is made of. Then every topic you add, whether a keyword, a product, a link or a video, becomes the whole set in one click, written in your brand voice by Claude, ChatGPT, Gemini or a local Ollama model. Self-hosted, built for teams, MIT licensed.',
     href: 'https://github.com/shimentosh/dotcontent#quick-start',
     cta: 'Self-host it free',
+    youtubeId: 'pNe1qWDQ3Qw',
     source: 'https://github.com/shimentosh/dotcontent',
     os: 'Web, Windows, macOS, Linux',
     logo: {
@@ -691,6 +697,7 @@ export const tools: Tool[] = [
       'New laptop, new OS or a fresh Chrome profile usually means logging in to every site again. Cookie Migrator copies your cookies, and with them your sessions, to the new browser in two clicks. No account, no server, no tracking: about 100 lines of open source JavaScript you can read in a few minutes.',
     href: 'https://github.com/shimentosh/cookie-migrator#-installation',
     cta: 'Get it on GitHub',
+    youtubeId: 'qGxLrZxsCYA',
     source: 'https://github.com/shimentosh/cookie-migrator',
     os: 'Chrome, Edge, Brave, Opera, Vivaldi, Arc',
     logo: {
@@ -808,6 +815,7 @@ export const tools: Tool[] = [
       'Logins, API keys, .env files, SSH keys, servers, databases, 2FA codes, cards and private notes, in one vault you run on your own server. Everything is encrypted on your device before it reaches the server, and you organise it the way you work: by project, collection and tag. Open source under the AGPL-3.0 licence.',
     href: 'https://github.com/shimentosh/minions#quick-start',
     cta: 'Self-host it free',
+    youtubeId: 'AyiTy3WyXfM',
     source: 'https://github.com/shimentosh/minions',
     os: 'Web, Chrome, Windows',
     logo: {
@@ -962,6 +970,7 @@ export const tools: Tool[] = [
       'I built it for myself because I take screenshots all day. One shortcut freezes the screen, you drag over what matters, add an arrow, a box or a note, and press Enter. The annotated screenshot is on your clipboard, ready for Slack, ChatGPT, Notion or Mail. It lives in the menu bar, takes under 1 MB and never uploads anything. Open source under the MIT licence.',
     href: 'https://github.com/shimentosh/ShotMate/releases/latest/download/ShotMate.dmg',
     cta: 'Download for Mac',
+    youtubeId: 'KGfP5Icg84k',
     source: 'https://github.com/shimentosh/ShotMate',
     os: 'macOS',
     logo: {
@@ -1077,6 +1086,7 @@ export const tools: Tool[] = [
       'Twelve video, voice and AI tools in one small desktop app. No account, no subscription, no cloud: your files never leave your computer, and every tool except the downloader works offline. Open source under the MIT licence.',
     href: 'https://github.com/shimentosh/dotmate/releases/latest',
     cta: 'Download free',
+    youtubeId: 'YK7uuxwIAso',
     source: 'https://github.com/shimentosh/dotmate',
     os: 'Windows, macOS',
     logo: {
@@ -1435,6 +1445,7 @@ export const tools: Tool[] = [
       'Paste a list of prompts, hit start and walk away. It waits for ChatGPT to finish each reply before sending the next one: no clicking, no waiting, no copy-pasting.',
     href: 'https://chromewebstore.google.com/detail/chatgpt-auto-chat/fpbogjahcaeiojmjnocfgdogammodjli',
     cta: 'Add to Chrome',
+    youtubeId: 'YJA_T8wg29M',
     logo: {
       src: '/tools/chatgpt-auto-chat/icon.png',
       alt: 'ChatGPT Auto Chat logo',
@@ -1524,6 +1535,7 @@ export const tools: Tool[] = [
       'Collect public Instagram data straight from your browser. No API key, no third-party server, no signup: install it, open Instagram and start scraping.',
     href: 'https://chromewebstore.google.com/detail/instagram-scraper-posts-h/ppkljldebhpengdgcpbghkckgdnkfadm',
     cta: 'Add to Chrome',
+    youtubeId: '3pz56-mJyd8',
     logo: {
       src: '/tools/instagram-scraper/icon.png',
       alt: 'Instagram Scraper logo',

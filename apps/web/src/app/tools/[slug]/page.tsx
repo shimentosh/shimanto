@@ -206,7 +206,12 @@ export default async function ToolPage({ params }: Props) {
                     accentBg[tool.tone],
                   )}
                 />
-                <ScreenshotSlider shots={tool.screenshots} />
+                <ScreenshotSlider
+                  shots={tool.screenshots}
+                  video={
+                    tool.youtubeId ? { id: tool.youtubeId, title: `${tool.name} video` } : undefined
+                  }
+                />
               </div>
             )}
           </div>

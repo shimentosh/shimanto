@@ -5,6 +5,14 @@ import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ToolImage } from '@/content/tools';
 
+function PlayIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
+      <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z" />
+    </svg>
+  );
+}
+
 function Chevron({ dir }: { dir: 'left' | 'right' }) {
   return (
     <svg
@@ -26,11 +34,21 @@ function Chevron({ dir }: { dir: 'left' | 'right' }) {
  * Screenshot carousel: a scroll-snap track (so swipe and trackpad work natively) with arrow
  * buttons, a caption from the alt text and a thumbnail strip. The first shot loads with priority,
  * since it sits in the hero.
+ *
+ * With a `video`, the first shot is its poster: a play button over it, and pressing it swaps in the
+ * privacy-enhanced (youtube-nocookie) player in the same frame. Leaving the slide stops it.
  */
-export function ScreenshotSlider({ shots }: { shots: ToolImage[] }) {
+export function ScreenshotSlider({
+  shots,
+  video,
+}: {
+  shots: ToolImage[];
+  video?: { id: string; title: string };
+}) {
   const track = useRef<HTMLUListElement>(null);
   const thumbs = useRef<HTMLUListElement>(null);
   const [index, setIndex] = useState(0);
+  const [playing, setPlaying] = useState(false);
   const last = shots.length - 1;
 
   const goTo = useCallback((i: number) => {
@@ -59,7 +77,11 @@ export function ScreenshotSlider({ shots }: { shots: ToolImage[] }) {
           }
         });
         // The last slide can't reach the left edge, so the end of the scroll range means it.
-        setIndex(el.scrollLeft >= el.scrollWidth - el.clientWidth - 2 ? slides.length - 1 : best);
+        const next =
+          el.scrollLeft >= el.scrollWidth - el.clientWidth - 2 ? slides.length - 1 : best;
+        setIndex(next);
+        // Leaving the video's slide stops it.
+        if (next !== 0) setPlaying(false);
       });
     };
     el.addEventListener('scroll', onScroll, { passive: true });
@@ -118,15 +140,42 @@ export function ScreenshotSlider({ shots }: { shots: ToolImage[] }) {
                 <span className="bg-ink/15 size-2.5 rounded-full" />
                 <span className="bg-ink/15 size-2.5 rounded-full" />
               </div>
-              <Image
-                src={shot.src}
-                alt={shot.alt}
-                width={shot.width}
-                height={shot.height}
-                priority={i === 0}
-                sizes="(min-width: 1024px) 700px, 100vw"
-                className="h-auto w-full"
-              />
+              {video && i === 0 && playing ? (
+                <div className="relative aspect-video bg-black">
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0`}
+                    title={video.title}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="absolute inset-0 size-full"
+                  />
+                </div>
+              ) : (
+                <Image
+                  src={shot.src}
+                  alt={shot.alt}
+                  width={shot.width}
+                  height={shot.height}
+                  priority={i === 0}
+                  sizes="(min-width: 1024px) 700px, 100vw"
+                  className="h-auto w-full"
+                />
+              )}
+              {video && i === 0 && !playing && (
+                <button
+                  type="button"
+                  onClick={() => setPlaying(true)}
+                  className="group absolute inset-0 grid cursor-pointer place-items-center bg-black/25 transition-colors hover:bg-black/10"
+                >
+                  <span className="bg-canvas/90 text-ink rounded-pill flex items-center gap-3 py-2 pr-5 pl-2 text-lg font-medium shadow-xl backdrop-blur transition-transform duration-300 group-hover:scale-105">
+                    <span className="bg-create text-on-world grid size-11 place-items-center rounded-full">
+                      <PlayIcon className="ml-0.5 size-5" />
+                    </span>
+                    Watch the video
+                  </span>
+                  <span className="sr-only">: {video.title}</span>
+                </button>
+              )}
             </figure>
           </li>
         ))}
@@ -176,7 +225,7 @@ export function ScreenshotSlider({ shots }: { shots: ToolImage[] }) {
                   aria-label={`Show screenshot ${i + 1}`}
                   aria-current={i === index}
                   className={cn(
-                    'block w-20 overflow-hidden rounded-md border-2 transition md:w-24',
+                    'relative block w-20 overflow-hidden rounded-md border-2 transition md:w-24',
                     i === index
                       ? 'border-ink opacity-100'
                       : 'border-transparent opacity-50 hover:opacity-80',
@@ -190,6 +239,14 @@ export function ScreenshotSlider({ shots }: { shots: ToolImage[] }) {
                     sizes="96px"
                     className="h-auto w-full"
                   />
+                  {video && i === 0 && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0 grid place-items-center bg-black/30 text-white"
+                    >
+                      <PlayIcon className="size-4" />
+                    </span>
+                  )}
                 </button>
               </li>
             ))}
