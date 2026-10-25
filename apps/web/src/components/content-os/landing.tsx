@@ -37,6 +37,7 @@ import {
   Terminal,
   offer,
   platformOf,
+  rail,
   tint,
 } from './parts';
 import { pressDark } from './press';
@@ -153,7 +154,7 @@ export function ContentOsLanding({
       {/* ───────────── Hero: the bot ───────────── */}
       <section id="top" className="relative isolate overflow-hidden">
         <PosterWall />
-        <Container className="relative grid gap-12 pt-14 pb-20 md:pt-20 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-16 lg:pb-28">
+        <Container className="relative grid gap-10 pt-6 pb-16 md:gap-12 md:pt-20 md:pb-20 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-16 lg:pb-28">
           <div>
             <p className="rounded-pill inline-flex items-center gap-2 bg-white/[0.06] py-1.5 pr-4 pl-1.5 text-sm text-[#F3EFE4] ring-1 ring-white/15 backdrop-blur">
               <BotMark className="size-6 rounded-full text-[9px]" />
@@ -168,13 +169,18 @@ export function ContentOsLanding({
             <p className="text-ink-soft mt-7 max-w-[58ch] text-lg leading-relaxed md:text-xl">
               {c.hero.intro}
             </p>
-            <div className="mt-9 flex flex-wrap items-center gap-3">
-              <BuyButton href={buy} label={fill(c.hero.buy)} comingSoon={c.pricing.comingSoon} />
+            <div className="mt-8 grid gap-3 sm:mt-9 sm:flex sm:flex-wrap sm:items-center">
+              <BuyButton
+                href={buy}
+                label={fill(c.hero.buy)}
+                comingSoon={c.pricing.comingSoon}
+                className="w-full sm:w-auto"
+              />
               <a
                 href="#story"
                 className={cn(
                   pressDark,
-                  'rounded-pill inline-flex items-center gap-2 px-6 py-4 text-[17px] font-medium',
+                  'rounded-pill inline-flex items-center justify-center gap-2 px-6 py-4 text-[17px] font-medium',
                 )}
               >
                 <Icon name="play" className="size-4" />
@@ -240,7 +246,12 @@ export function ContentOsLanding({
           title={c.makes.title}
           rest={c.makes.rest}
         />
-        <ul className="mt-12 grid gap-4 sm:grid-cols-2 md:gap-5 xl:grid-cols-3">
+        <ul
+          className={cn(
+            rail,
+            'mt-8 gap-4 md:mt-12 md:grid-cols-2 md:gap-5 xl:grid-cols-3 [&>*]:w-[82%] md:[&>*]:w-auto',
+          )}
+        >
           {c.makes.kinds.map((kind) => (
             <li
               key={kind.title}
@@ -316,7 +327,12 @@ export function ContentOsLanding({
           ))}
         </ul>
         {/* 12 posts: full rows at 1, 2, 3 and 4 columns. */}
-        <ul className="mt-12 grid items-start gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <ul
+          className={cn(
+            rail,
+            'mt-8 items-start gap-4 md:mt-12 md:grid-cols-2 md:gap-5 lg:grid-cols-3 xl:grid-cols-4 [&>*]:w-[76%] md:[&>*]:w-auto',
+          )}
+        >
           {graphicDemos.slice(0, 12).map((post) => (
             <PostCard key={post.id} post={post} readMore={c.posts.readMore} />
           ))}
@@ -387,7 +403,10 @@ export function ContentOsLanding({
         </div>
 
         <ClipGallery
-          className="mt-12 grid grid-cols-2 gap-4 md:grid-cols-5"
+          className={cn(
+            rail,
+            'mt-8 gap-3 md:mt-12 md:grid-cols-5 md:gap-4 [&>*]:w-[44%] md:[&>*]:w-auto',
+          )}
           items={c.beyond.styles.flatMap((style) => {
             const clip = beyondDemos.find((b) => b.id === style.id);
             return clip ? [{ ...clip, title: style.title, body: style.body }] : [];
@@ -485,7 +504,12 @@ export function ContentOsLanding({
           title={c.abilities.title}
           rest={c.abilities.rest}
         />
-        <ul className="mt-12 grid gap-4 md:grid-cols-2 md:gap-5 xl:grid-cols-4">
+        <ul
+          className={cn(
+            rail,
+            'mt-8 gap-4 md:mt-12 md:grid-cols-2 md:gap-5 xl:grid-cols-4 [&>*]:w-[86%] md:[&>*]:w-auto',
+          )}
+        >
           {c.abilities.groups.map((group) => (
             <li
               key={group.title}
@@ -516,7 +540,12 @@ export function ContentOsLanding({
           title={c.how.title}
           rest={c.how.rest}
         />
-        <ol className="mt-12 grid gap-4 md:grid-cols-2 md:gap-5 xl:grid-cols-4">
+        <ol
+          className={cn(
+            rail,
+            'mt-8 gap-4 md:mt-12 md:grid-cols-2 md:gap-5 xl:grid-cols-4 [&>*]:w-[82%] md:[&>*]:w-auto',
+          )}
+        >
           {c.how.steps.map((step, i) => (
             <li
               key={step.title}
@@ -549,12 +578,16 @@ export function ContentOsLanding({
           title={c.different.title}
           rest={c.different.rest}
         />
-        <ul className="mt-12 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 md:mt-12 md:gap-x-8 md:gap-y-10 lg:grid-cols-4">
           {c.different.items.map((item) => (
             <li key={item.title}>
               <IconTile icon={item.icon} tone={item.tone} />
-              <h3 className="mt-4 text-lg font-medium tracking-[-0.02em]">{item.title}</h3>
-              <p className="text-ink-soft mt-1.5 leading-relaxed">{item.body}</p>
+              <h3 className="mt-3 text-[15px] leading-snug font-medium tracking-[-0.02em] md:mt-4 md:text-lg">
+                {item.title}
+              </h3>
+              <p className="text-ink-soft mt-1 text-sm leading-snug md:mt-1.5 md:text-base md:leading-relaxed">
+                {item.body}
+              </p>
             </li>
           ))}
         </ul>
@@ -563,7 +596,7 @@ export function ContentOsLanding({
       {/* ───────────── Commands ───────────── */}
       <section aria-labelledby="cos-commands" className="pb-16 md:pb-24">
         <Container>
-          <div className="grid gap-10 rounded-[24px] bg-gradient-to-br from-[#12233a] to-[#0E0F0C] p-7 ring-1 ring-white/10 md:p-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
+          <div className="grid gap-8 rounded-[24px] bg-gradient-to-br from-[#12233a] to-[#0E0F0C] p-5 ring-1 ring-white/10 md:p-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
             <div className="self-start lg:sticky lg:top-12">
               <Headline
                 id="cos-commands"
@@ -590,7 +623,12 @@ export function ContentOsLanding({
           title={c.platforms.title}
           rest={c.platforms.rest}
         />
-        <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <ul
+          className={cn(
+            rail,
+            'mt-8 gap-3 md:mt-10 md:grid-cols-2 lg:grid-cols-4 [&>*]:w-[70%] md:[&>*]:w-auto',
+          )}
+        >
           {c.platforms.list.map((platform) => (
             <li
               key={platform.name}
@@ -629,7 +667,12 @@ export function ContentOsLanding({
           title={c.audience.title}
           rest={c.audience.rest}
         />
-        <ul className="mt-10 grid gap-4 md:grid-cols-3 md:gap-5">
+        <ul
+          className={cn(
+            rail,
+            'mt-8 gap-4 md:mt-10 md:grid-cols-3 md:gap-5 [&>*]:w-[82%] md:[&>*]:w-auto',
+          )}
+        >
           {c.audience.list.map((item) => (
             <li
               key={item.title}

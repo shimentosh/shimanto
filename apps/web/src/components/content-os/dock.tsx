@@ -10,8 +10,9 @@ type DockLink = { href: string; label: string; icon: IconName };
 
 /**
  * The Content OS navigation once you scroll past the header: a floating dock at the bottom of the
- * screen with raised blocks for the pages and for this page's sections (icons only on small
- * screens; sections from `sm` up), the section you're reading pressed in, and the buy button.
+ * screen with raised blocks for the pages and for this page's sections (sections from `sm` up),
+ * the section you're reading pressed in, and the buy button. On phones it's a full-width tab bar,
+ * icons over labels, above the home indicator.
  */
 export function Dock({
   label,
@@ -54,13 +55,13 @@ export function Dock({
   const item = (link: DockLink, on: boolean, extra?: string) => (
     <span
       className={cn(
-        'flex h-10 items-center gap-2 rounded-[14px] px-2.5 text-sm font-medium lg:px-3.5',
+        'flex h-12 flex-col items-center justify-center gap-0.5 rounded-[14px] px-2 text-[10px] font-medium sm:h-10 sm:flex-row sm:gap-2 sm:px-2.5 sm:text-sm lg:px-3.5',
         on ? pressCream : cn(pressDark, 'text-ink-soft hover:text-[#F3EFE4]'),
         extra,
       )}
     >
       <Icon name={link.icon} className="size-4 shrink-0" />
-      <span className="sr-only lg:not-sr-only">{link.label}</span>
+      <span className="sm:sr-only lg:not-sr-only">{link.label}</span>
     </span>
   );
 
@@ -69,17 +70,22 @@ export function Dock({
       aria-label={label}
       inert={!shown}
       className={cn(
-        'pointer-events-none fixed inset-x-0 bottom-3 z-50 flex justify-center px-3 transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:bottom-5',
+        'pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-2 pb-[max(8px,env(safe-area-inset-bottom))] transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-3 sm:pb-3 md:pb-5',
         shown ? 'translate-y-0 opacity-100' : 'translate-y-[140%] opacity-0',
       )}
     >
-      <div className="pointer-events-auto flex max-w-full [scrollbar-width:none] items-center gap-1 overflow-x-auto rounded-[22px] bg-[#16130f]/85 p-1.5 shadow-[0_24px_60px_-18px_rgba(0,0,0,0.95),inset_0_1px_0_rgba(255,255,255,0.08)] ring-1 ring-white/10 backdrop-blur-xl">
-        <ul className="flex shrink-0 items-center gap-1">
+      <div className="pointer-events-auto flex w-full max-w-full [scrollbar-width:none] items-center gap-1 overflow-x-auto rounded-[22px] bg-[#16130f]/85 p-1.5 shadow-[0_24px_60px_-18px_rgba(0,0,0,0.95),inset_0_1px_0_rgba(255,255,255,0.08)] ring-1 ring-white/10 backdrop-blur-xl sm:w-auto">
+        <ul className="flex min-w-0 flex-1 items-center gap-1 sm:flex-none">
           {pages.map((page) => {
             const here = pathname === page.href;
             return (
-              <li key={page.href}>
-                <Link href={page.href} aria-current={here ? 'page' : undefined} title={page.label}>
+              <li key={page.href} className="min-w-0 flex-1 sm:flex-none">
+                <Link
+                  href={page.href}
+                  aria-current={here ? 'page' : undefined}
+                  title={page.label}
+                  className="block"
+                >
                   {/* The page you're on: a blue line under its block */}
                   {item(
                     page,

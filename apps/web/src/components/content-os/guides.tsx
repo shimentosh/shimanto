@@ -90,7 +90,7 @@ export function ContentOsGuides({
     <ContentOsShell copy={c} product={product} lang={lang} path={path} sections={g.sections}>
       {/* ───────────── Hero ───────────── */}
       <section id="top">
-        <Container className="pt-12 pb-12 md:pt-20 md:pb-16">
+        <Container className="pt-6 pb-10 md:pt-20 md:pb-16">
           <p className="rounded-pill inline-flex items-center gap-2 bg-white/[0.06] py-1.5 pr-4 pl-1.5 text-sm text-[#F3EFE4] ring-1 ring-white/15">
             <BotMark className="size-6 rounded-full text-[9px]" />
             {g.hero.badge}
@@ -138,7 +138,7 @@ export function ContentOsGuides({
               id={guide.id}
               aria-labelledby={`${guide.id}-title`}
               className={cn(
-                'scroll-mt-8 rounded-[24px] p-6 ring-1 ring-white/10 md:p-8',
+                'scroll-mt-8 rounded-[24px] p-5 ring-1 ring-white/10 md:p-8',
                 i % 2 ? 'bg-white/[0.02]' : tint[guide.tone],
               )}
             >

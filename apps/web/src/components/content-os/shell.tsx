@@ -36,7 +36,7 @@ export function ContentOsShell({
   const href = buy ?? '/content-os#pricing';
 
   return (
-    <main id="main" lang={lang} data-standalone="" className="cos-dark min-h-dvh pb-20 md:pb-24">
+    <main id="main" lang={lang} data-standalone="" className="cos-dark min-h-dvh pb-28 md:pb-24">
       <header>
         <Container className="flex h-16 items-center md:h-20">
           <Link href="/content-os" className="shrink-0">
@@ -97,7 +97,7 @@ export function ContentOsShell({
             label={buyLabel}
             comingSoon={c.pricing.comingSoon}
             size="sm"
-            className="h-10 rounded-[14px]"
+            className="h-12 rounded-[14px] px-4 sm:h-10"
           />
         }
       />

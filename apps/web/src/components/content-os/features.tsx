@@ -27,6 +27,7 @@ import {
   PostCard,
   PosterWall,
   offer,
+  rail,
   tint,
 } from './parts';
 import { pressDark } from './press';
@@ -72,7 +73,7 @@ export function ContentOsFeatures({
       {/* ───────────── Hero ───────────── */}
       <section id="top" className="relative isolate overflow-hidden">
         <PosterWall />
-        <Container className="relative pt-12 pb-16 md:pt-20 md:pb-24">
+        <Container className="relative pt-6 pb-14 md:pt-20 md:pb-24">
           <p className="rounded-pill inline-flex items-center gap-2 bg-white/[0.06] py-1.5 pr-4 pl-1.5 text-sm text-[#F3EFE4] ring-1 ring-white/15 backdrop-blur">
             <BotMark className="size-6 rounded-full text-[9px]" />
             {f.hero.badge}
@@ -97,14 +98,14 @@ export function ContentOsFeatures({
             ))}
           </dl>
           {/* Jump to a section */}
-          <ul className="mt-8 flex flex-wrap gap-2">
+          <ul className="cos-rail -mx-5 mt-8 flex gap-2 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:px-0">
             {f.sections.map((s) => (
               <li key={s.href}>
                 <a
                   href={s.href}
                   className={cn(
                     pressDark,
-                    'text-ink-soft inline-flex h-10 items-center gap-2 rounded-[14px] px-3.5 text-sm font-medium hover:text-[#F3EFE4]',
+                    'text-ink-soft inline-flex h-10 shrink-0 items-center gap-2 rounded-[14px] px-3.5 text-sm font-medium whitespace-nowrap hover:text-[#F3EFE4]',
                   )}
                 >
                   <Icon name={s.icon} className="size-4" />
@@ -210,7 +211,12 @@ export function ContentOsFeatures({
           rest={f.posts.rest}
           intro={f.posts.intro}
         />
-        <ul className="mt-10 grid items-start gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <ul
+          className={cn(
+            rail,
+            'mt-8 items-start gap-4 md:mt-10 md:grid-cols-2 md:gap-5 lg:grid-cols-3 xl:grid-cols-4 [&>*]:w-[76%] md:[&>*]:w-auto',
+          )}
+        >
           {graphicDemos.map((post) => (
             <PostCard key={post.id} post={post} readMore={c.posts.readMore} />
           ))}
@@ -229,7 +235,10 @@ export function ContentOsFeatures({
           intro={f.styles.intro}
         />
         <ClipGallery
-          className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-5"
+          className={cn(
+            rail,
+            'mt-8 gap-3 md:mt-10 md:grid-cols-5 md:gap-4 [&>*]:w-[44%] md:[&>*]:w-auto',
+          )}
           items={styles}
           labels={{ close: c.gallery.close, prev: c.carousels.prev, next: c.carousels.next }}
         />
@@ -272,7 +281,12 @@ export function ContentOsFeatures({
           title={f.catalogue.title}
           rest={f.catalogue.rest}
         />
-        <ul className="mt-10 grid gap-4 md:grid-cols-2 md:gap-5 xl:grid-cols-4">
+        <ul
+          className={cn(
+            rail,
+            'mt-8 gap-4 md:mt-10 md:grid-cols-2 md:gap-5 xl:grid-cols-4 [&>*]:w-[86%] md:[&>*]:w-auto',
+          )}
+        >
           {c.abilities.groups.map((group) => (
             <li
               key={group.title}
@@ -291,12 +305,14 @@ export function ContentOsFeatures({
           ))}
         </ul>
 
-        <ul className="mt-12 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="mt-10 grid grid-cols-2 gap-x-4 gap-y-7 md:mt-12 md:gap-x-8 md:gap-y-8 lg:grid-cols-4">
           {c.different.items.map((item) => (
             <li key={item.title}>
               <IconTile icon={item.icon} tone={item.tone} />
-              <h3 className="mt-4 text-lg font-medium tracking-[-0.02em]">{item.title}</h3>
-              <p className="text-ink-soft mt-1">{item.body}</p>
+              <h3 className="mt-3 text-[15px] leading-snug font-medium tracking-[-0.02em] md:mt-4 md:text-lg">
+                {item.title}
+              </h3>
+              <p className="text-ink-soft mt-1 text-sm leading-snug md:text-base">{item.body}</p>
             </li>
           ))}
         </ul>
@@ -346,7 +362,7 @@ export function ContentOsFeatures({
                 {f.final.rest}
               </span>
             </h2>
-            <div className="mt-10 flex flex-wrap justify-center gap-3">
+            <div className="mt-10 grid gap-3 sm:flex sm:flex-wrap sm:justify-center">
               <BuyButton
                 href={buy ?? '/content-os#pricing'}
                 label={fill(c.final.buy)}

@@ -233,7 +233,11 @@ export function CommandFlow({ commands }: { commands: Commands }) {
 
   return (
     <div ref={ref}>
-      <div className="flex flex-wrap gap-1.5" role="group" aria-label={commands.flow.label}>
+      <div
+        className="cos-rail -mx-5 flex gap-1.5 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:px-0"
+        role="group"
+        aria-label={commands.flow.label}
+      >
         {commands.list.map((c, i) => (
           <button
             key={c.command}
@@ -242,7 +246,7 @@ export function CommandFlow({ commands }: { commands: Commands }) {
             title={c.command}
             onClick={() => setActive(i)}
             className={cn(
-              'rounded-pill inline-flex items-center gap-1.5 px-3 py-1.5 font-mono text-[12px] ring-1 transition',
+              'rounded-pill inline-flex shrink-0 items-center gap-1.5 px-3 py-1.5 font-mono text-[12px] ring-1 transition',
               i === active
                 ? 'bg-[#F3EFE4] text-[#0E0F0C] ring-transparent'
                 : 'text-ink-soft ring-white/10 hover:text-[#F3EFE4] hover:ring-white/25',

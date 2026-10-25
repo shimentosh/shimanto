@@ -9,6 +9,14 @@ import { pressBlue } from './press';
 
 /** Shared pieces of the Content OS pages (landing, features, guides). */
 
+/**
+ * Phone layout for a list of cards: one swipeable row that snaps card by card, edge to edge, with
+ * the next card peeking in. From `md` up it's a plain grid; add the grid columns and each card's
+ * phone width (`[&>*]:w-[82%] md:[&>*]:w-auto`) next to it.
+ */
+export const rail =
+  'cos-rail -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-3 overflow-x-auto px-5 pb-1 [&>*]:shrink-0 [&>*]:snap-start md:mx-0 md:grid md:overflow-visible md:px-0 md:pb-0';
+
 /** Price and whether it can be bought yet; until it's published in the admin, nothing is sold. */
 export function offer(product: StoreProduct | undefined) {
   const amount = product?.amount ?? CONTENT_OS_FALLBACK.amount;

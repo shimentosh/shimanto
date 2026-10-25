@@ -392,6 +392,17 @@ body:has(main[data-standalone]) {
   background: var(--canvas);
   color-scheme: dark;
 }
+/* App-like on phones: no grey tap flash; swipe rows keep their scroll and hide the bar. */
+.cos-dark {
+  -webkit-tap-highlight-color: transparent;
+}
+.cos-rail {
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.cos-rail::-webkit-scrollbar {
+  display: none;
+}
 
 /* Content OS hero: columns of real renders drifting up and down behind the chat. */
 @keyframes cos-drift-up {
