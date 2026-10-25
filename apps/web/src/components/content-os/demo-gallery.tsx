@@ -1,9 +1,9 @@
 'use client';
 
-/* eslint-disable @next/next/no-img-element -- hundreds of small pre-sized posters */
 import { Icon, type IconName, cn, useFinePointer } from '@shimanto/ui';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { DemoGroup, FormatDemo } from '@/content/content-os/demos';
+import { AutoVideo } from './media';
 
 const PAGE = 30;
 
@@ -22,33 +22,40 @@ const groupIcon: Record<DemoGroup, IconName> = {
 };
 
 /**
- * A pin: the poster at its own shape, a silent preview while hovered, the name over a gradient on
- * hover (always under it on touch screens). Opens the player.
+ * A pin: the demo at its own shape, playing silently. While one is hovered the others pause and
+ * fade, so it's the only thing moving. The name shows over a gradient on hover (under the pin on
+ * touch screens). Opens the player.
  */
 function Tile({
   demo,
   groupName,
-  hover,
   wideLabel,
+  focus,
+  paused,
+  onHover,
   onOpen,
 }: {
   demo: FormatDemo;
   groupName: string;
-  hover: boolean;
   wideLabel: string;
+  /** Another tile is hovered: pause and fade this one. */
+  focus: 'none' | 'this' | 'other';
+  paused: boolean;
+  onHover: (hovering: boolean) => void;
   onOpen: () => void;
 }) {
-  const [previewing, setPreviewing] = useState(false);
-
   return (
-    <li className="mb-3 break-inside-avoid md:mb-4">
+    <li className="mb-3 md:mb-4">
       <button
         type="button"
         onClick={onOpen}
-        onMouseEnter={() => hover && setPreviewing(true)}
-        onMouseLeave={() => setPreviewing(false)}
+        onMouseEnter={() => onHover(true)}
+        onMouseLeave={() => onHover(false)}
         aria-label={`${demo.name}: ${demo.tagline}`}
-        className="group block w-full text-left"
+        className={cn(
+          'group block w-full text-left transition-opacity duration-300',
+          focus === 'other' && 'opacity-35',
+        )}
         data-cursor="Play"
       >
         <span
@@ -61,23 +68,7 @@ function Tile({
                 : 'aspect-[9/16]',
           )}
         >
-          <img
-            src={demo.poster}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            className="absolute inset-0 size-full object-cover transition duration-500 group-hover:scale-[1.03]"
-          />
-          {previewing && (
-            <video
-              src={demo.video}
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 size-full object-cover"
-            />
-          )}
+          <AutoVideo src={demo.video} poster={demo.poster} paused={paused || focus === 'other'} />
           {/* Group mark, and "16:9 too" when the format has both shapes */}
           <span className="absolute top-2.5 left-2.5 flex gap-1.5">
             <span className="grid size-7 place-items-center rounded-full bg-black/45 text-white backdrop-blur">
@@ -107,6 +98,85 @@ function Tile({
       </button>
     </li>
   );
+}
+
+/** Masonry columns for the width: 2 on phones, 3 on tablets, 4 from laptops up. */
+function useColumnCount() {
+  const [count, setCount] = useState(4);
+  useEffect(() => {
+    const update = () => {
+      const w = window.innerWidth;
+      setCount(w >= 1024 ? 4 : w >= 640 ? 3 : 2);
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+  return count;
+}
+
+/** Height of a tile (plus its gap) for a column width of 1. */
+const heightOf = (demo: FormatDemo) =>
+  (demo.aspect === '16:9' ? 9 / 16 : demo.aspect === '1:1' ? 1 : 16 / 9) + 0.08;
+
+/**
+ * Masonry that ends level. The first `count` demos go to the shortest column; then each column
+ * that ends short is topped up from the demos not shown yet, picking the one that best fills its
+ * gap (a tall reel for a big gap, a landscape or square one for a small gap).
+ */
+function layout(list: FormatDemo[], columnCount: number, count: number) {
+  const columns: Array<Array<{ demo: FormatDemo; index: number }>> = Array.from(
+    { length: columnCount },
+    () => [],
+  );
+  const heights = Array.from({ length: columnCount }, () => 0);
+  const used = new Set<number>();
+  const place = (index: number, column: number) => {
+    columns[column]!.push({ demo: list[index]!, index });
+    heights[column]! += heightOf(list[index]!);
+    used.add(index);
+  };
+
+  for (let i = 0; i < Math.min(count, list.length); i++) {
+    place(i, heights.indexOf(Math.min(...heights)));
+  }
+
+  // Level the bottoms: fill gaps bigger than a third of a tile, overshooting by a sliver at most.
+  for (let guard = 0; guard < 50; guard++) {
+    const top = Math.max(...heights);
+    let placed = false;
+    for (let c = 0; c < columnCount; c++) {
+      const gap = top - heights[c]!;
+      if (gap < 0.35) continue;
+      let best = -1;
+      for (let i = 0; i < list.length; i++) {
+        if (used.has(i)) continue;
+        const h = heightOf(list[i]!);
+        if (h <= gap + 0.15 && (best < 0 || h > heightOf(list[best]!))) best = i;
+      }
+      if (best >= 0) {
+        place(best, c);
+        placed = true;
+      }
+    }
+    if (!placed) break;
+  }
+  return { columns, shown: used.size };
+}
+
+/** One from each group in turn, so "All" mixes styles and shapes from the first row. */
+function interleave(demos: FormatDemo[]): FormatDemo[] {
+  const byGroup = new Map<DemoGroup, FormatDemo[]>();
+  for (const d of demos) byGroup.set(d.group, [...(byGroup.get(d.group) ?? []), d]);
+  const queues = [...byGroup.values()];
+  const out: FormatDemo[] = [];
+  while (out.length < demos.length) {
+    for (const q of queues) {
+      const next = q.shift();
+      if (next) out.push(next);
+    }
+  }
+  return out;
 }
 
 /** Full-screen player for one demo, with 9:16 / 16:9 when the format has both, and prev / next. */
@@ -249,20 +319,26 @@ export function DemoGallery({
   };
 }) {
   const hover = useFinePointer();
+  const columnCount = useColumnCount();
   const [group, setGroup] = useState<DemoGroup | 'all'>('all');
   const [shown, setShown] = useState(PAGE);
   const [open, setOpen] = useState<number | null>(null);
+  const [hovered, setHovered] = useState<string | null>(null);
 
   const counts = useMemo(() => {
     const c = new Map<DemoGroup, number>();
     for (const d of demos) c.set(d.group, (c.get(d.group) ?? 0) + 1);
     return c;
   }, [demos]);
+  const mixed = useMemo(() => interleave(demos), [demos]);
   const list = useMemo(
-    () => (group === 'all' ? demos : demos.filter((d) => d.group === group)),
-    [demos, group],
+    () => (group === 'all' ? mixed : demos.filter((d) => d.group === group)),
+    [demos, mixed, group],
   );
-  const visible = list.slice(0, shown);
+  const { columns, shown: placed } = useMemo(
+    () => layout(list, columnCount, shown),
+    [list, columnCount, shown],
+  );
   const current = open === null ? null : list[open];
 
   const chip = (value: DemoGroup | 'all', label: string, count: number) => (
@@ -295,27 +371,33 @@ export function DemoGallery({
           .map((g) => chip(g, groups[g], counts.get(g) ?? 0))}
       </div>
 
-      <ul className="mt-8 columns-2 gap-3 sm:columns-3 md:gap-4 lg:columns-4 xl:columns-5 2xl:columns-6">
-        {visible.map((demo, i) => (
-          <Tile
-            key={demo.id}
-            demo={demo}
-            groupName={groups[demo.group]}
-            hover={hover}
-            wideLabel={labels.wideToo}
-            onOpen={() => setOpen(i)}
-          />
+      <div className="mt-8 flex items-start gap-3 md:gap-4">
+        {columns.map((column, c) => (
+          <ul key={c} className="min-w-0 flex-1">
+            {column.map(({ demo, index }) => (
+              <Tile
+                key={demo.id}
+                demo={demo}
+                groupName={groups[demo.group]}
+                wideLabel={labels.wideToo}
+                focus={hovered === null ? 'none' : hovered === demo.id ? 'this' : 'other'}
+                paused={open !== null}
+                onHover={(on) => hover && setHovered(on ? demo.id : null)}
+                onOpen={() => setOpen(index)}
+              />
+            ))}
+          </ul>
         ))}
-      </ul>
+      </div>
 
-      {shown < list.length && (
+      {placed < list.length && (
         <div className="mt-6 flex justify-center">
           <button
             type="button"
             onClick={() => setShown((n) => n + PAGE)}
             className="rounded-pill px-6 py-3 font-medium ring-1 ring-white/20 hover:bg-white/10"
           >
-            {labels.showMore} <span className="text-ink-soft">({list.length - shown})</span>
+            {labels.showMore} <span className="text-ink-soft">({list.length - placed})</span>
           </button>
         </div>
       )}

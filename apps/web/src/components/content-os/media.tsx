@@ -1,6 +1,6 @@
 'use client';
 
-import { Icon, cn } from '@shimanto/ui';
+import { Icon, cn, useFinePointer, useInView, usePrefersReducedMotion } from '@shimanto/ui';
 import { useEffect, useRef, useState } from 'react';
 
 /**
@@ -120,6 +120,45 @@ export function Clip({
   );
 }
 
+/**
+ * A silent preview that plays while it's on screen, unless `paused` (another card is hovered, a
+ * player is open) or the visitor prefers reduced motion. Nothing downloads before it's in view.
+ */
+export function AutoVideo({
+  src,
+  poster,
+  paused = false,
+  className,
+}: {
+  src: string;
+  poster: string;
+  paused?: boolean;
+  className?: string;
+}) {
+  const ref = useRef<HTMLVideoElement>(null);
+  const reduced = usePrefersReducedMotion();
+  const visible = useInView(ref, { once: false, rootMargin: '0px' });
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    if (visible && !reduced && !paused) void v.play().catch(() => undefined);
+    else v.pause();
+  }, [visible, reduced, paused]);
+  return (
+    <video
+      ref={ref}
+      src={src}
+      poster={poster}
+      muted
+      loop
+      playsInline
+      preload="none"
+      aria-hidden="true"
+      className={cn('absolute inset-0 size-full object-cover', className)}
+    />
+  );
+}
+
 /** Swipe left / right on touch screens: calls `onStep(+1 | -1)`. */
 function useSwipe(onStep?: (delta: number) => void) {
   const start = useRef<number | null>(null);
@@ -233,43 +272,41 @@ export function VideoDialog({
   );
 }
 
-/** A card that loops a light, silent preview while hovered; `onOpen` on click. */
+/** A card playing its silent preview; `onOpen` on click. Fades while another card is hovered. */
 function PreviewCard({
   video,
   poster,
   title,
   onOpen,
+  onHover,
+  dimmed = false,
+  paused = false,
   className,
 }: {
   video: string;
   poster: string;
   title: string;
   onOpen: () => void;
+  onHover?: (hovering: boolean) => void;
+  dimmed?: boolean;
+  paused?: boolean;
   className?: string;
 }) {
-  const [previewing, setPreviewing] = useState(false);
   return (
     <button
       type="button"
       onClick={onOpen}
-      onMouseEnter={() => setPreviewing(true)}
-      onMouseLeave={() => setPreviewing(false)}
+      onMouseEnter={() => onHover?.(true)}
+      onMouseLeave={() => onHover?.(false)}
       aria-label={title}
       data-cursor="Play"
-      className={cn('group relative block w-full overflow-hidden bg-black', className)}
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={poster} alt="" loading="lazy" decoding="async" className="size-full object-cover" />
-      {previewing && (
-        <video
-          src={video}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 size-full object-cover"
-        />
+      className={cn(
+        'group relative block w-full overflow-hidden bg-black transition-opacity duration-300',
+        dimmed && 'opacity-35',
+        className,
       )}
+    >
+      <AutoVideo src={video} poster={poster} paused={paused || dimmed} />
       <span className="absolute right-2.5 bottom-2.5 grid size-9 place-items-center rounded-full bg-white text-[#0E0F0C] shadow-lg transition group-hover:scale-110">
         <Icon name="play" className="size-4" />
       </span>
@@ -344,6 +381,8 @@ export function ClipGallery({
   className?: string;
 }) {
   const [open, setOpen] = useState<number | null>(null);
+  const [hovered, setHovered] = useState<string | null>(null);
+  const hover = useFinePointer();
   const current = open === null ? null : items[open];
   return (
     <>
@@ -355,6 +394,9 @@ export function ClipGallery({
               poster={item.poster}
               title={item.title}
               onOpen={() => setOpen(i)}
+              onHover={(on) => hover && setHovered(on ? item.id : null)}
+              dimmed={hovered !== null && hovered !== item.id}
+              paused={open !== null}
               className={cn('rounded-[18px] ring-1 ring-white/10', aspectClass(item.aspect))}
             />
             <p className="mt-2.5 font-medium">{item.title}</p>
