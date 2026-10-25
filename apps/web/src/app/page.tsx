@@ -3,6 +3,7 @@ import {
   HeroSection,
   ManifestoSection,
   NowSection,
+  PeopleSection,
   ProductsSection,
   SocialSection,
   ToolsSection,
@@ -20,6 +21,7 @@ export default function HomePage() {
     <main id="main">
       <HeroSection />
       <ManifestoSection />
+      <PeopleSection />
       <WorkSection />
       <ToolsSection />
       <ProductsSection />

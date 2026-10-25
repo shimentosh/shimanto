@@ -15,7 +15,6 @@ import { VintageField } from '@/components/home/vintage-field';
 import { Lightbox } from '@/components/page/lightbox';
 import { SiteCommandPalette } from '@/components/page/site-command-palette';
 import { site, siteUrl } from '@/lib/site';
-import { getStoreProducts, isStoreOpen } from '@/lib/store';
 import { getTrackingConfig } from '@/lib/tracking';
 import './globals.css';
 
@@ -66,9 +65,7 @@ export const viewport: Viewport = {
 const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || undefined;
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const [tracking, products] = await Promise.all([getTrackingConfig(), getStoreProducts()]);
-  // Nobody has a customer account until something is on sale, so "Log in" waits in the menu.
-  const storeOpen = isStoreOpen(products);
+  const tracking = await getTrackingConfig();
   return (
     // data-theme is set before paint by ThemeScript, so the attribute legitimately differs from SSR.
     <html
@@ -92,7 +89,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           groups={menuGroups}
           cta={ctaNav}
           account={{ href: accountNav.href, label: 'Log in' }}
-          showAccount={storeOpen}
+          showAccount
           showLocaleSwitch={false}
           tabs={[
             { href: '/', label: 'Home', icon: 'home' },

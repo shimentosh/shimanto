@@ -115,14 +115,14 @@ export const socialProfiles: Array<{
     label: 'Instagram',
     handle: '@shimanto.bn',
     href: 'https://www.instagram.com/shimanto.bn/',
-    audience: 3_160,
+    audience: 3_381,
     audienceLabel: 'followers',
   },
   {
     label: 'Facebook',
     handle: 'sh1manto',
     href: 'https://www.facebook.com/sh1manto/',
-    audience: 36_256,
+    audience: 38_000,
     audienceLabel: 'followers',
   },
   {

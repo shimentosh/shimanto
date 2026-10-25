@@ -2,9 +2,9 @@ import type { CSSProperties } from 'react';
 import { SocialIcon, platformColor } from '@/components/page/social-icon';
 import { audienceAsOf, formatAudience, socialProfiles } from '@/content/navigation';
 
-const counted = socialProfiles.filter((p) => p.audience);
+export const countedProfiles = socialProfiles.filter((p) => p.audience);
 /** Everyone across every platform with a known number. A floor: each count rounds down. */
-const reach = counted.reduce((sum, p) => sum + (p.audience ?? 0), 0);
+export const totalReach = countedProfiles.reduce((sum, p) => sum + (p.audience ?? 0), 0);
 
 /**
  * The combined audience, each platform's share as one bar, and a card per profile.
@@ -16,10 +16,10 @@ export function SocialReach({ className }: { className?: string }) {
       <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
         <p className="flex items-baseline gap-3">
           <span className="text-5xl font-medium tracking-[-0.05em] md:text-6xl">
-            {formatAudience(reach)}+
+            {formatAudience(totalReach)}+
           </span>
           <span className="text-ink-soft text-lg">
-            people follow along, across {counted.length} platforms
+            people follow along, across {countedProfiles.length} platforms
           </span>
         </p>
         <p className="text-ink-soft text-sm">
@@ -31,12 +31,12 @@ export function SocialReach({ className }: { className?: string }) {
         aria-hidden="true"
         className="bg-ink/[0.06] mt-5 flex h-3 gap-1 overflow-hidden rounded-full"
       >
-        {counted.map((p) => (
+        {countedProfiles.map((p) => (
           <span
             key={p.label}
             className="h-full first:rounded-l-full last:rounded-r-full"
             style={{
-              width: `${((p.audience ?? 0) / reach) * 100}%`,
+              width: `${((p.audience ?? 0) / totalReach) * 100}%`,
               background: platformColor[p.label],
             }}
           />
@@ -45,7 +45,7 @@ export function SocialReach({ className }: { className?: string }) {
       <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {socialProfiles.map((profile) => {
           const color = platformColor[profile.label] ?? 'var(--ink)';
-          const share = profile.audience ? (profile.audience / reach) * 100 : 0;
+          const share = profile.audience ? (profile.audience / totalReach) * 100 : 0;
           const body = (
             <>
               {/* Brand-coloured glow, brighter on hover. */}
@@ -143,18 +143,18 @@ export function FollowAlong() {
         id="follow-title"
         className="relative mt-2 text-2xl leading-tight font-medium tracking-[-0.03em] md:text-3xl"
       >
-        Join {formatAudience(reach)}+ people who follow along.
+        Join {formatAudience(totalReach)}+ people who follow along.
       </h2>
       <div
         aria-hidden="true"
         className="bg-ink/[0.06] relative mt-5 flex h-2 gap-1 overflow-hidden rounded-full"
       >
-        {counted.map((p) => (
+        {countedProfiles.map((p) => (
           <span
             key={p.label}
             className="h-full first:rounded-l-full last:rounded-r-full"
             style={{
-              width: `${((p.audience ?? 0) / reach) * 100}%`,
+              width: `${((p.audience ?? 0) / totalReach) * 100}%`,
               background: platformColor[p.label],
             }}
           />
@@ -210,7 +210,7 @@ export function SocialBanner({ titleId }: { titleId: string }) {
     <div className="bg-night text-cream rounded-sheet relative isolate overflow-hidden p-6 sm:p-8 md:p-12">
       {/* A soft blob of each platform's colour behind everything. */}
       <div aria-hidden="true" className="absolute inset-0 -z-10 opacity-30 blur-3xl">
-        {counted.map((p, i) => (
+        {countedProfiles.map((p, i) => (
           <span
             key={p.label}
             className="absolute size-56 rounded-full"
@@ -238,10 +238,10 @@ export function SocialBanner({ titleId }: { titleId: string }) {
           </h2>
           <p className="mt-8 flex items-baseline gap-3">
             <span className="text-6xl font-medium tracking-[-0.05em] tabular-nums">
-              {formatAudience(reach)}
+              {formatAudience(totalReach)}
               <span className="text-spark">+</span>
             </span>
-            <span className="text-white/70">people across {counted.length} platforms</span>
+            <span className="text-white/70">people across {countedProfiles.length} platforms</span>
           </p>
           <p className="mt-2 text-xs text-white/50">
             As of <time dateTime={audienceAsOf.iso}>{audienceAsOf.label}</time>

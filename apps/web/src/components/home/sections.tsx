@@ -11,7 +11,8 @@ import {
   LoadingDots,
   Strike,
 } from '@/components/page/title-motifs';
-import { SocialReach } from '@/components/page/social-reach';
+import { SocialReach, countedProfiles, totalReach } from '@/components/page/social-reach';
+import { formatAudience } from '@/content/navigation';
 import { MoreBuildsNote, VentureRow } from '@/components/page/venture-card';
 import { ProductCard } from '@/components/store/product-card';
 import { musicChannel, signatureWin, toneFor, ventures } from '@/content/catalog';
@@ -24,6 +25,10 @@ import { MusicPlayer } from '@/components/home/music-player';
 import { OnlineCounter, YearProgress } from '@/components/home/now-live';
 import { HeroLens } from '@/components/home/hero-lens';
 import { ToolSpotlight, ToolTile } from '@/components/home/tool-tiles';
+import { Sparkle } from '@/components/home/portrait';
+import { PlatformMark, SocialIcon } from '@/components/page/social-icon';
+import Image from 'next/image';
+import brothersPhoto from '../../../public/me/shimanto-and-noor.jpg';
 
 const pillarStyle: Record<string, { icon: IconName; world: Accent }> = {
   Builds: { icon: 'rocket', world: 'build' },
@@ -146,6 +151,33 @@ export function HeroSection() {
               </div>
             ))}
           </dl>
+          {/* The social section's numbers, small: stacked platform marks and the combined audience. */}
+          <Link
+            href="/social"
+            className="group border-ink/10 bg-paper/60 rounded-pill hover:border-ink/25 mt-8 inline-flex items-center gap-3 border py-1.5 pr-4 pl-1.5 text-sm transition-colors"
+          >
+            <span className="flex -space-x-2">
+              {countedProfiles.map((p) => (
+                <SocialIcon
+                  key={p.label}
+                  platform={p.label}
+                  className="ring-canvas size-7 ring-2"
+                />
+              ))}
+            </span>
+            <span>
+              <span className="font-semibold tabular-nums">{formatAudience(totalReach)}+</span>{' '}
+              <span className="text-ink-soft">
+                followers across {countedProfiles.length} platforms
+              </span>
+            </span>
+            <span
+              aria-hidden="true"
+              className="text-ink-soft group-hover:text-ink transition-transform duration-300 group-hover:translate-x-0.5"
+            >
+              →
+            </span>
+          </Link>
         </div>
         <div className="relative z-10 w-full px-6 sm:px-10 lg:px-0">
           <HeroLens />
@@ -269,6 +301,124 @@ export function ManifestoSection() {
         </div>
       </div>
       <TopicsStrip />
+    </Section>
+  );
+}
+
+/**
+ * The people behind the work: straight after the manifesto and before the builds, so the site
+ * goes from who I am, to who builds with me, to what we've built. A panel like the manifesto's:
+ * the shared photo (with a name tag on each side) beside the copy and the two profiles.
+ */
+export function PeopleSection() {
+  const { people } = home;
+  const left = people.profiles.find((p) => p.side === 'left');
+  const right = people.profiles.find((p) => p.side === 'right');
+  return (
+    <Section labelledBy="people-title">
+      <div className="border-ink/10 bg-paper rounded-card relative overflow-hidden border p-5 sm:p-8 md:p-12">
+        <div
+          aria-hidden="true"
+          className="bg-signal/15 pointer-events-none absolute -bottom-28 -left-28 size-80 rounded-full blur-3xl"
+        />
+        <div
+          aria-hidden="true"
+          className="bg-build/15 pointer-events-none absolute -top-24 -right-24 size-72 rounded-full blur-3xl"
+        />
+        <div className="relative grid items-center gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-14">
+          <div>
+            <p className="text-ink-soft flex items-center gap-2 font-mono text-xs tracking-[0.14em] uppercase">
+              <span aria-hidden="true" className="bg-build size-2 rounded-full" />
+              {people.eyebrow}
+            </p>
+            <DisplayTitle
+              id="people-title"
+              size="md"
+              className="mt-4"
+              lead={
+                <>
+                  {people.lead} <Squiggle world="build">{people.leadWord}</Squiggle>.{' '}
+                </>
+              }
+              rest={people.rest}
+            />
+            <p className="text-ink-soft mt-6 max-w-[46ch] text-lg leading-relaxed">{people.body}</p>
+            <ul className="border-ink/10 divide-ink/10 mt-10 divide-y border-y">
+              {people.profiles.map((profile) => (
+                <li key={profile.name} className="group flex items-center gap-4 py-5">
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      'on-world grid size-12 shrink-0 place-items-center rounded-xl transition-transform duration-300 motion-safe:group-hover:-rotate-6',
+                      accentBg[profile.world],
+                    )}
+                  >
+                    <Icon name={profile.icon} className="size-5" />
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className="text-xl font-medium tracking-[-0.03em] md:text-2xl">
+                      {profile.name}
+                    </h3>
+                    <p className="text-ink-soft mt-0.5 text-sm md:text-base">{profile.role}</p>
+                  </div>
+                  <span className="ml-auto flex shrink-0 gap-2">
+                    {profile.links.map((link) => (
+                      <a
+                        key={link.platform}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener"
+                        className="border-ink/10 text-ink-soft hover:border-ink/30 hover:text-ink grid size-10 place-items-center rounded-full border transition-colors"
+                      >
+                        <PlatformMark platform={link.platform} className="size-4" />
+                        <span className="sr-only">
+                          {profile.name} on {link.platform} (opens in a new tab)
+                        </span>
+                      </a>
+                    ))}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <figure className="group relative lg:order-first">
+            {/* The photo is 4:5; tablets get a wider 4:3 crop that still keeps both faces. */}
+            <div className="border-ink/10 relative aspect-[4/5] overflow-hidden rounded-2xl border sm:aspect-[4/3] lg:aspect-[4/5]">
+              <Image
+                src={brothersPhoto}
+                alt={`${left?.name} (left) and ${right?.name} (right) sitting together in a studio, ${left?.name}'s arm around ${right?.name}'s shoulder`}
+                placeholder="blur"
+                sizes="(min-width: 1280px) 560px, (min-width: 1024px) 45vw, 100vw"
+                className="size-full object-cover object-[50%_25%] transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.02]"
+              />
+              <div
+                aria-hidden="true"
+                className="absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-black/45 to-transparent"
+              />
+              {/* A frosted name tag under each person. */}
+              <div aria-hidden="true" className="absolute inset-x-4 bottom-4 flex justify-between">
+                {[left, right].map(
+                  (p) =>
+                    p && (
+                      <span
+                        key={p.name}
+                        className="bg-night/55 text-cream rounded-pill flex items-center gap-2 py-1.5 pr-3.5 pl-2 text-sm font-medium ring-1 ring-white/15 backdrop-blur-xl"
+                      >
+                        <span className={cn('size-2 rounded-full', accentBg[p.world])} />
+                        {p.name.split(' ')[0]}
+                      </span>
+                    ),
+                )}
+              </div>
+            </div>
+            <Sparkle className="art-float fill-spark absolute -top-3 -right-3 size-6" />
+            <figcaption className="sr-only">
+              {people.profiles.map((p) => `${p.name}, ${p.role}`).join('; ')}
+            </figcaption>
+          </figure>
+        </div>
+      </div>
     </Section>
   );
 }

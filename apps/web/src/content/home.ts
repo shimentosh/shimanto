@@ -31,6 +31,35 @@ export const home = {
     ],
     cta: { label: 'About me', href: '/about' },
   },
+  /** Supplied copy, used verbatim. `side` is where each person sits in the shared photo. */
+  people: {
+    eyebrow: 'The people behind the work',
+    lead: 'I build the',
+    leadWord: 'vision',
+    rest: 'He makes it happen.',
+    body: 'I focus on building products, exploring ideas, and shaping the direction of our ventures. My brother leads operations, bringing structure, coordination, and execution to the businesses we build together.',
+    profiles: [
+      {
+        name: 'Shimanto Neer',
+        role: 'Founder & Builder',
+        world: 'build',
+        icon: 'bulb',
+        side: 'right',
+        links: [{ platform: 'Instagram', href: 'https://www.instagram.com/shimanto.bn/' }],
+      },
+      {
+        name: 'Noor Fahim',
+        role: 'Chief Operating Officer',
+        world: 'signal',
+        icon: 'gear',
+        side: 'left',
+        links: [
+          { platform: 'LinkedIn', href: 'https://bd.linkedin.com/in/imnoorfahim' },
+          { platform: 'Instagram', href: 'https://www.instagram.com/im.noorfahim/' },
+        ],
+      },
+    ],
+  },
   work: {
     eyebrow: 'Selected work',
     cta: { label: 'All builds', href: '/work' },
@@ -50,26 +79,25 @@ export const home = {
     cta: { label: 'Read the blog', href: '/blog' },
   },
   now: {
-    updated: { iso: '2026-09', label: 'September 2026' },
+    updated: { iso: '2026-10', label: 'October 2026' },
     building: [
       {
-        label: 'shimanto.xyz',
-        note: 'You’re on it right now.',
-        href: '/',
-        icon: 'globe',
+        label: 'DotMirror',
+        note: 'Revenue growth.',
+        href: '/work/dotmirror',
+        icon: 'chart',
         tone: 'build',
       },
       {
-        label: 'dotcontent',
-        note: 'Now free and open source.',
-        href: '/tools/dotcontent',
-        icon: 'box',
+        label: 'Grok bot',
+        note: 'Work in progress.',
+        icon: 'chat',
         tone: 'signal',
       },
       {
-        label: 'AI video and automation systems',
-        note: 'Work in progress.',
-        icon: 'video',
+        label: 'Social media marketing',
+        note: 'Growing reach across platforms.',
+        icon: 'megaphone',
         tone: 'idea',
       },
     ],

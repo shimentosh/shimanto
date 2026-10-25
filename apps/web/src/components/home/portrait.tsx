@@ -58,7 +58,7 @@ export function NowBuildingChip() {
           </span>
           Now building
         </span>
-        <span className="mt-0.5 block text-sm font-medium">{home.now.building[1]?.label}</span>
+        <span className="mt-0.5 block text-sm font-medium">{home.now.building[0]?.label}</span>
         {/* Work in progress: a light sweeping along a track. */}
         <span
           aria-hidden="true"
