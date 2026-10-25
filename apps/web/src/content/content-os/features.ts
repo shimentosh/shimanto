@@ -27,10 +27,6 @@ export interface FeaturesCopy {
     synced: string;
     labels: { next: string; qa: string; preview: string; pillars: string; play: string };
   };
-  formats: { eyebrow: string; title: string; rest: string; intro: string };
-  carousels: { eyebrow: string; title: string; rest: string; intro: string };
-  posts: { eyebrow: string; title: string; rest: string; intro: string };
-  styles: { eyebrow: string; title: string; rest: string; intro: string };
   catalogue: {
     eyebrow: string;
     title: string;
@@ -45,26 +41,22 @@ export const featuresEn: FeaturesCopy = {
   meta: {
     title: 'Content OS features: every demo, every ability',
     description:
-      'Every video format, carousel, post and style Content OS makes, the Studio you run it from, and everything it can do.',
+      'A tour of the Content OS Studio, screen by screen: what each one does for you, and everything it can do.',
   },
   hero: {
     badge: 'Features',
-    title: 'Every feature.',
-    rest: 'Every demo.',
-    intro: 'All of it, in one place. Real renders, real posts, the real Studio.',
+    title: 'Every screen.',
+    rest: 'Every feature.',
+    intro: 'A tour of the Studio, one screen at a time.',
     stats: [
-      { value: '{videos}', label: 'video demos' },
-      { value: '{carousels}', label: 'carousels' },
-      { value: '{posts}', label: 'posts' },
-      { value: '{styles}', label: 'styles' },
+      { value: '13', label: 'kinds of context' },
+      { value: '28', label: 'quality checks' },
+      { value: '7', label: 'platforms' },
+      { value: '3', label: 'AI brains' },
     ],
   },
   sections: [
-    { href: '#studio', label: 'Studio', icon: 'monitor' },
-    { href: '#formats', label: 'Videos', icon: 'video' },
-    { href: '#carousels', label: 'Carousels', icon: 'grid' },
-    { href: '#posts', label: 'Posts', icon: 'pen' },
-    { href: '#styles', label: 'Styles', icon: 'bulb' },
+    { href: '#studio', label: 'Studio tour', icon: 'monitor' },
     { href: '#catalogue', label: 'All features', icon: 'layers' },
   ],
   studio: {
@@ -151,30 +143,6 @@ export const featuresEn: FeaturesCopy = {
       pillars: 'Pillar balance',
       play: 'Show the views one by one',
     },
-  },
-  formats: {
-    eyebrow: 'Video formats',
-    title: 'Every format.',
-    rest: 'Press play on any.',
-    intro: 'Reels, Shorts and YouTube. Each one rendered in code.',
-  },
-  carousels: {
-    eyebrow: 'Carousels',
-    title: 'Every carousel.',
-    rest: 'Swipe them all.',
-    intro: 'Real carousels in a real brand kit.',
-  },
-  posts: {
-    eyebrow: 'Posts & graphics',
-    title: 'Every post.',
-    rest: 'Caption included.',
-    intro: 'Graphic, caption and hashtags, in three series.',
-  },
-  styles: {
-    eyebrow: 'Styles',
-    title: 'Beyond templates.',
-    rest: 'Styles made to order.',
-    intro: 'Describe a look. It builds it in code.',
   },
   catalogue: {
     eyebrow: 'All features',

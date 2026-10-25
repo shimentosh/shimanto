@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element -- pre-sized renders from Content OS */
 import { Container, Icon, cn } from '@shimanto/ui';
 import Link from 'next/link';
 import { Section } from '@/components/page/section';
@@ -7,29 +6,14 @@ import type { ContentOsCopy } from '@/content/content-os';
 import {
   beyondDemos,
   carouselDemos,
-  demoGroups,
   formatDemos,
   graphicDemos,
-  hostDemo,
   videoDemoCount,
 } from '@/content/content-os/demos';
 import type { FeaturesCopy } from '@/content/content-os/features';
 import type { StoreProduct } from '@/lib/store';
 import { BotMark } from './bot-chat';
-import { CarouselViewer } from './carousel-viewer';
-import { DemoGallery } from './demo-gallery';
-import { ClipGallery, HoverClip } from './media';
-import {
-  BuyButton,
-  Headline,
-  IconTile,
-  PointItem,
-  PostCard,
-  PosterWall,
-  offer,
-  rail,
-  tint,
-} from './parts';
+import { BuyButton, Headline, IconTile, PointItem, PosterWall, offer, rail, tint } from './parts';
 import { pressDark } from './press';
 import { ContentOsShell } from './shell';
 import { StudioTour } from './studio-tour';
@@ -143,132 +127,6 @@ export function ContentOsFeatures({
             }}
           />
         </div>
-      </Section>
-
-      {/* ───────────── Every video format ───────────── */}
-      <Section divided labelledBy="cos-formats" id="formats" className="scroll-mt-8">
-        <Headline
-          id="cos-formats"
-          eyebrow={f.formats.eyebrow}
-          icon="video"
-          tone="create"
-          title={f.formats.title}
-          rest={f.formats.rest}
-          intro={f.formats.intro}
-        />
-        <div className="mt-10">
-          <DemoGallery
-            demos={formatDemos}
-            groups={demoGroups}
-            labels={{
-              all: c.gallery.all,
-              showMore: c.gallery.showMore,
-              close: c.gallery.close,
-              vertical: c.gallery.vertical,
-              landscape: c.gallery.landscape,
-              wideToo: c.gallery.wideToo,
-              prev: c.carousels.prev,
-              next: c.carousels.next,
-            }}
-          />
-        </div>
-        <p className="text-ink-soft mt-6 text-sm">{c.gallery.note}</p>
-      </Section>
-
-      {/* ───────────── Every carousel ───────────── */}
-      <Section divided labelledBy="cos-all-carousels" id="carousels" className="scroll-mt-8">
-        <Headline
-          id="cos-all-carousels"
-          eyebrow={f.carousels.eyebrow}
-          icon="grid"
-          tone="build"
-          title={f.carousels.title}
-          rest={f.carousels.rest}
-          intro={f.carousels.intro}
-        />
-        <div className="mt-10">
-          <CarouselViewer
-            carousels={carouselDemos}
-            labels={{
-              pick: c.carousels.pick,
-              slideOf: c.carousels.slideOf,
-              captionLabel: c.carousels.captionLabel,
-              prev: c.carousels.prev,
-              next: c.carousels.next,
-            }}
-          />
-        </div>
-      </Section>
-
-      {/* ───────────── Every post ───────────── */}
-      <Section divided labelledBy="cos-all-posts" id="posts" className="scroll-mt-8">
-        <Headline
-          id="cos-all-posts"
-          eyebrow={f.posts.eyebrow}
-          icon="pen"
-          tone="idea"
-          title={f.posts.title}
-          rest={f.posts.rest}
-          intro={f.posts.intro}
-        />
-        <ul
-          className={cn(
-            rail,
-            'mt-8 items-start gap-4 md:mt-10 md:grid-cols-2 md:gap-5 lg:grid-cols-3 xl:grid-cols-4 [&>*]:w-[76%] md:[&>*]:w-auto',
-          )}
-        >
-          {graphicDemos.map((post) => (
-            <PostCard key={post.id} post={post} readMore={c.posts.readMore} />
-          ))}
-        </ul>
-      </Section>
-
-      {/* ───────────── Styles ───────────── */}
-      <Section divided labelledBy="cos-styles" id="styles" className="scroll-mt-8">
-        <Headline
-          id="cos-styles"
-          eyebrow={f.styles.eyebrow}
-          icon="bulb"
-          tone="create"
-          title={f.styles.title}
-          rest={f.styles.rest}
-          intro={f.styles.intro}
-        />
-        <ClipGallery
-          className={cn(
-            rail,
-            'mt-8 gap-3 md:mt-10 md:grid-cols-5 md:gap-4 [&>*]:w-[44%] md:[&>*]:w-auto',
-          )}
-          items={styles}
-          labels={{ close: c.gallery.close, prev: c.carousels.prev, next: c.carousels.next }}
-        />
-        {hostDemo && (
-          <div className="mt-8 grid gap-5 rounded-[24px] bg-white/[0.03] p-5 ring-1 ring-white/10 md:grid-cols-[180px_minmax(0,1fr)] md:items-center md:p-7">
-            <HoverClip
-              video={hostDemo.video}
-              poster={hostDemo.poster}
-              full={hostDemo.full}
-              title={c.beyond.host.title}
-              aspect="9:16"
-              closeLabel={c.gallery.close}
-              className="aspect-[9/16] w-32 rounded-[16px] ring-1 ring-white/10 md:w-full"
-            />
-            <div>
-              <h3 className="text-2xl font-medium tracking-[-0.03em]">{c.beyond.host.title}</h3>
-              <p className="text-ink-soft mt-2 max-w-[48ch]">{c.beyond.host.body}</p>
-              <img
-                src={hostDemo.emotions}
-                srcSet={`${hostDemo.emotions} 1280w, ${hostDemo.emotionsFull} 1920w`}
-                sizes="(min-width: 1024px) 60vw, 92vw"
-                alt={c.beyond.host.emotions}
-                width={1280}
-                height={720}
-                loading="lazy"
-                className="mt-5 w-full max-w-2xl rounded-[16px] bg-white ring-1 ring-white/10"
-              />
-            </div>
-          </div>
-        )}
       </Section>
 
       {/* ───────────── Every feature ───────────── */}
