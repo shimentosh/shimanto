@@ -22,6 +22,7 @@ import {
 import { absoluteUrl, site } from '@/lib/site';
 import { type StoreProduct, formatPrice, majorUnits } from '@/lib/store';
 import { BotChat, BotMark, type ChatAttachments } from './bot-chat';
+import { BrandMemory } from './brand-memory';
 import { CarouselViewer } from './carousel-viewer';
 import { DemoGallery } from './demo-gallery';
 import { Clip, ClipGallery, HoverClip, StoryVideo } from './media';
@@ -415,44 +416,18 @@ export function ContentOsLanding({
         <p className="text-ink-soft mt-4 text-center text-sm">{c.hero.videoCaption}</p>
       </Section>
 
-      {/* ───────────── Pains, answered ───────────── */}
-      <Section divided labelledBy="cos-pains">
+      {/* ───────────── Brand memory ───────────── */}
+      <Section divided labelledBy="cos-memory">
         <SectionTitle
-          id="cos-pains"
-          eyebrow={c.pains.eyebrow}
-          title={c.pains.title}
-          rest={c.pains.rest}
+          id="cos-memory"
+          eyebrow={c.memory.eyebrow}
+          title={c.memory.title}
+          rest={c.memory.rest}
         />
-        <ul className="mt-12 grid gap-4 md:grid-cols-2 md:gap-5 xl:grid-cols-4">
-          {c.pains.items.map((item) => (
-            <li
-              key={item.pain}
-              className="flex flex-col gap-3 rounded-[24px] bg-white/[0.03] p-4 ring-1 ring-white/10 md:p-5"
-            >
-              {/* What you say */}
-              <div className="flex items-start justify-end gap-2">
-                <p className="bg-create/15 rounded-[18px] rounded-tr-[6px] px-4 py-3 text-[15px] leading-snug text-[#F3EFE4] ring-1 ring-[#FF7059]/30">
-                  <span className="text-create mb-1 flex items-center gap-1.5 text-xs font-medium">
-                    <Icon name="alert" className="size-3.5" />
-                    {c.pains.you}
-                  </span>
-                  “{item.pain}”
-                </p>
-              </div>
-              {/* What the bot answers */}
-              <div className="flex flex-1 items-start gap-2.5">
-                <BotMark className="mt-1 size-7 rounded-[8px] text-[10px]" />
-                <p className="flex-1 rounded-[18px] rounded-tl-[6px] bg-[#2E9BF7]/12 px-4 py-3 text-[15px] leading-snug ring-1 ring-[#2E9BF7]/30">
-                  <span className="text-signal mb-1 flex items-center gap-1.5 text-xs font-medium">
-                    <Icon name={item.icon} className="size-3.5" />
-                    {c.bot.name}
-                  </span>
-                  {item.fix}
-                </p>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <p className="text-ink-soft mt-6 max-w-[62ch] text-lg leading-relaxed">{c.memory.intro}</p>
+        <div className="mt-10">
+          <BrandMemory memory={c.memory} />
+        </div>
       </Section>
 
       {/* ───────────── What it makes ───────────── */}

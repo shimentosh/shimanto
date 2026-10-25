@@ -124,13 +124,47 @@ export interface ContentOsCopy {
     note: string;
   };
 
-  /** Pain points as a chat: what people say, and how Content OS answers. */
-  pains: {
+  /**
+   * Brand memory: a 3D "brain" of the context Content OS keeps per page, with real pages to
+   * switch between. Each page's facts come from its own context files.
+   */
+  memory: {
     eyebrow: string;
     title: string;
     rest: string;
-    you: string;
-    items: Array<{ pain: string; fix: string; icon: IconName }>;
+    intro: string;
+    switchLabel: string;
+    /** The context categories orbiting the core. */
+    categories: string[];
+    /** Where the core sends finished work. */
+    outputs: string[];
+    labels: {
+      voice: string;
+      audience: string;
+      pillars: string;
+      rule: string;
+      colours: string;
+      fonts: string;
+      platform: string;
+      language: string;
+    };
+    brands: Array<{
+      id: string;
+      name: string;
+      handle: string;
+      /** Brand name of the platform (its logo is looked up by it). */
+      platform: string;
+      colors: string[];
+      fonts: string;
+      language: string;
+      voice?: string;
+      audience?: string;
+      pillars?: string;
+      rule?: string;
+    }>;
+    note: string;
+    /** Screen-reader description of the animation. */
+    visualLabel: string;
   };
 
   /** Everything it can do, in four groups. */
