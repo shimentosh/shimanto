@@ -13,6 +13,7 @@ import {
 import { AnalyticsProvider } from '@/components/analytics/analytics';
 import { VintageField } from '@/components/home/vintage-field';
 import { Lightbox } from '@/components/page/lightbox';
+import { SiteChrome } from '@/components/page/site-chrome';
 import { SiteCommandPalette } from '@/components/page/site-command-palette';
 import { site, siteUrl } from '@/lib/site';
 import { getTrackingConfig } from '@/lib/tracking';
@@ -83,37 +84,41 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         >
           Skip to content
         </a>
-        <FloatingNav
-          logo={<Logo name={site.name} />}
-          links={primaryNav}
-          groups={menuGroups}
-          cta={ctaNav}
-          account={{ href: accountNav.href, label: 'Log in' }}
-          showAccount
-          showLocaleSwitch={false}
-          tabs={[
-            { href: '/', label: 'Home', icon: 'home' },
-            { href: '/work', label: 'Work', icon: 'briefcase' },
-            { href: '/tools', label: 'Tools', icon: 'wrench' },
-            { href: '/blog', label: 'Blog', icon: 'pen' },
-          ]}
-        />
-        {/* The vintage halftone poster at the top of every page (HeroField is the 3D particle-ocean
+        <SiteChrome>
+          <FloatingNav
+            logo={<Logo name={site.name} />}
+            links={primaryNav}
+            groups={menuGroups}
+            cta={ctaNav}
+            account={{ href: accountNav.href, label: 'Log in' }}
+            showAccount
+            showLocaleSwitch={false}
+            tabs={[
+              { href: '/', label: 'Home', icon: 'home' },
+              { href: '/work', label: 'Work', icon: 'briefcase' },
+              { href: '/tools', label: 'Tools', icon: 'wrench' },
+              { href: '/blog', label: 'Blog', icon: 'pen' },
+            ]}
+          />
+          {/* The vintage halftone poster at the top of every page (HeroField is the 3D particle-ocean
             alternative); it scrolls away with the page and pauses offscreen. */}
-        <VintageField className="absolute inset-x-0 top-0 -z-10 h-[min(100svh,900px)] [mask-image:linear-gradient(to_bottom,black_60%,transparent)]" />
+          <VintageField className="absolute inset-x-0 top-0 -z-10 h-[min(100svh,900px)] [mask-image:linear-gradient(to_bottom,black_60%,transparent)]" />
+        </SiteChrome>
         {children}
-        <Footer
-          showLocaleSwitch={false}
-          owner={site.name}
-          invite="Got a business, a product or a messy process that needs a system? Tell me what you're building."
-          cta={{ href: '/collaborate', label: 'Start a conversation' }}
-          columns={footerColumns}
-          legal={legalNav}
-          email={contactEmail}
-          socials={socialProfiles.flatMap((p) =>
-            p.href ? [{ label: p.label, href: p.href }] : [],
-          )}
-        />
+        <SiteChrome>
+          <Footer
+            showLocaleSwitch={false}
+            owner={site.name}
+            invite="Got a business, a product or a messy process that needs a system? Tell me what you're building."
+            cta={{ href: '/collaborate', label: 'Start a conversation' }}
+            columns={footerColumns}
+            legal={legalNav}
+            email={contactEmail}
+            socials={socialProfiles.flatMap((p) =>
+              p.href ? [{ label: p.label, href: p.href }] : [],
+            )}
+          />
+        </SiteChrome>
         <SiteCommandPalette />
         <Lightbox />
         <CustomCursor />

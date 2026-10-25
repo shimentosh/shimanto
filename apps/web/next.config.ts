@@ -17,6 +17,8 @@ const nextConfig: NextConfig = {
       { source: '/writing/:slug', destination: '/blog/:slug', permanent: true },
       // The Wall of Wins page was removed.
       { source: '/wins', destination: '/about', permanent: true },
+      // Content OS has its own sales page.
+      { source: '/products/content-os', destination: '/content-os', permanent: false },
     ];
   },
 };

@@ -322,14 +322,22 @@ export function EnginesSection({
 }
 
 /** Questions and answers, as native disclosure rows. */
-export function FaqSection({ faq }: { faq: NonNullable<Tool['faq']> }) {
+export function FaqSection({
+  faq,
+  eyebrow = 'FAQ',
+  title = 'Good questions.',
+}: {
+  faq: NonNullable<Tool['faq']>;
+  eyebrow?: string;
+  title?: string;
+}) {
   return (
     <Section divided labelledBy="faq-title">
       <div className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
         <SectionTitle
           id="faq-title"
-          eyebrow="FAQ"
-          title="Good questions."
+          eyebrow={eyebrow}
+          title={title}
           className="self-start lg:sticky lg:top-28"
         />
         <ul className="border-ink/10 border-b">

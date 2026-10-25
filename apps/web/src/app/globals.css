@@ -373,3 +373,67 @@ button,
     animation: pop-in 0.22s cubic-bezier(0.22, 1, 0.36, 1);
   }
 }
+
+/*
+ * Standalone landing pages (Content OS): no site chrome, always dark. `.cos-dark` re-scopes the
+ * theme tokens like `.on-world` does for light islands, so theme-aware utilities just work.
+ */
+body:has(main[data-standalone]) {
+  background: #0e0f0c;
+  padding-bottom: 0;
+}
+.cos-dark {
+  --canvas: #0e0f0c;
+  --canvas-2: #1a1c17;
+  --ink: #f3efe4;
+  --ink-soft: #b9b4a7;
+  --paper: #1a1c17;
+  color: var(--ink);
+  background: var(--canvas);
+  color-scheme: dark;
+}
+
+/* Content OS hero: columns of real renders drifting up and down behind the chat. */
+@keyframes cos-drift-up {
+  to {
+    transform: translateY(-50%);
+  }
+}
+@keyframes cos-drift-down {
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.cos-drift-up {
+  animation: cos-drift-up var(--cos-speed, 60s) linear infinite;
+}
+.cos-drift-down {
+  animation: cos-drift-down var(--cos-speed, 60s) linear infinite;
+}
+/* Chat lines appear one by one. */
+@keyframes cos-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.cos-rise {
+  animation: cos-rise 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes cos-blink {
+  50% {
+    opacity: 0;
+  }
+}
+.cos-caret {
+  animation: cos-blink 1s step-end infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cos-drift-up,
+  .cos-drift-down {
+    animation: none;
+  }
+}

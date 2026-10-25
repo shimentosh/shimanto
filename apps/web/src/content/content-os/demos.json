@@ -1,0 +1,2882 @@
+{
+  "groups": {
+    "viral": "Viral picks",
+    "brand": "Brand & product",
+    "teach": "Teach & explain",
+    "story": "Story & people",
+    "social": "Social & music",
+    "motion": "Motion & type",
+    "mixed": "Mixed formats",
+    "engines": "3D & engines",
+    "youtube": "YouTube (16:9)",
+    "headlines": "Headline animations"
+  },
+  "story": {
+    "video": "story.mp4",
+    "poster": "story.jpg",
+    "full": "full/story.mp4"
+  },
+  "formats": [
+    {
+      "id": "vr-rip-explainer",
+      "name": "Calm prop explainer",
+      "tagline": "One bold claim, one soft 3D prop per sentence and a little cursor host reacting, on a calm off-white page: a tech shift explained like a story.",
+      "group": "viral",
+      "aspect": "9:16",
+      "video": "demos/formats/vr-rip-explainer.mp4",
+      "poster": "demos/formats/vr-rip-explainer.jpg",
+      "full": "full/demos/formats/vr-rip-explainer.mp4"
+    },
+    {
+      "id": "vr-chapter-host",
+      "name": "Chapter HUD host",
+      "tagline": "A tool or workflow explained in numbered chapters: the headline builds word by word on paper, one drawn prop per chapter, a mascot doing the work, a tracker filling up and the narrator's cartoon self reacting in the corner.",
+      "group": "viral",
+      "aspect": "9:16",
+      "video": "demos/formats/vr-chapter-host.mp4",
+      "poster": "demos/formats/vr-chapter-host.jpg",
+      "full": "full/demos/formats/vr-chapter-host.mp4",
+      "wide": {
+        "video": "demos/formats/vr-chapter-host@16x9.mp4",
+        "poster": "demos/formats/vr-chapter-host@16x9.jpg",
+        "full": "full/demos/formats/vr-chapter-host@16x9.mp4"
+      }
+    },
+    {
+      "id": "vr-paper-stepper",
+      "name": "Paper stepper guide",
+      "tagline": "A three-step setup guide on cream paper: a serif headline with one highlighted word, a 1-2-3 stepper that ticks green, crisp bordered UI cards with hard shadows and a pixel-art host beside them.",
+      "group": "viral",
+      "aspect": "9:16",
+      "video": "demos/formats/vr-paper-stepper.mp4",
+      "poster": "demos/formats/vr-paper-stepper.jpg",
+      "full": "full/demos/formats/vr-paper-stepper.mp4",
+      "wide": {
+        "video": "demos/formats/vr-paper-stepper@16x9.mp4",
+        "poster": "demos/formats/vr-paper-stepper@16x9.jpg",
+        "full": "full/demos/formats/vr-paper-stepper@16x9.mp4"
+      }
+    },
+    {
+      "id": "vr-paper-diorama",
+      "name": "Paper diorama world",
+      "tagline": "Every beat a handmade cut-paper set (vault, furnace, machine, market stall, race track, theatre) with tiny critters acting the idea out, a torn-tape title and a live meter that keeps moving.",
+      "group": "viral",
+      "aspect": "9:16",
+      "video": "demos/formats/vr-paper-diorama.mp4",
+      "poster": "demos/formats/vr-paper-diorama.jpg",
+      "full": "full/demos/formats/vr-paper-diorama.mp4",
+      "wide": {
+        "video": "demos/formats/vr-paper-diorama@16x9.mp4",
+        "poster": "demos/formats/vr-paper-diorama@16x9.jpg",
+        "full": "full/demos/formats/vr-paper-diorama@16x9.mp4"
+      }
+    },
+    {
+      "id": "vr-clay-cast",
+      "name": "Soft clay cast",
+      "tagline": "Clean, premium and soft: glossy clay characters, a typed headline, giant number moments and a cast introduced one by one, each with its job on a UI card.",
+      "group": "viral",
+      "aspect": "9:16",
+      "video": "demos/formats/vr-clay-cast.mp4",
+      "poster": "demos/formats/vr-clay-cast.jpg",
+      "full": "full/demos/formats/vr-clay-cast.mp4",
+      "wide": {
+        "video": "demos/formats/vr-clay-cast@16x9.mp4",
+        "poster": "demos/formats/vr-clay-cast@16x9.jpg",
+        "full": "full/demos/formats/vr-clay-cast@16x9.mp4"
+      }
+    },
+    {
+      "id": "vr-avatar-wall",
+      "name": "Avatar + proof wall",
+      "tagline": "The narrator as a cartoon avatar talking you through a story with a chapter tag, a counter that tells the story and big proof walls (a grid of 40 clips, a clock racing through the night), ending in a neon dark act.",
+      "group": "viral",
+      "aspect": "9:16",
+      "video": "demos/formats/vr-avatar-wall.mp4",
+      "poster": "demos/formats/vr-avatar-wall.jpg",
+      "full": "full/demos/formats/vr-avatar-wall.mp4",
+      "wide": {
+        "video": "demos/formats/vr-avatar-wall@16x9.mp4",
+        "poster": "demos/formats/vr-avatar-wall@16x9.jpg",
+        "full": "full/demos/formats/vr-avatar-wall@16x9.mp4"
+      }
+    },
+    {
+      "id": "vr-stick-playbook",
+      "name": "Stick-figure playbook",
+      "tagline": "A stick figure on warm paper walks you through a numbered playbook: a big result ticker, four numbered tiles as the open loop, one tile at a time with the wrong way crossed out, and a dark finale with the checklist.",
+      "group": "viral",
+      "aspect": "9:16",
+      "video": "demos/formats/vr-stick-playbook.mp4",
+      "poster": "demos/formats/vr-stick-playbook.jpg",
+      "full": "full/demos/formats/vr-stick-playbook.mp4",
+      "wide": {
+        "video": "demos/formats/vr-stick-playbook@16x9.mp4",
+        "poster": "demos/formats/vr-stick-playbook@16x9.jpg",
+        "full": "full/demos/formats/vr-stick-playbook@16x9.mp4"
+      }
+    },
+    {
+      "id": "yt-doc-explainer",
+      "name": "Documentary explainer",
+      "tagline": "A calm narrated documentary built from maps, timelines, paper documents and slow camera moves over stills.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-doc-explainer.mp4",
+      "poster": "demos/formats/yt-doc-explainer.jpg",
+      "full": "full/demos/formats/yt-doc-explainer.mp4"
+    },
+    {
+      "id": "yt-history-map",
+      "name": "History on maps",
+      "tagline": "History told on an animated map: borders shifting, arrows marching, cities lighting up, the year counter running.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-history-map.mp4",
+      "poster": "demos/formats/yt-history-map.jpg",
+      "full": "full/demos/formats/yt-history-map.mp4"
+    },
+    {
+      "id": "yt-mystery-file",
+      "name": "Mystery case file",
+      "tagline": "An unsolved mystery laid out on a detective's desk: case folders, a red-string board, typed notes and a slow reveal.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-mystery-file.mp4",
+      "poster": "demos/formats/yt-mystery-file.jpg",
+      "full": "full/demos/formats/yt-mystery-file.mp4"
+    },
+    {
+      "id": "yt-ranked-doc",
+      "name": "Ranked documentary",
+      "tagline": "A ranked list told like a documentary: a persistent rank board, and every entry gets its own mini-world, not a slideshow.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-ranked-doc.mp4",
+      "poster": "demos/formats/yt-ranked-doc.jpg",
+      "full": "full/demos/formats/yt-ranked-doc.mp4"
+    },
+    {
+      "id": "yt-space-scale",
+      "name": "Space & scale journey",
+      "tagline": "A journey through scale: the camera zooms from a person to a planet to a galaxy, with size comparisons that make numbers felt.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-space-scale.mp4",
+      "poster": "demos/formats/yt-space-scale.jpg",
+      "full": "full/demos/formats/yt-space-scale.mp4"
+    },
+    {
+      "id": "yt-geo-data",
+      "name": "Geography by numbers",
+      "tagline": "Countries and regions compared with clean maps, flags and racing bars: the world explained in data.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-geo-data.mp4",
+      "poster": "demos/formats/yt-geo-data.jpg",
+      "full": "full/demos/formats/yt-geo-data.mp4"
+    },
+    {
+      "id": "yt-money-explained",
+      "name": "Money explained",
+      "tagline": "Personal finance and how money works, explained with ledgers, coins, jars and charts that build step by step.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-money-explained.mp4",
+      "poster": "demos/formats/yt-money-explained.jpg",
+      "full": "full/demos/formats/yt-money-explained.mp4"
+    },
+    {
+      "id": "yt-stick-story",
+      "name": "Stick-figure story",
+      "tagline": "A lesson acted out by simple stick figures on a clean ground: relatable scenes that carry psychology and self-improvement ideas.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-stick-story.mp4",
+      "poster": "demos/formats/yt-stick-story.jpg",
+      "full": "full/demos/formats/yt-stick-story.mp4"
+    },
+    {
+      "id": "yt-sketch-notes",
+      "name": "Sketch-note explainer",
+      "tagline": "A page of hand-drawn sketch notes that builds as the narration goes, ending as one saveable summary page.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-sketch-notes.mp4",
+      "poster": "demos/formats/yt-sketch-notes.jpg",
+      "full": "full/demos/formats/yt-sketch-notes.mp4"
+    },
+    {
+      "id": "yt-philosophy-essay",
+      "name": "Philosophy essay",
+      "tagline": "A slow, beautiful essay: marble textures, classical illustration, serif quotes and one idea at a time.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-philosophy-essay.mp4",
+      "poster": "demos/formats/yt-philosophy-essay.jpg",
+      "full": "full/demos/formats/yt-philosophy-essay.mp4"
+    },
+    {
+      "id": "yt-ai-news",
+      "name": "Tech news weekly",
+      "tagline": "The week's tech or AI news as a crisp news show: story cards, a rundown bar, product UIs rebuilt in code and a verdict per story.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-ai-news.mp4",
+      "poster": "demos/formats/yt-ai-news.jpg",
+      "full": "full/demos/formats/yt-ai-news.mp4"
+    },
+    {
+      "id": "yt-what-if",
+      "name": "What if…?",
+      "tagline": "A speculative scenario that escalates step by step: the world reacts, counters climb, the map changes.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-what-if.mp4",
+      "poster": "demos/formats/yt-what-if.jpg",
+      "full": "full/demos/formats/yt-what-if.mp4"
+    },
+    {
+      "id": "yt-animated-fable",
+      "name": "Animated story",
+      "tagline": "A narrated story in layered illustrated scenes with parallax depth, gentle character motion and a moral at the end.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-animated-fable.mp4",
+      "poster": "demos/formats/yt-animated-fable.jpg",
+      "full": "full/demos/formats/yt-animated-fable.mp4"
+    },
+    {
+      "id": "yt-sleep-story",
+      "name": "Calm sleep story",
+      "tagline": "A long, slow, soothing video: soft gradients, drifting light, minimal text and a calm voice; made to fall asleep to.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-sleep-story.mp4",
+      "poster": "demos/formats/yt-sleep-story.jpg",
+      "full": "full/demos/formats/yt-sleep-story.mp4"
+    },
+    {
+      "id": "yt-mythology",
+      "name": "Myths & legends",
+      "tagline": "Gods, heroes and creatures as illustrated cut-outs in ornate frames, with family trees and maps of the myth world.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-mythology.mp4",
+      "poster": "demos/formats/yt-mythology.jpg",
+      "full": "full/demos/formats/yt-mythology.mp4"
+    },
+    {
+      "id": "yt-psychology",
+      "name": "Psychology explained",
+      "tagline": "How the mind works: experiments diagrammed, scenarios with abstract figures and brain-and-behaviour visuals.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-psychology.mp4",
+      "poster": "demos/formats/yt-psychology.jpg",
+      "full": "full/demos/formats/yt-psychology.mp4"
+    },
+    {
+      "id": "yt-biography",
+      "name": "Life story",
+      "tagline": "A person's life told along a timeline: illustrated portrait, the turning points, the numbers, the lesson.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-biography.mp4",
+      "poster": "demos/formats/yt-biography.jpg",
+      "full": "full/demos/formats/yt-biography.mp4"
+    },
+    {
+      "id": "yt-product-walkthrough",
+      "name": "Product walkthrough",
+      "tagline": "The product shown end to end: its real UI rebuilt in code, a cursor doing the job, zooms on what matters.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-product-walkthrough.mp4",
+      "poster": "demos/formats/yt-product-walkthrough.jpg",
+      "full": "full/demos/formats/yt-product-walkthrough.mp4"
+    },
+    {
+      "id": "yt-feature-deepdive",
+      "name": "Feature deep-dive",
+      "tagline": "One feature, properly: the problem it solves, how it works, three ways to use it and what it changes.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-feature-deepdive.mp4",
+      "poster": "demos/formats/yt-feature-deepdive.jpg",
+      "full": "full/demos/formats/yt-feature-deepdive.mp4"
+    },
+    {
+      "id": "yt-case-study",
+      "name": "Customer case study",
+      "tagline": "A real customer's story: the situation, what was done, and the measured result, with their own words.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-case-study.mp4",
+      "poster": "demos/formats/yt-case-study.jpg",
+      "full": "full/demos/formats/yt-case-study.mp4"
+    },
+    {
+      "id": "yt-founder-story",
+      "name": "Founder story",
+      "tagline": "The founder on camera telling why the company exists, cut with archive cards, early photos and the turning points.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-founder-story.mp4",
+      "poster": "demos/formats/yt-founder-story.jpg",
+      "full": "full/demos/formats/yt-founder-story.mp4"
+    },
+    {
+      "id": "yt-launch-film",
+      "name": "Launch film",
+      "tagline": "A keynote-style product launch: cinematic reveal, the three big things, the price and the date.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-launch-film.mp4",
+      "poster": "demos/formats/yt-launch-film.jpg",
+      "full": "full/demos/formats/yt-launch-film.mp4"
+    },
+    {
+      "id": "yt-faq-answers",
+      "name": "FAQ answered",
+      "tagline": "The questions customers really ask, answered one by one: a question card, a clear answer, a visual.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-faq-answers.mp4",
+      "poster": "demos/formats/yt-faq-answers.jpg",
+      "full": "full/demos/formats/yt-faq-answers.mp4"
+    },
+    {
+      "id": "yt-pricing-explained",
+      "name": "Plans & pricing explained",
+      "tagline": "What you get for what you pay: plan cards, a calculator and who each plan is for, said plainly.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-pricing-explained.mp4",
+      "poster": "demos/formats/yt-pricing-explained.jpg",
+      "full": "full/demos/formats/yt-pricing-explained.mp4"
+    },
+    {
+      "id": "yt-compare",
+      "name": "A vs B comparison",
+      "tagline": "A fair comparison built on screen: the criteria, a table that fills, a score per round and a clear verdict for each kind of viewer.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-compare.mp4",
+      "poster": "demos/formats/yt-compare.jpg",
+      "full": "full/demos/formats/yt-compare.mp4"
+    },
+    {
+      "id": "yt-how-we-work",
+      "name": "How we work",
+      "tagline": "Behind the scenes of the process: the pipeline from first call to delivery, each stage with who does what.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-how-we-work.mp4",
+      "poster": "demos/formats/yt-how-we-work.jpg",
+      "full": "full/demos/formats/yt-how-we-work.mp4"
+    },
+    {
+      "id": "yt-company-update",
+      "name": "Monthly update",
+      "tagline": "What shipped this month and what's next: release cards, numbers that moved and the roadmap.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-company-update.mp4",
+      "poster": "demos/formats/yt-company-update.jpg",
+      "full": "full/demos/formats/yt-company-update.mp4"
+    },
+    {
+      "id": "yt-local-business",
+      "name": "Local business showcase",
+      "tagline": "A local shop, clinic or restaurant shown at its best: the place, the menu or services, the people and how to visit.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-local-business.mp4",
+      "poster": "demos/formats/yt-local-business.jpg",
+      "full": "full/demos/formats/yt-local-business.mp4"
+    },
+    {
+      "id": "yt-industry-report",
+      "name": "Industry report",
+      "tagline": "What the data says about the industry this year: key findings as charts, what they mean and what to do.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-industry-report.mp4",
+      "poster": "demos/formats/yt-industry-report.jpg",
+      "full": "full/demos/formats/yt-industry-report.mp4"
+    },
+    {
+      "id": "yt-expert-howto",
+      "name": "Expert how-to",
+      "tagline": "Teach the process you're paid for, step by step, then offer the done-for-you version: the lead-magnet video.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-expert-howto.mp4",
+      "poster": "demos/formats/yt-expert-howto.jpg",
+      "full": "full/demos/formats/yt-expert-howto.mp4"
+    },
+    {
+      "id": "yt-results-montage",
+      "name": "Client results",
+      "tagline": "Real clients, real results: short testimonials and result cards cut together into one proof video.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-results-montage.mp4",
+      "poster": "demos/formats/yt-results-montage.jpg",
+      "full": "full/demos/formats/yt-results-montage.mp4"
+    },
+    {
+      "id": "yt-course-lesson",
+      "name": "Course lesson",
+      "tagline": "A clear lesson: the goal, the idea built in diagrams, a worked example, a quick check and the recap card.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-course-lesson.mp4",
+      "poster": "demos/formats/yt-course-lesson.jpg",
+      "full": "full/demos/formats/yt-course-lesson.mp4"
+    },
+    {
+      "id": "yt-coding-tutorial",
+      "name": "Coding tutorial",
+      "tagline": "Code that types, highlights and runs on screen: an editor rebuilt in code, the terminal output and the result.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-coding-tutorial.mp4",
+      "poster": "demos/formats/yt-coding-tutorial.jpg",
+      "full": "full/demos/formats/yt-coding-tutorial.mp4"
+    },
+    {
+      "id": "yt-math-visual",
+      "name": "Math made visual",
+      "tagline": "Equations that morph into pictures: graphs drawing themselves, shapes transforming, the intuition before the formula.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-math-visual.mp4",
+      "poster": "demos/formats/yt-math-visual.jpg",
+      "full": "full/demos/formats/yt-math-visual.mp4"
+    },
+    {
+      "id": "yt-science-explained",
+      "name": "Science explained",
+      "tagline": "How nature works, zooming from the everyday to the microscopic: cutaway diagrams, particles and processes in motion.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-science-explained.mp4",
+      "poster": "demos/formats/yt-science-explained.jpg",
+      "full": "full/demos/formats/yt-science-explained.mp4"
+    },
+    {
+      "id": "yt-language-lesson",
+      "name": "Language lesson",
+      "tagline": "Words and phrases taught with clear type, sound waves for pronunciation, example sentences and quick practice.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-language-lesson.mp4",
+      "poster": "demos/formats/yt-language-lesson.jpg",
+      "full": "full/demos/formats/yt-language-lesson.mp4"
+    },
+    {
+      "id": "yt-book-summary",
+      "name": "Book summary",
+      "tagline": "A book's big ideas, one chapter each: the real cover, illustrated idea cards and how to use each idea.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-book-summary.mp4",
+      "poster": "demos/formats/yt-book-summary.jpg",
+      "full": "full/demos/formats/yt-book-summary.mp4"
+    },
+    {
+      "id": "yt-exam-prep",
+      "name": "Exam prep",
+      "tagline": "Revision made efficient: the topics that come up, flash cards, memory hooks and the common traps.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-exam-prep.mp4",
+      "poster": "demos/formats/yt-exam-prep.jpg",
+      "full": "full/demos/formats/yt-exam-prep.mp4"
+    },
+    {
+      "id": "yt-diy-guide",
+      "name": "DIY guide",
+      "tagline": "Make or fix something step by step: exploded diagrams, the tools you need, numbered steps and safety notes.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-diy-guide.mp4",
+      "poster": "demos/formats/yt-diy-guide.jpg",
+      "full": "full/demos/formats/yt-diy-guide.mp4"
+    },
+    {
+      "id": "yt-recipe",
+      "name": "Recipe video",
+      "tagline": "A recipe with ingredient cards, step timers and the finished dish: real cooking footage or illustrated steps.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-recipe.mp4",
+      "poster": "demos/formats/yt-recipe.jpg",
+      "full": "full/demos/formats/yt-recipe.mp4"
+    },
+    {
+      "id": "yt-data-story",
+      "name": "Data story",
+      "tagline": "A story told by charts: each chart answers one question and leads to the next, building to one clear insight.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-data-story.mp4",
+      "poster": "demos/formats/yt-data-story.jpg",
+      "full": "full/demos/formats/yt-data-story.mp4"
+    },
+    {
+      "id": "yt-kids-learning",
+      "name": "Kids learning",
+      "tagline": "Bright, gentle learning for young kids: friendly characters, letters and numbers that bounce, repetition and songs-style rhythm.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-kids-learning.mp4",
+      "poster": "demos/formats/yt-kids-learning.jpg",
+      "full": "full/demos/formats/yt-kids-learning.mp4"
+    },
+    {
+      "id": "yt-video-essay",
+      "name": "Video essay",
+      "tagline": "An argued essay with editorial typography, archival frames and a voice with a point of view.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-video-essay.mp4",
+      "poster": "demos/formats/yt-video-essay.jpg",
+      "full": "full/demos/formats/yt-video-essay.mp4"
+    },
+    {
+      "id": "yt-commentary",
+      "name": "On-camera commentary",
+      "tagline": "You on camera with a point of view; cards, headlines and receipts pop in beside you as you talk.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-commentary.mp4",
+      "poster": "demos/formats/yt-commentary.jpg",
+      "full": "full/demos/formats/yt-commentary.mp4"
+    },
+    {
+      "id": "yt-video-podcast",
+      "name": "Video podcast",
+      "tagline": "A podcast made for YouTube: two people on camera or audio with a live waveform, topic cards and chapter titles.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-video-podcast.mp4",
+      "poster": "demos/formats/yt-video-podcast.jpg",
+      "full": "full/demos/formats/yt-video-podcast.mp4"
+    },
+    {
+      "id": "yt-interview",
+      "name": "Interview",
+      "tagline": "A guest interview cut tight: question cards, the guest's answers, B-roll and the key quote pulled big.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-interview.mp4",
+      "poster": "demos/formats/yt-interview.jpg",
+      "full": "full/demos/formats/yt-interview.mp4"
+    },
+    {
+      "id": "yt-review",
+      "name": "Honest review",
+      "tagline": "A real product reviewed after real use: the scorecard, pros and cons, who should buy and who shouldn't.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-review.mp4",
+      "poster": "demos/formats/yt-review.jpg",
+      "full": "full/demos/formats/yt-review.mp4"
+    },
+    {
+      "id": "yt-experiment",
+      "name": "I tried it for 30 days",
+      "tagline": "A personal experiment with a day counter, progress graphs and honest results, good or bad.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-experiment.mp4",
+      "poster": "demos/formats/yt-experiment.jpg",
+      "full": "full/demos/formats/yt-experiment.mp4"
+    },
+    {
+      "id": "yt-tools-roundup",
+      "name": "Tools roundup",
+      "tagline": "The best tools for one job, each shown working in its real UI, with what it's for and the honest catch.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-tools-roundup.mp4",
+      "poster": "demos/formats/yt-tools-roundup.jpg",
+      "full": "full/demos/formats/yt-tools-roundup.mp4"
+    },
+    {
+      "id": "yt-breakdown",
+      "name": "Strategy breakdown",
+      "tagline": "Take a famous campaign, product or move apart: what they did, why it worked, and how to copy the principle.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-breakdown.mp4",
+      "poster": "demos/formats/yt-breakdown.jpg",
+      "full": "full/demos/formats/yt-breakdown.mp4"
+    },
+    {
+      "id": "yt-story-vlog",
+      "name": "Story vlog",
+      "tagline": "A vlog edited like a story: chapters with titles, map stamps between places, a clear goal and a payoff.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-story-vlog.mp4",
+      "poster": "demos/formats/yt-story-vlog.jpg",
+      "full": "full/demos/formats/yt-story-vlog.mp4"
+    },
+    {
+      "id": "yt-build-challenge",
+      "name": "Build challenge",
+      "tagline": "Build something under a constraint (time, budget, tools): a timer, a budget counter, milestones and the reveal.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-build-challenge.mp4",
+      "poster": "demos/formats/yt-build-challenge.jpg",
+      "full": "full/demos/formats/yt-build-challenge.mp4"
+    },
+    {
+      "id": "yt-channel-trailer",
+      "name": "Channel trailer",
+      "tagline": "The 60-second video new visitors see: who the channel is for, what they'll get, how often, and why subscribe.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-channel-trailer.mp4",
+      "poster": "demos/formats/yt-channel-trailer.jpg",
+      "full": "full/demos/formats/yt-channel-trailer.mp4"
+    },
+    {
+      "id": "yt-intro-sting",
+      "name": "Intro sting",
+      "tagline": "A 3-5 second branded sting placed after the hook (never before it): the channel's logo moment.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-intro-sting.mp4",
+      "poster": "demos/formats/yt-intro-sting.jpg",
+      "full": "full/demos/formats/yt-intro-sting.mp4"
+    },
+    {
+      "id": "yt-end-screen",
+      "name": "End screen",
+      "tagline": "The last 20 seconds designed for YouTube's end-screen elements: two video slots, subscribe and a closing line.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-end-screen.mp4",
+      "poster": "demos/formats/yt-end-screen.jpg",
+      "full": "full/demos/formats/yt-end-screen.mp4"
+    },
+    {
+      "id": "yt-chapter-cards",
+      "name": "Chapter cards",
+      "tagline": "The channel's chapter transition: a number and a title that land the same way every time, so long videos feel organised.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-chapter-cards.mp4",
+      "poster": "demos/formats/yt-chapter-cards.jpg",
+      "full": "full/demos/formats/yt-chapter-cards.mp4"
+    },
+    {
+      "id": "yt-lower-thirds",
+      "name": "Lower thirds & callouts",
+      "tagline": "The channel's on-screen labels: name tags, place tags, key-term callouts and link prompts, all in one system.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-lower-thirds.mp4",
+      "poster": "demos/formats/yt-lower-thirds.jpg",
+      "full": "full/demos/formats/yt-lower-thirds.mp4"
+    },
+    {
+      "id": "yt-shorts-cutdown",
+      "name": "Shorts from a long video",
+      "tagline": "A long video's best moment re-framed for Shorts: hook first, the 16:9 picture placed in a 9:16 layout with a title band.",
+      "group": "youtube",
+      "aspect": "9:16",
+      "video": "demos/formats/yt-shorts-cutdown.mp4",
+      "poster": "demos/formats/yt-shorts-cutdown.jpg",
+      "full": "full/demos/formats/yt-shorts-cutdown.mp4"
+    },
+    {
+      "id": "yt-mid-reminder",
+      "name": "Mid-video reminder",
+      "tagline": "A small, polite animated reminder mid-video (subscribe, the free guide, the next part) that never blocks the content.",
+      "group": "youtube",
+      "aspect": "16:9",
+      "video": "demos/formats/yt-mid-reminder.mp4",
+      "poster": "demos/formats/yt-mid-reminder.jpg",
+      "full": "full/demos/formats/yt-mid-reminder.mp4"
+    },
+    {
+      "id": "mx-poster-ui",
+      "name": "Poster × UI",
+      "tagline": "An editorial poster that comes alive: oversized serif type, crisp UI cards sliding over it, paper tape holding it together.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-poster-ui.mp4",
+      "poster": "demos/formats/mx-poster-ui.jpg",
+      "full": "full/demos/formats/mx-poster-ui.mp4"
+    },
+    {
+      "id": "mx-collage-data",
+      "name": "Collage data",
+      "tagline": "Real numbers told in torn paper: a chart draws itself across a cut-paper collage while the figures count up.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-collage-data.mp4",
+      "poster": "demos/formats/mx-collage-data.jpg",
+      "full": "full/demos/formats/mx-collage-data.mp4"
+    },
+    {
+      "id": "mx-glass-depth",
+      "name": "Glass depth",
+      "tagline": "Frosted glass cards floating in 3D depth over a big headline that morphs from thin to heavy, with a light sweep across.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-glass-depth.mp4",
+      "poster": "demos/formats/mx-glass-depth.jpg",
+      "full": "full/demos/formats/mx-glass-depth.mp4"
+    },
+    {
+      "id": "mx-sketch-to-real",
+      "name": "Sketch to real",
+      "tagline": "A marker sketch draws itself, then fills in as crisp finished UI, with highlighter strokes marking what matters.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-sketch-to-real.mp4",
+      "poster": "demos/formats/mx-sketch-to-real.jpg",
+      "full": "full/demos/formats/mx-sketch-to-real.mp4"
+    },
+    {
+      "id": "mx-newsroom",
+      "name": "Newsroom mix",
+      "tagline": "Breaking-news energy: a live ticker, newspaper collage, typewriter text and a map pin drop in one frame.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-newsroom.mp4",
+      "poster": "demos/formats/mx-newsroom.jpg",
+      "full": "full/demos/formats/mx-newsroom.mp4"
+    },
+    {
+      "id": "mx-route-story",
+      "name": "Route story",
+      "tagline": "A journey on a map: the route draws itself, location cards pop up, passport stamps land, and the camera flies along.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-route-story.mp4",
+      "poster": "demos/formats/mx-route-story.jpg",
+      "full": "full/demos/formats/mx-route-story.mp4"
+    },
+    {
+      "id": "mx-split-verdict",
+      "name": "Split verdict",
+      "tagline": "Two sides fight for the screen: a swipe divider, kinetic type on each side, and a rubber stamp delivers the verdict.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-split-verdict.mp4",
+      "poster": "demos/formats/mx-split-verdict.jpg",
+      "full": "full/demos/formats/mx-split-verdict.mp4"
+    },
+    {
+      "id": "mx-iso-pipeline",
+      "name": "Isometric pipeline",
+      "tagline": "A process as a small isometric machine: blocks, particles flowing along the path and live counters on the block faces.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-iso-pipeline.mp4",
+      "poster": "demos/formats/mx-iso-pipeline.jpg",
+      "full": "full/demos/formats/mx-iso-pipeline.mp4"
+    },
+    {
+      "id": "mx-terminal-neon",
+      "name": "Terminal neon",
+      "tagline": "A terminal types the story while a neon headline flickers on, with clean glitch cuts between beats.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-terminal-neon.mp4",
+      "poster": "demos/formats/mx-terminal-neon.jpg",
+      "full": "full/demos/formats/mx-terminal-neon.mp4"
+    },
+    {
+      "id": "mx-magazine-flip",
+      "name": "Magazine flip",
+      "tagline": "A magazine cover that turns into the story: masthead, cover lines, cut-out objects and page-turn transitions.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-magazine-flip.mp4",
+      "poster": "demos/formats/mx-magazine-flip.jpg",
+      "full": "full/demos/formats/mx-magazine-flip.mp4"
+    },
+    {
+      "id": "mx-sticky-board",
+      "name": "Sticky board",
+      "tagline": "A planning wall: sticky notes pin down, marker doodles draw themselves, kinetic type lands on the notes.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-sticky-board.mp4",
+      "poster": "demos/formats/mx-sticky-board.jpg",
+      "full": "full/demos/formats/mx-sticky-board.mp4"
+    },
+    {
+      "id": "mx-phone-story",
+      "name": "Phone scroll story",
+      "tagline": "The story told on a phone: the screen scrolls, notifications pop, overlays explain and the camera zooms in.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-phone-story.mp4",
+      "poster": "demos/formats/mx-phone-story.jpg",
+      "full": "full/demos/formats/mx-phone-story.mp4"
+    },
+    {
+      "id": "mx-receipt-print",
+      "name": "Receipt print",
+      "tagline": "What something really costs, printed: a receipt prints line by line, a big total is stamped, a barcode closes it.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-receipt-print.mp4",
+      "poster": "demos/formats/mx-receipt-print.jpg",
+      "full": "full/demos/formats/mx-receipt-print.mp4"
+    },
+    {
+      "id": "mx-arcade-levels",
+      "name": "Arcade levels",
+      "tagline": "Progress as a game: pixel UI, a level bar filling up, score counters popping and CRT scanlines.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-arcade-levels.mp4",
+      "poster": "demos/formats/mx-arcade-levels.jpg",
+      "full": "full/demos/formats/mx-arcade-levels.mp4"
+    },
+    {
+      "id": "mx-blueprint",
+      "name": "Blueprint callouts",
+      "tagline": "How something is built: a blueprint grid draws itself, callouts point at the parts, dimension lines size them.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-blueprint.mp4",
+      "poster": "demos/formats/mx-blueprint.jpg",
+      "full": "full/demos/formats/mx-blueprint.mp4"
+    },
+    {
+      "id": "mx-bento-build",
+      "name": "Bento build",
+      "tagline": "A bento grid assembles with springs: the headline is one tile, icons and counters fill the others.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-bento-build.mp4",
+      "poster": "demos/formats/mx-bento-build.jpg",
+      "full": "full/demos/formats/mx-bento-build.mp4"
+    },
+    {
+      "id": "mx-timeline-parallax",
+      "name": "Timeline parallax",
+      "tagline": "History in depth: a horizontal timeline moves through parallax layers, big year numerals count, milestone cards land.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-timeline-parallax.mp4",
+      "poster": "demos/formats/mx-timeline-parallax.jpg",
+      "full": "full/demos/formats/mx-timeline-parallax.mp4"
+    },
+    {
+      "id": "mx-paper-popup",
+      "name": "Paper pop-up",
+      "tagline": "A pop-up book: paper folds stand up in depth, UI chips ride on them, soft shadows and kinetic type.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-paper-popup.mp4",
+      "poster": "demos/formats/mx-paper-popup.jpg",
+      "full": "full/demos/formats/mx-paper-popup.mp4"
+    },
+    {
+      "id": "mx-swiss-grid",
+      "name": "Swiss grid",
+      "tagline": "International-style motion graphics: a strict grid, bold geometric shapes snapping along its lines, huge grotesk type that locks in.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-swiss-grid.mp4",
+      "poster": "demos/formats/mx-swiss-grid.jpg",
+      "full": "full/demos/formats/mx-swiss-grid.mp4"
+    },
+    {
+      "id": "mx-liquid-morph",
+      "name": "Liquid morph",
+      "tagline": "Soft shapes that melt and merge into each other while the type rides them, with a colour flood carrying each beat.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-liquid-morph.mp4",
+      "poster": "demos/formats/mx-liquid-morph.jpg",
+      "full": "full/demos/formats/mx-liquid-morph.mp4"
+    },
+    {
+      "id": "mx-memphis-pop",
+      "name": "Memphis pop",
+      "tagline": "Loud, joyful motion graphics: flat geometric shapes, squiggles and confetti bounce in with springy pops around bold type.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-memphis-pop.mp4",
+      "poster": "demos/formats/mx-memphis-pop.jpg",
+      "full": "full/demos/formats/mx-memphis-pop.mp4"
+    },
+    {
+      "id": "mx-type-orbit",
+      "name": "3D type orbit",
+      "tagline": "Type in real depth: extruded words turn in 3D while shapes orbit them and the camera arcs around.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-type-orbit.mp4",
+      "poster": "demos/formats/mx-type-orbit.jpg",
+      "full": "full/demos/formats/mx-type-orbit.mp4"
+    },
+    {
+      "id": "mx-riso-overprint",
+      "name": "Riso overprint",
+      "tagline": "Two-ink risograph print in motion: shapes and type overprint, slip off register and snap back, with grain and halftone everywhere.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-riso-overprint.mp4",
+      "poster": "demos/formats/mx-riso-overprint.jpg",
+      "full": "full/demos/formats/mx-riso-overprint.mp4"
+    },
+    {
+      "id": "mx-type-window",
+      "name": "Type window",
+      "tagline": "The headline is a window: a living scene plays inside the letters, then the camera dives through them into it.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-type-window.mp4",
+      "poster": "demos/formats/mx-type-window.jpg",
+      "full": "full/demos/formats/mx-type-window.mp4"
+    },
+    {
+      "id": "mx-one-line",
+      "name": "One line",
+      "tagline": "One unbroken line draws the whole video: icons, frames and words grow out of the same stroke while the camera follows the pen.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-one-line.mp4",
+      "poster": "demos/formats/mx-one-line.jpg",
+      "full": "full/demos/formats/mx-one-line.mp4"
+    },
+    {
+      "id": "mx-soft-clay",
+      "name": "Soft clay",
+      "tagline": "Squishy clay-like shapes and puffy UI that squash, stretch and bounce in soft pastel light.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-soft-clay.mp4",
+      "poster": "demos/formats/mx-soft-clay.jpg",
+      "full": "full/demos/formats/mx-soft-clay.mp4"
+    },
+    {
+      "id": "mx-chrome-y2k",
+      "name": "Chrome Y2K",
+      "tagline": "Liquid chrome type, glossy bubble UI and sparkle glints on a deep ground, with smooth orbiting moves.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-chrome-y2k.mp4",
+      "poster": "demos/formats/mx-chrome-y2k.jpg",
+      "full": "full/demos/formats/mx-chrome-y2k.mp4"
+    },
+    {
+      "id": "mx-ink-brush",
+      "name": "Ink & brush",
+      "tagline": "Big sumi brush strokes sweep across the frame as transitions, revealing crisp type and calm UI, sealed with a red stamp.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-ink-brush.mp4",
+      "poster": "demos/formats/mx-ink-brush.jpg",
+      "full": "full/demos/formats/mx-ink-brush.mp4"
+    },
+    {
+      "id": "mx-op-art",
+      "name": "Op art",
+      "tagline": "Hypnotic stripes and circles move in rhythm, and the type punches through them.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-op-art.mp4",
+      "poster": "demos/formats/mx-op-art.jpg",
+      "full": "full/demos/formats/mx-op-art.mp4"
+    },
+    {
+      "id": "mx-tape-lanes",
+      "name": "Tape lanes",
+      "tagline": "Lanes of printed tape race across the frame at angles; the headline rides them until they stop and lock.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-tape-lanes.mp4",
+      "poster": "demos/formats/mx-tape-lanes.jpg",
+      "full": "full/demos/formats/mx-tape-lanes.mp4"
+    },
+    {
+      "id": "mx-stencil-spray",
+      "name": "Stencil & spray",
+      "tagline": "Street-art energy: spray-painted stencil type, paste-up posters and drips on a concrete wall.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-stencil-spray.mp4",
+      "poster": "demos/formats/mx-stencil-spray.jpg",
+      "full": "full/demos/formats/mx-stencil-spray.mp4"
+    },
+    {
+      "id": "mx-pop-art",
+      "name": "Pop art panels",
+      "tagline": "Comic pop art in motion: dot screens, thick outlines, action lines and panels that slide in like a comic page.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-pop-art.mp4",
+      "poster": "demos/formats/mx-pop-art.jpg",
+      "full": "full/demos/formats/mx-pop-art.mp4"
+    },
+    {
+      "id": "mx-origami-fold",
+      "name": "Origami fold",
+      "tagline": "The frame folds like paper: crisp creases turn one scene into the next, with soft light on every facet.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-origami-fold.mp4",
+      "poster": "demos/formats/mx-origami-fold.jpg",
+      "full": "full/demos/formats/mx-origami-fold.mp4"
+    },
+    {
+      "id": "mx-infinite-zoom",
+      "name": "Infinite zoom",
+      "tagline": "One endless zoom: every frame hides the next one inside it, and the camera never stops falling in.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-infinite-zoom.mp4",
+      "poster": "demos/formats/mx-infinite-zoom.jpg",
+      "full": "full/demos/formats/mx-infinite-zoom.mp4"
+    },
+    {
+      "id": "mx-type-wall",
+      "name": "Type wall",
+      "tagline": "A wall of repeated words scrolls in rows, and the key word lights up out of the pattern.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-type-wall.mp4",
+      "poster": "demos/formats/mx-type-wall.jpg",
+      "full": "full/demos/formats/mx-type-wall.mp4"
+    },
+    {
+      "id": "mx-mosaic-flip",
+      "name": "Mosaic flip",
+      "tagline": "A wall of tiles flips in waves to form pictures, icons and type, like a giant split-flap mosaic.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-mosaic-flip.mp4",
+      "poster": "demos/formats/mx-mosaic-flip.jpg",
+      "full": "full/demos/formats/mx-mosaic-flip.mp4"
+    },
+    {
+      "id": "mx-exploded-view",
+      "name": "Exploded view",
+      "tagline": "A product or app splits into its layers in depth, a scan line reveals what's inside, and callouts name each part.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-exploded-view.mp4",
+      "poster": "demos/formats/mx-exploded-view.jpg",
+      "full": "full/demos/formats/mx-exploded-view.mp4"
+    },
+    {
+      "id": "mx-title-sequence",
+      "name": "Title sequence",
+      "tagline": "A 60s-style film title sequence: flat cut shapes, jagged hand-cut type and silhouettes moving to a jazzy rhythm.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-title-sequence.mp4",
+      "poster": "demos/formats/mx-title-sequence.jpg",
+      "full": "full/demos/formats/mx-title-sequence.mp4"
+    },
+    {
+      "id": "mx-light-table",
+      "name": "Light table",
+      "tagline": "A glowing light table: slides and film strips slide in, a loupe magnifies the detail, a grease pencil marks the pick.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-light-table.mp4",
+      "poster": "demos/formats/mx-light-table.jpg",
+      "full": "full/demos/formats/mx-light-table.mp4"
+    },
+    {
+      "id": "mx-broadcast",
+      "name": "Broadcast package",
+      "tagline": "A sports-broadcast graphics package: angled panels, speed wipes, sliding stat bars and a confident lower-third rhythm.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-broadcast.mp4",
+      "poster": "demos/formats/mx-broadcast.jpg",
+      "full": "full/demos/formats/mx-broadcast.mp4"
+    },
+    {
+      "id": "mx-beat-visualizer",
+      "name": "Beat visualizer",
+      "tagline": "Music-driven motion: EQ bars, a spinning record and waveforms pulse on the beat while the type hits with them.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-beat-visualizer.mp4",
+      "poster": "demos/formats/mx-beat-visualizer.jpg",
+      "full": "full/demos/formats/mx-beat-visualizer.mp4"
+    },
+    {
+      "id": "mx-aurora-grain",
+      "name": "Aurora grain",
+      "tagline": "Soft fields of light drift behind elegant serif type and thin line icons, with film grain: calm, premium, slow.",
+      "group": "mixed",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-aurora-grain.mp4",
+      "poster": "demos/formats/mx-aurora-grain.jpg",
+      "full": "full/demos/formats/mx-aurora-grain.mp4"
+    },
+    {
+      "id": "mx-spark-treatise",
+      "name": "Spark treatise",
+      "tagline": "The PDoom way: one glowing spark drags a line through every plate, writing the words, drawing the chart and lighting the payoff.",
+      "group": "engines",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-spark-treatise.mp4",
+      "poster": "demos/formats/mx-spark-treatise.jpg",
+      "full": "full/demos/formats/mx-spark-treatise.mp4"
+    },
+    {
+      "id": "mx-monument-type",
+      "name": "Monument type",
+      "tagline": "Giant 3D letters stand in a landscape like monuments; the sun moves, shadows swing and the camera flies past them.",
+      "group": "engines",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-monument-type.mp4",
+      "poster": "demos/formats/mx-monument-type.jpg",
+      "full": "full/demos/formats/mx-monument-type.mp4"
+    },
+    {
+      "id": "mx-product-hero",
+      "name": "Product hero 3D",
+      "tagline": "A 3D product turns in studio light while crisp spec cards float beside it, a light sweep crosses it and it lands on the logo.",
+      "group": "engines",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-product-hero.mp4",
+      "poster": "demos/formats/mx-product-hero.jpg",
+      "full": "full/demos/formats/mx-product-hero.mp4"
+    },
+    {
+      "id": "mx-engraved-3d",
+      "name": "Engraved 3D",
+      "tagline": "3D objects shaded with engraving lines like an old print, turning in space, labelled by a plotter pen.",
+      "group": "engines",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-engraved-3d.mp4",
+      "poster": "demos/formats/mx-engraved-3d.jpg",
+      "full": "full/demos/formats/mx-engraved-3d.mp4"
+    },
+    {
+      "id": "mx-particle-morph",
+      "name": "Particle morph",
+      "tagline": "Thousands of glowing particles flow and morph into icons, numbers and words, then scatter into the next idea.",
+      "group": "engines",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-particle-morph.mp4",
+      "poster": "demos/formats/mx-particle-morph.jpg",
+      "full": "full/demos/formats/mx-particle-morph.mp4"
+    },
+    {
+      "id": "mx-code-to-3d",
+      "name": "Code to 3D",
+      "tagline": "Code types itself on one side and every line builds the 3D object live on the other.",
+      "group": "engines",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-code-to-3d.mp4",
+      "poster": "demos/formats/mx-code-to-3d.jpg",
+      "full": "full/demos/formats/mx-code-to-3d.mp4"
+    },
+    {
+      "id": "mx-glass-refraction",
+      "name": "Glass refraction",
+      "tagline": "Clear 3D glass shapes drift in front of big type and bend it through their surfaces, with light catching their edges.",
+      "group": "engines",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-glass-refraction.mp4",
+      "poster": "demos/formats/mx-glass-refraction.jpg",
+      "full": "full/demos/formats/mx-glass-refraction.mp4"
+    },
+    {
+      "id": "mx-oscilloscope",
+      "name": "Oscilloscope",
+      "tagline": "A glowing phosphor beam draws waves, icons and words on a scope screen, with afterglow and live readouts.",
+      "group": "engines",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-oscilloscope.mp4",
+      "poster": "demos/formats/mx-oscilloscope.jpg",
+      "full": "full/demos/formats/mx-oscilloscope.mp4"
+    },
+    {
+      "id": "mx-paper-diorama",
+      "name": "Paper diorama",
+      "tagline": "Painted paper layers stand in real 3D depth like a diorama, with soft shadows, a gentle camera dolly and paper-strip headlines.",
+      "group": "engines",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-paper-diorama.mp4",
+      "poster": "demos/formats/mx-paper-diorama.jpg",
+      "full": "full/demos/formats/mx-paper-diorama.mp4"
+    },
+    {
+      "id": "mx-stage-show-3d",
+      "name": "3D stage show",
+      "tagline": "The stage show in real 3D: velvet curtains, light beams through haze, props on stage and the headline on the stage's screen.",
+      "group": "engines",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-stage-show-3d.mp4",
+      "poster": "demos/formats/mx-stage-show-3d.jpg",
+      "full": "full/demos/formats/mx-stage-show-3d.mp4"
+    },
+    {
+      "id": "mx-instrument-readout",
+      "name": "Instrument readout",
+      "tagline": "Scientific-instrument graphics: engraved dials, guilloché patterns, crop marks and a number that rolls up to fill the screen.",
+      "group": "engines",
+      "aspect": "9:16",
+      "video": "demos/formats/mx-instrument-readout.mp4",
+      "poster": "demos/formats/mx-instrument-readout.jpg",
+      "full": "full/demos/formats/mx-instrument-readout.mp4"
+    },
+    {
+      "id": "kinetic",
+      "name": "Kinetic",
+      "tagline": "Big type that moves on the beat: the words are the visuals.",
+      "group": "motion",
+      "aspect": "9:16",
+      "video": "demos/formats/kinetic.mp4",
+      "poster": "demos/formats/kinetic.jpg",
+      "full": "full/demos/formats/kinetic.mp4",
+      "wide": {
+        "video": "demos/formats/kinetic@16x9.mp4",
+        "poster": "demos/formats/kinetic@16x9.jpg",
+        "full": "full/demos/formats/kinetic@16x9.mp4"
+      }
+    },
+    {
+      "id": "motion-graphics",
+      "name": "Motion graphics",
+      "tagline": "Shapes, icons and diagrams that morph from idea to idea.",
+      "group": "motion",
+      "aspect": "9:16",
+      "video": "demos/formats/motion-graphics.mp4",
+      "poster": "demos/formats/motion-graphics.jpg",
+      "full": "full/demos/formats/motion-graphics.mp4",
+      "wide": {
+        "video": "demos/formats/motion-graphics@16x9.mp4",
+        "poster": "demos/formats/motion-graphics@16x9.jpg",
+        "full": "full/demos/formats/motion-graphics@16x9.mp4"
+      }
+    },
+    {
+      "id": "minimal",
+      "name": "Minimal",
+      "tagline": "Calm, slow and spacious: one thought at a time.",
+      "group": "motion",
+      "aspect": "16:9",
+      "video": "demos/formats/minimal@16x9.mp4",
+      "poster": "demos/formats/minimal@16x9.jpg",
+      "full": "full/demos/formats/minimal@16x9.mp4"
+    },
+    {
+      "id": "editorial",
+      "name": "Editorial",
+      "tagline": "A magazine spread in motion: masthead, columns, pull quotes.",
+      "group": "motion",
+      "aspect": "16:9",
+      "video": "demos/formats/editorial@16x9.mp4",
+      "poster": "demos/formats/editorial@16x9.jpg",
+      "full": "full/demos/formats/editorial@16x9.mp4"
+    },
+    {
+      "id": "vfx",
+      "name": "VFX",
+      "tagline": "Glitches, light streaks, particles and impact effects.",
+      "group": "motion",
+      "aspect": "9:16",
+      "video": "demos/formats/vfx.mp4",
+      "poster": "demos/formats/vfx.jpg",
+      "full": "full/demos/formats/vfx.mp4",
+      "wide": {
+        "video": "demos/formats/vfx@16x9.mp4",
+        "poster": "demos/formats/vfx@16x9.jpg",
+        "full": "full/demos/formats/vfx@16x9.mp4"
+      }
+    },
+    {
+      "id": "3d",
+      "name": "3D",
+      "tagline": "Lit 3D objects with camera moves.",
+      "group": "motion",
+      "aspect": "16:9",
+      "video": "demos/formats/3d.mp4",
+      "poster": "demos/formats/3d.jpg",
+      "full": "full/demos/formats/3d.mp4"
+    },
+    {
+      "id": "quote",
+      "name": "Quote",
+      "tagline": "One quote, beautifully set and animated.",
+      "group": "motion",
+      "aspect": "16:9",
+      "video": "demos/formats/quote@16x9.mp4",
+      "poster": "demos/formats/quote@16x9.jpg",
+      "full": "full/demos/formats/quote@16x9.mp4"
+    },
+    {
+      "id": "retro",
+      "name": "Retro / VHS",
+      "tagline": "VHS, CRT and 8-bit nostalgia.",
+      "group": "motion",
+      "aspect": "9:16",
+      "video": "demos/formats/retro.mp4",
+      "poster": "demos/formats/retro.jpg",
+      "full": "full/demos/formats/retro.mp4",
+      "wide": {
+        "video": "demos/formats/retro@16x9.mp4",
+        "poster": "demos/formats/retro@16x9.jpg",
+        "full": "full/demos/formats/retro@16x9.mp4"
+      }
+    },
+    {
+      "id": "kinetic-bangla",
+      "name": "Kinetic Bangla",
+      "tagline": "Bangla typography that moves: big Bangla words on the beat.",
+      "group": "motion",
+      "aspect": "9:16",
+      "video": "demos/formats/kinetic-bangla.mp4",
+      "poster": "demos/formats/kinetic-bangla.jpg",
+      "full": "full/demos/formats/kinetic-bangla.mp4",
+      "wide": {
+        "video": "demos/formats/kinetic-bangla@16x9.mp4",
+        "poster": "demos/formats/kinetic-bangla@16x9.jpg",
+        "full": "full/demos/formats/kinetic-bangla@16x9.mp4"
+      }
+    },
+    {
+      "id": "satisfying",
+      "name": "Satisfying loop",
+      "tagline": "Shapes that click perfectly into place, looping forever.",
+      "group": "motion",
+      "aspect": "16:9",
+      "video": "demos/formats/satisfying@16x9.mp4",
+      "poster": "demos/formats/satisfying@16x9.jpg",
+      "full": "full/demos/formats/satisfying@16x9.mp4"
+    },
+    {
+      "id": "lyric",
+      "name": "Lyric / voice quote",
+      "tagline": "Your spoken line, word by word, like a lyric video.",
+      "group": "motion",
+      "aspect": "9:16",
+      "video": "demos/formats/lyric.mp4",
+      "poster": "demos/formats/lyric.jpg",
+      "full": "full/demos/formats/lyric.mp4",
+      "wide": {
+        "video": "demos/formats/lyric@16x9.mp4",
+        "poster": "demos/formats/lyric@16x9.jpg",
+        "full": "full/demos/formats/lyric@16x9.mp4"
+      }
+    },
+    {
+      "id": "intro-outro",
+      "name": "Intro / outro",
+      "tagline": "A logo sting to open and an end screen to close.",
+      "group": "motion",
+      "aspect": "16:9",
+      "video": "demos/formats/intro-outro.mp4",
+      "poster": "demos/formats/intro-outro.jpg",
+      "full": "full/demos/formats/intro-outro.mp4"
+    },
+    {
+      "id": "branding",
+      "name": "Branding",
+      "tagline": "A brand reveal: logo, colours, type and the promise.",
+      "group": "brand",
+      "aspect": "16:9",
+      "video": "demos/formats/branding@16x9.mp4",
+      "poster": "demos/formats/branding@16x9.jpg",
+      "full": "full/demos/formats/branding@16x9.mp4"
+    },
+    {
+      "id": "product",
+      "name": "Product",
+      "tagline": "The product as the hero: features, details, price.",
+      "group": "brand",
+      "aspect": "9:16",
+      "video": "demos/formats/product.mp4",
+      "poster": "demos/formats/product.jpg",
+      "full": "full/demos/formats/product.mp4",
+      "wide": {
+        "video": "demos/formats/product@16x9.mp4",
+        "poster": "demos/formats/product@16x9.jpg",
+        "full": "full/demos/formats/product@16x9.mp4"
+      }
+    },
+    {
+      "id": "saas-ui",
+      "name": "SaaS / UI",
+      "tagline": "An app walkthrough: cursor, clicks and the feature that matters.",
+      "group": "brand",
+      "aspect": "16:9",
+      "video": "demos/formats/saas-ui.mp4",
+      "poster": "demos/formats/saas-ui.jpg",
+      "full": "full/demos/formats/saas-ui.mp4"
+    },
+    {
+      "id": "advertisement",
+      "name": "Advertisement",
+      "tagline": "A fast ad: hook, hero, benefits, offer, CTA.",
+      "group": "brand",
+      "aspect": "9:16",
+      "video": "demos/formats/advertisement.mp4",
+      "poster": "demos/formats/advertisement.jpg",
+      "full": "full/demos/formats/advertisement.mp4",
+      "wide": {
+        "video": "demos/formats/advertisement@16x9.mp4",
+        "poster": "demos/formats/advertisement@16x9.jpg",
+        "full": "full/demos/formats/advertisement@16x9.mp4"
+      }
+    },
+    {
+      "id": "trailer",
+      "name": "Trailer",
+      "tagline": "Tension, title cards and a big reveal.",
+      "group": "brand",
+      "aspect": "16:9",
+      "video": "demos/formats/trailer.mp4",
+      "poster": "demos/formats/trailer.jpg",
+      "full": "full/demos/formats/trailer.mp4"
+    },
+    {
+      "id": "testimonial",
+      "name": "Testimonial",
+      "tagline": "A real client's words and result, beautifully set.",
+      "group": "brand",
+      "aspect": "9:16",
+      "video": "demos/formats/testimonial.mp4",
+      "poster": "demos/formats/testimonial.jpg",
+      "full": "full/demos/formats/testimonial.mp4",
+      "wide": {
+        "video": "demos/formats/testimonial@16x9.mp4",
+        "poster": "demos/formats/testimonial@16x9.jpg",
+        "full": "full/demos/formats/testimonial@16x9.mp4"
+      }
+    },
+    {
+      "id": "announcement",
+      "name": "Announcement",
+      "tagline": "Big news: teaser, countdown, reveal, date.",
+      "group": "brand",
+      "aspect": "16:9",
+      "video": "demos/formats/announcement.mp4",
+      "poster": "demos/formats/announcement.jpg",
+      "full": "full/demos/formats/announcement.mp4"
+    },
+    {
+      "id": "case-study",
+      "name": "Case study",
+      "tagline": "Challenge → approach → results, with real numbers.",
+      "group": "brand",
+      "aspect": "9:16",
+      "video": "demos/formats/case-study.mp4",
+      "poster": "demos/formats/case-study.jpg",
+      "full": "full/demos/formats/case-study.mp4"
+    },
+    {
+      "id": "before-after",
+      "name": "Before / after",
+      "tagline": "The same thing, before and after: a wipe makes the change obvious.",
+      "group": "brand",
+      "aspect": "16:9",
+      "video": "demos/formats/before-after@16x9.mp4",
+      "poster": "demos/formats/before-after@16x9.jpg",
+      "full": "full/demos/formats/before-after@16x9.mp4"
+    },
+    {
+      "id": "device-mockup",
+      "name": "Device mockup",
+      "tagline": "Your app or site inside phones and laptops, floating in space.",
+      "group": "brand",
+      "aspect": "16:9",
+      "video": "demos/formats/device-mockup.mp4",
+      "poster": "demos/formats/device-mockup.jpg",
+      "full": "full/demos/formats/device-mockup.mp4"
+    },
+    {
+      "id": "unboxing",
+      "name": "Unboxing / reveal",
+      "tagline": "Something gets opened and what's inside is revealed.",
+      "group": "brand",
+      "aspect": "9:16",
+      "video": "demos/formats/unboxing.mp4",
+      "poster": "demos/formats/unboxing.jpg",
+      "full": "full/demos/formats/unboxing.mp4",
+      "wide": {
+        "video": "demos/formats/unboxing@16x9.mp4",
+        "poster": "demos/formats/unboxing@16x9.jpg",
+        "full": "full/demos/formats/unboxing@16x9.mp4"
+      }
+    },
+    {
+      "id": "pricing",
+      "name": "Pricing / offer",
+      "tagline": "Plans side by side; the right one stands out.",
+      "group": "brand",
+      "aspect": "16:9",
+      "video": "demos/formats/pricing.mp4",
+      "poster": "demos/formats/pricing.jpg",
+      "full": "full/demos/formats/pricing.mp4"
+    },
+    {
+      "id": "results",
+      "name": "Results",
+      "tagline": "One big result, then how it happened.",
+      "group": "brand",
+      "aspect": "9:16",
+      "video": "demos/formats/results.mp4",
+      "poster": "demos/formats/results.jpg",
+      "full": "full/demos/formats/results.mp4"
+    },
+    {
+      "id": "countdown",
+      "name": "Countdown",
+      "tagline": "Days left: flip clocks, a burning fuse, urgency.",
+      "group": "brand",
+      "aspect": "16:9",
+      "video": "demos/formats/countdown@16x9.mp4",
+      "poster": "demos/formats/countdown@16x9.jpg",
+      "full": "full/demos/formats/countdown@16x9.mp4"
+    },
+    {
+      "id": "process-reveal",
+      "name": "Process reveal",
+      "tagline": "How you work, station by station.",
+      "group": "brand",
+      "aspect": "16:9",
+      "video": "demos/formats/process-reveal.mp4",
+      "poster": "demos/formats/process-reveal.jpg",
+      "full": "full/demos/formats/process-reveal.mp4"
+    },
+    {
+      "id": "explainer",
+      "name": "Explainer",
+      "tagline": "Problem → how it works → result, with diagrams that draw themselves.",
+      "group": "teach",
+      "aspect": "9:16",
+      "video": "demos/formats/explainer.mp4",
+      "poster": "demos/formats/explainer.jpg",
+      "full": "full/demos/formats/explainer.mp4"
+    },
+    {
+      "id": "educational",
+      "name": "Educational",
+      "tagline": "A mini lesson: concept, example, quiz, recap.",
+      "group": "teach",
+      "aspect": "16:9",
+      "video": "demos/formats/educational.mp4",
+      "poster": "demos/formats/educational.jpg",
+      "full": "full/demos/formats/educational.mp4"
+    },
+    {
+      "id": "tutorial",
+      "name": "Tutorial",
+      "tagline": "Step 1, 2, 3 on a real screen.",
+      "group": "teach",
+      "aspect": "16:9",
+      "video": "demos/formats/tutorial.mp4",
+      "poster": "demos/formats/tutorial.jpg",
+      "full": "full/demos/formats/tutorial.mp4"
+    },
+    {
+      "id": "presentation",
+      "name": "Presentation",
+      "tagline": "Keynote-style slides with builds and a chart.",
+      "group": "teach",
+      "aspect": "16:9",
+      "video": "demos/formats/presentation.mp4",
+      "poster": "demos/formats/presentation.jpg",
+      "full": "full/demos/formats/presentation.mp4"
+    },
+    {
+      "id": "data",
+      "name": "Data",
+      "tagline": "A number told over time: charts that draw, counters, annotations.",
+      "group": "teach",
+      "aspect": "16:9",
+      "video": "demos/formats/data.mp4",
+      "poster": "demos/formats/data.jpg",
+      "full": "full/demos/formats/data.mp4"
+    },
+    {
+      "id": "listicle",
+      "name": "Listicle",
+      "tagline": "Top N, counted down, each with its own visual.",
+      "group": "teach",
+      "aspect": "9:16",
+      "video": "demos/formats/listicle.mp4",
+      "poster": "demos/formats/listicle.jpg",
+      "full": "full/demos/formats/listicle.mp4",
+      "wide": {
+        "video": "demos/formats/listicle@16x9.mp4",
+        "poster": "demos/formats/listicle@16x9.jpg",
+        "full": "full/demos/formats/listicle@16x9.mp4"
+      }
+    },
+    {
+      "id": "myth-fact",
+      "name": "Myth vs fact",
+      "tagline": "A belief stamped MYTH, then the truth with proof.",
+      "group": "teach",
+      "aspect": "9:16",
+      "video": "demos/formats/myth-fact.mp4",
+      "poster": "demos/formats/myth-fact.jpg",
+      "full": "full/demos/formats/myth-fact.mp4"
+    },
+    {
+      "id": "whiteboard",
+      "name": "Whiteboard",
+      "tagline": "A hand draws the idea line by line on a whiteboard.",
+      "group": "teach",
+      "aspect": "16:9",
+      "video": "demos/formats/whiteboard.mp4",
+      "poster": "demos/formats/whiteboard.jpg",
+      "full": "full/demos/formats/whiteboard.mp4"
+    },
+    {
+      "id": "tier-list",
+      "name": "Tier list",
+      "tagline": "Items ranked S to D, snapping into tiers.",
+      "group": "teach",
+      "aspect": "9:16",
+      "video": "demos/formats/tier-list.mp4",
+      "poster": "demos/formats/tier-list.jpg",
+      "full": "full/demos/formats/tier-list.mp4"
+    },
+    {
+      "id": "cheat-sheet",
+      "name": "Cheat sheet",
+      "tagline": "A one-page reference that builds section by section.",
+      "group": "teach",
+      "aspect": "16:9",
+      "video": "demos/formats/cheat-sheet@16x9.mp4",
+      "poster": "demos/formats/cheat-sheet@16x9.jpg",
+      "full": "full/demos/formats/cheat-sheet@16x9.mp4"
+    },
+    {
+      "id": "framework",
+      "name": "Framework",
+      "tagline": "A model drawn live: a 2x2, a cycle, a pyramid.",
+      "group": "teach",
+      "aspect": "16:9",
+      "video": "demos/formats/framework@16x9.mp4",
+      "poster": "demos/formats/framework@16x9.jpg",
+      "full": "full/demos/formats/framework@16x9.mp4"
+    },
+    {
+      "id": "mistakes",
+      "name": "Mistakes",
+      "tagline": "N mistakes: each shown with ✕, then the fix with ✓.",
+      "group": "teach",
+      "aspect": "9:16",
+      "video": "demos/formats/mistakes.mp4",
+      "poster": "demos/formats/mistakes.jpg",
+      "full": "full/demos/formats/mistakes.mp4"
+    },
+    {
+      "id": "glossary",
+      "name": "Glossary / term",
+      "tagline": "One term explained like a dictionary entry.",
+      "group": "teach",
+      "aspect": "16:9",
+      "video": "demos/formats/glossary.mp4",
+      "poster": "demos/formats/glossary.jpg",
+      "full": "full/demos/formats/glossary.mp4"
+    },
+    {
+      "id": "quiz",
+      "name": "Quiz / poll",
+      "tagline": "A question, options, a timer, then the answer.",
+      "group": "teach",
+      "aspect": "9:16",
+      "video": "demos/formats/quiz.mp4",
+      "poster": "demos/formats/quiz.jpg",
+      "full": "full/demos/formats/quiz.mp4"
+    },
+    {
+      "id": "carousel-video",
+      "name": "Carousel → video",
+      "tagline": "Your carousel's slides, swiping with motion inside each one.",
+      "group": "teach",
+      "aspect": "9:16",
+      "video": "demos/formats/carousel-video.mp4",
+      "poster": "demos/formats/carousel-video.jpg",
+      "full": "full/demos/formats/carousel-video.mp4",
+      "wide": {
+        "video": "demos/formats/carousel-video@16x9.mp4",
+        "poster": "demos/formats/carousel-video@16x9.jpg",
+        "full": "full/demos/formats/carousel-video@16x9.mp4"
+      }
+    },
+    {
+      "id": "thread-video",
+      "name": "Thread → video",
+      "tagline": "A written post or thread, each paragraph becoming a scene.",
+      "group": "teach",
+      "aspect": "16:9",
+      "video": "demos/formats/thread-video.mp4",
+      "poster": "demos/formats/thread-video.jpg",
+      "full": "full/demos/formats/thread-video.mp4"
+    },
+    {
+      "id": "storytelling",
+      "name": "Storytelling",
+      "tagline": "A story in chapters: setup, turn, resolution.",
+      "group": "story",
+      "aspect": "9:16",
+      "video": "demos/formats/storytelling.mp4",
+      "poster": "demos/formats/storytelling.jpg",
+      "full": "full/demos/formats/storytelling.mp4",
+      "wide": {
+        "video": "demos/formats/storytelling@16x9.mp4",
+        "poster": "demos/formats/storytelling@16x9.jpg",
+        "full": "full/demos/formats/storytelling@16x9.mp4"
+      }
+    },
+    {
+      "id": "documentary",
+      "name": "Documentary",
+      "tagline": "Archival frames, lower thirds, maps and dates.",
+      "group": "story",
+      "aspect": "16:9",
+      "video": "demos/formats/documentary.mp4",
+      "poster": "demos/formats/documentary.jpg",
+      "full": "full/demos/formats/documentary.mp4"
+    },
+    {
+      "id": "cinematic",
+      "name": "Cinematic",
+      "tagline": "Film look: letterbox, slow camera, light and atmosphere.",
+      "group": "story",
+      "aspect": "16:9",
+      "video": "demos/formats/cinematic.mp4",
+      "poster": "demos/formats/cinematic.jpg",
+      "full": "full/demos/formats/cinematic.mp4"
+    },
+    {
+      "id": "talking-head",
+      "name": "Talking head",
+      "tagline": "You talk to camera; punch-ins, key words and B-roll support you.",
+      "group": "story",
+      "aspect": "9:16",
+      "video": "demos/formats/talking-head.mp4",
+      "poster": "demos/formats/talking-head.jpg",
+      "full": "full/demos/formats/talking-head.mp4"
+    },
+    {
+      "id": "podcast",
+      "name": "Podcast",
+      "tagline": "The best minute of a conversation, key lines as big type.",
+      "group": "story",
+      "aspect": "9:16",
+      "video": "demos/formats/podcast.mp4",
+      "poster": "demos/formats/podcast.jpg",
+      "full": "full/demos/formats/podcast.mp4"
+    },
+    {
+      "id": "ugc",
+      "name": "UGC",
+      "tagline": "Phone-shot, honest, native: like a real user posted it.",
+      "group": "story",
+      "aspect": "9:16",
+      "video": "demos/formats/ugc.mp4",
+      "poster": "demos/formats/ugc.jpg",
+      "full": "full/demos/formats/ugc.mp4",
+      "wide": {
+        "video": "demos/formats/ugc@16x9.mp4",
+        "poster": "demos/formats/ugc@16x9.jpg",
+        "full": "full/demos/formats/ugc@16x9.mp4"
+      }
+    },
+    {
+      "id": "news",
+      "name": "News",
+      "tagline": "A news package: bumper, headline, ticker, facts.",
+      "group": "story",
+      "aspect": "16:9",
+      "video": "demos/formats/news.mp4",
+      "poster": "demos/formats/news.jpg",
+      "full": "full/demos/formats/news.mp4"
+    },
+    {
+      "id": "comic",
+      "name": "Comic",
+      "tagline": "A story told in comic/manga panels.",
+      "group": "story",
+      "aspect": "16:9",
+      "video": "demos/formats/comic@16x9.mp4",
+      "poster": "demos/formats/comic@16x9.jpg",
+      "full": "full/demos/formats/comic@16x9.mp4"
+    },
+    {
+      "id": "travel-map",
+      "name": "Travel / map",
+      "tagline": "A journey on a map: a route draws, pins drop, places appear.",
+      "group": "story",
+      "aspect": "16:9",
+      "video": "demos/formats/travel-map.mp4",
+      "poster": "demos/formats/travel-map.jpg",
+      "full": "full/demos/formats/travel-map.mp4"
+    },
+    {
+      "id": "qa",
+      "name": "Q&A",
+      "tagline": "A real viewer question, answered.",
+      "group": "story",
+      "aspect": "9:16",
+      "video": "demos/formats/qa.mp4",
+      "poster": "demos/formats/qa.jpg",
+      "full": "full/demos/formats/qa.mp4"
+    },
+    {
+      "id": "reaction",
+      "name": "Reaction / duet",
+      "tagline": "Someone's post on top, your reaction below.",
+      "group": "story",
+      "aspect": "9:16",
+      "video": "demos/formats/reaction.mp4",
+      "poster": "demos/formats/reaction.jpg",
+      "full": "full/demos/formats/reaction.mp4"
+    },
+    {
+      "id": "green-screen",
+      "name": "Green screen",
+      "tagline": "You in front of the thing you're talking about.",
+      "group": "story",
+      "aspect": "9:16",
+      "video": "demos/formats/green-screen.mp4",
+      "poster": "demos/formats/green-screen.jpg",
+      "full": "full/demos/formats/green-screen.mp4",
+      "wide": {
+        "video": "demos/formats/green-screen@16x9.mp4",
+        "poster": "demos/formats/green-screen@16x9.jpg",
+        "full": "full/demos/formats/green-screen@16x9.mp4"
+      }
+    },
+    {
+      "id": "hot-take",
+      "name": "Hot take",
+      "tagline": "An unpopular opinion, said with conviction.",
+      "group": "story",
+      "aspect": "9:16",
+      "video": "demos/formats/hot-take.mp4",
+      "poster": "demos/formats/hot-take.jpg",
+      "full": "full/demos/formats/hot-take.mp4"
+    },
+    {
+      "id": "behind-scenes",
+      "name": "Behind the scenes",
+      "tagline": "A day or a project, as it really happens.",
+      "group": "story",
+      "aspect": "16:9",
+      "video": "demos/formats/behind-scenes.mp4",
+      "poster": "demos/formats/behind-scenes.jpg",
+      "full": "full/demos/formats/behind-scenes.mp4"
+    },
+    {
+      "id": "split-story",
+      "name": "Split story",
+      "tagline": "Two lanes, two people, the same day side by side.",
+      "group": "story",
+      "aspect": "9:16",
+      "video": "demos/formats/split-story.mp4",
+      "poster": "demos/formats/split-story.jpg",
+      "full": "full/demos/formats/split-story.mp4"
+    },
+    {
+      "id": "social",
+      "name": "Social",
+      "tagline": "Native short-form: fast cuts, text pops, a loop.",
+      "group": "social",
+      "aspect": "9:16",
+      "video": "demos/formats/social.mp4",
+      "poster": "demos/formats/social.jpg",
+      "full": "full/demos/formats/social.mp4"
+    },
+    {
+      "id": "faceless",
+      "name": "Faceless",
+      "tagline": "Voice over moody illustrated scenes; no face on camera.",
+      "group": "social",
+      "aspect": "9:16",
+      "video": "demos/formats/faceless.mp4",
+      "poster": "demos/formats/faceless.jpg",
+      "full": "full/demos/formats/faceless.mp4",
+      "wide": {
+        "video": "demos/formats/faceless@16x9.mp4",
+        "poster": "demos/formats/faceless@16x9.jpg",
+        "full": "full/demos/formats/faceless@16x9.mp4"
+      }
+    },
+    {
+      "id": "montage",
+      "name": "Montage",
+      "tagline": "Rapid cuts on the beat: many shots, one feeling.",
+      "group": "social",
+      "aspect": "16:9",
+      "video": "demos/formats/montage.mp4",
+      "poster": "demos/formats/montage.jpg",
+      "full": "full/demos/formats/montage.mp4"
+    },
+    {
+      "id": "music",
+      "name": "Music",
+      "tagline": "A visualiser: the sound drives the picture.",
+      "group": "social",
+      "aspect": "16:9",
+      "video": "demos/formats/music@16x9.mp4",
+      "poster": "demos/formats/music@16x9.jpg",
+      "full": "full/demos/formats/music@16x9.mp4"
+    },
+    {
+      "id": "photo-motion",
+      "name": "Photo motion",
+      "tagline": "Still photos brought to life: parallax, Ken Burns, frames.",
+      "group": "social",
+      "aspect": "16:9",
+      "video": "demos/formats/photo-motion@16x9.mp4",
+      "poster": "demos/formats/photo-motion@16x9.jpg",
+      "full": "full/demos/formats/photo-motion@16x9.mp4"
+    },
+    {
+      "id": "chat-story",
+      "name": "Chat story",
+      "tagline": "A story told as a text-message thread.",
+      "group": "social",
+      "aspect": "9:16",
+      "video": "demos/formats/chat-story.mp4",
+      "poster": "demos/formats/chat-story.jpg",
+      "full": "full/demos/formats/chat-story.mp4",
+      "wide": {
+        "video": "demos/formats/chat-story@16x9.mp4",
+        "poster": "demos/formats/chat-story@16x9.jpg",
+        "full": "full/demos/formats/chat-story@16x9.mp4"
+      }
+    },
+    {
+      "id": "paper-cutout",
+      "name": "Paper cut-out",
+      "tagline": "Stop-motion paper craft: layered shapes, stepped motion.",
+      "group": "social",
+      "aspect": "16:9",
+      "video": "demos/formats/paper-cutout@16x9.mp4",
+      "poster": "demos/formats/paper-cutout@16x9.jpg",
+      "full": "full/demos/formats/paper-cutout@16x9.mp4"
+    },
+    {
+      "id": "game",
+      "name": "Game",
+      "tagline": "Gamified: levels, XP, bosses and unlocks.",
+      "group": "social",
+      "aspect": "16:9",
+      "video": "demos/formats/game.mp4",
+      "poster": "demos/formats/game.jpg",
+      "full": "full/demos/formats/game.mp4"
+    },
+    {
+      "id": "pov",
+      "name": "POV",
+      "tagline": "'POV: …' a relatable moment from the viewer's eyes.",
+      "group": "social",
+      "aspect": "9:16",
+      "video": "demos/formats/pov.mp4",
+      "poster": "demos/formats/pov.jpg",
+      "full": "full/demos/formats/pov.mp4",
+      "wide": {
+        "video": "demos/formats/pov@16x9.mp4",
+        "poster": "demos/formats/pov@16x9.jpg",
+        "full": "full/demos/formats/pov@16x9.mp4"
+      }
+    },
+    {
+      "id": "this-or-that",
+      "name": "This or that",
+      "tagline": "Two options face off; one wins each round.",
+      "group": "social",
+      "aspect": "9:16",
+      "video": "demos/formats/this-or-that.mp4",
+      "poster": "demos/formats/this-or-that.jpg",
+      "full": "full/demos/formats/this-or-that.mp4",
+      "wide": {
+        "video": "demos/formats/this-or-that@16x9.mp4",
+        "poster": "demos/formats/this-or-that@16x9.jpg",
+        "full": "full/demos/formats/this-or-that@16x9.mp4"
+      }
+    },
+    {
+      "id": "ai-visual",
+      "name": "AI visual",
+      "tagline": "Generated images and clips in one style, code-made text on top.",
+      "group": "engines",
+      "aspect": "9:16",
+      "video": "demos/formats/ai-visual.mp4",
+      "poster": "demos/formats/ai-visual.jpg",
+      "full": "full/demos/formats/ai-visual.mp4",
+      "wide": {
+        "video": "demos/formats/ai-visual@16x9.mp4",
+        "poster": "demos/formats/ai-visual@16x9.jpg",
+        "full": "full/demos/formats/ai-visual@16x9.mp4"
+      }
+    },
+    {
+      "id": "hl-ghost-build",
+      "name": "Ghost-word build",
+      "tagline": "The line writes itself word by word top-left: each next word arrives pale grey, turns ink on its spoken word, and the key word lands in a serif italic in the accent.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-ghost-build.mp4",
+      "poster": "demos/headlines/hl-ghost-build.jpg",
+      "full": "full/demos/headlines/hl-ghost-build.mp4"
+    },
+    {
+      "id": "hl-step-title",
+      "name": "Step title",
+      "tagline": "A serif title with one highlighted word, a grey sub-line and a 1-2-3 stepper under it; at every step the title swaps and the next dot lights.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-step-title.mp4",
+      "poster": "demos/headlines/hl-step-title.jpg",
+      "full": "full/demos/headlines/hl-step-title.mp4"
+    },
+    {
+      "id": "hl-tape-tiles",
+      "name": "Tape title + paper tiles",
+      "tagline": "A torn masking-tape strip slaps on at the top with the beat's title, and the key spoken words drop in as small cut-paper tiles next to the action.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-tape-tiles.mp4",
+      "poster": "demos/headlines/hl-tape-tiles.jpg",
+      "full": "full/demos/headlines/hl-tape-tiles.mp4"
+    },
+    {
+      "id": "hl-typed-number",
+      "name": "Typed line + giant number",
+      "tagline": "A calm sentence types on with a caret, then a giant number lands under it and the last words settle in a large italic serif in the accent.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-typed-number.mp4",
+      "poster": "demos/headlines/hl-typed-number.jpg",
+      "full": "full/demos/headlines/hl-typed-number.mp4"
+    },
+    {
+      "id": "hl-decode-neon",
+      "name": "Decode neon",
+      "tagline": "On a dark ground the line builds in white, and the key word scrambles through random characters before it locks in neon with a glow.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-decode-neon.mp4",
+      "poster": "demos/headlines/hl-decode-neon.jpg",
+      "full": "full/demos/headlines/hl-decode-neon.mp4"
+    },
+    {
+      "id": "hl-label-chip",
+      "name": "Label chip + italic",
+      "tagline": "A bold tight sans line, the ordinal on a solid accent chip that pops in first (Two:), the key phrase in a serif italic in the accent, one word boxed in the accent.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-label-chip.mp4",
+      "poster": "demos/headlines/hl-label-chip.jpg",
+      "full": "full/demos/headlines/hl-label-chip.mp4"
+    },
+    {
+      "id": "hl-word-slam",
+      "name": "Word slam",
+      "tagline": "Each word slams down from big to set size with a hit of camera shake.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-word-slam.mp4",
+      "poster": "demos/headlines/hl-word-slam.jpg",
+      "full": "full/demos/headlines/hl-word-slam.mp4"
+    },
+    {
+      "id": "hl-mask-rise",
+      "name": "Mask rise",
+      "tagline": "Lines rise out of a hard edge one after another, calm and editorial.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-mask-rise.mp4",
+      "poster": "demos/headlines/hl-mask-rise.jpg",
+      "full": "full/demos/headlines/hl-mask-rise.mp4"
+    },
+    {
+      "id": "hl-split-reveal",
+      "name": "Split reveal",
+      "tagline": "The headline splits in two and the key word appears in the gap.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-split-reveal.mp4",
+      "poster": "demos/headlines/hl-split-reveal.jpg",
+      "full": "full/demos/headlines/hl-split-reveal.mp4"
+    },
+    {
+      "id": "hl-letter-cascade",
+      "name": "Letter cascade",
+      "tagline": "Letters drop in one by one with a springy overshoot (Bangla-safe: split by grapheme).",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-letter-cascade.mp4",
+      "poster": "demos/headlines/hl-letter-cascade.jpg",
+      "full": "full/demos/headlines/hl-letter-cascade.mp4"
+    },
+    {
+      "id": "hl-zoom-through",
+      "name": "Zoom through",
+      "tagline": "The camera flies through a letter of one headline into the next.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-zoom-through.mp4",
+      "poster": "demos/headlines/hl-zoom-through.jpg",
+      "full": "full/demos/headlines/hl-zoom-through.mp4"
+    },
+    {
+      "id": "hl-weight-morph",
+      "name": "Weight morph",
+      "tagline": "A variable font sweeps from hairline to black across the line.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-weight-morph.mp4",
+      "poster": "demos/headlines/hl-weight-morph.jpg",
+      "full": "full/demos/headlines/hl-weight-morph.mp4"
+    },
+    {
+      "id": "hl-stack-lockup",
+      "name": "Stack lock-up",
+      "tagline": "Words drop and lock into a justified poster block, each row sized to fill the width.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-stack-lockup.mp4",
+      "poster": "demos/headlines/hl-stack-lockup.jpg",
+      "full": "full/demos/headlines/hl-stack-lockup.mp4"
+    },
+    {
+      "id": "hl-word-carousel",
+      "name": "Word carousel",
+      "tagline": "A fixed phrase with one slot that rolls through words and lands on the key one.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-word-carousel.mp4",
+      "poster": "demos/headlines/hl-word-carousel.jpg",
+      "full": "full/demos/headlines/hl-word-carousel.mp4"
+    },
+    {
+      "id": "hl-echo-trail",
+      "name": "Echo trail",
+      "tagline": "Outlined copies trail behind the word as it moves and collapse into it on landing.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-echo-trail.mp4",
+      "poster": "demos/headlines/hl-echo-trail.jpg",
+      "full": "full/demos/headlines/hl-echo-trail.mp4"
+    },
+    {
+      "id": "hl-outline-fill",
+      "name": "Outline to fill",
+      "tagline": "Letters draw themselves as outlines, then fill with colour from left to right.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-outline-fill.mp4",
+      "poster": "demos/headlines/hl-outline-fill.jpg",
+      "full": "full/demos/headlines/hl-outline-fill.mp4"
+    },
+    {
+      "id": "hl-plate-swash",
+      "name": "Plate + swash",
+      "tagline": "The house headline: a dark plate, a white serif kicker, caps landing on the spoken words, the key word on a torn swash.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-plate-swash.mp4",
+      "poster": "demos/headlines/hl-plate-swash.jpg",
+      "full": "full/demos/headlines/hl-plate-swash.mp4"
+    },
+    {
+      "id": "hl-highlighter",
+      "name": "Highlighter swipe",
+      "tagline": "A marker highlight swipes behind the key word after the line lands.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-highlighter.mp4",
+      "poster": "demos/headlines/hl-highlighter.jpg",
+      "full": "full/demos/headlines/hl-highlighter.mp4"
+    },
+    {
+      "id": "hl-scribble",
+      "name": "Scribble mark",
+      "tagline": "A hand-drawn circle, arrow or double underline draws itself around the key word.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-scribble.mp4",
+      "poster": "demos/headlines/hl-scribble.jpg",
+      "full": "full/demos/headlines/hl-scribble.mp4"
+    },
+    {
+      "id": "hl-bar-wipe",
+      "name": "Bar wipe",
+      "tagline": "A solid colour bar wipes across and leaves each word behind.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-bar-wipe.mp4",
+      "poster": "demos/headlines/hl-bar-wipe.jpg",
+      "full": "full/demos/headlines/hl-bar-wipe.mp4"
+    },
+    {
+      "id": "hl-sticker-pop",
+      "name": "Sticker pop",
+      "tagline": "Words as die-cut stickers with a white edge that slap on at slight angles.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-sticker-pop.mp4",
+      "poster": "demos/headlines/hl-sticker-pop.jpg",
+      "full": "full/demos/headlines/hl-sticker-pop.mp4"
+    },
+    {
+      "id": "hl-shape-burst",
+      "name": "Shape burst",
+      "tagline": "The key word lands and a ring of geometric shapes bursts out and settles around it.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-shape-burst.mp4",
+      "poster": "demos/headlines/hl-shape-burst.jpg",
+      "full": "full/demos/headlines/hl-shape-burst.mp4"
+    },
+    {
+      "id": "hl-strike-rewrite",
+      "name": "Strike & rewrite",
+      "tagline": "The wrong word gets struck through and the right word writes in above it.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-strike-rewrite.mp4",
+      "poster": "demos/headlines/hl-strike-rewrite.jpg",
+      "full": "full/demos/headlines/hl-strike-rewrite.mp4"
+    },
+    {
+      "id": "hl-ribbon-unroll",
+      "name": "Ribbon unroll",
+      "tagline": "A folded ribbon unrolls across the frame with the headline printed on it.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-ribbon-unroll.mp4",
+      "poster": "demos/headlines/hl-ribbon-unroll.jpg",
+      "full": "full/demos/headlines/hl-ribbon-unroll.mp4"
+    },
+    {
+      "id": "hl-ransom-cut",
+      "name": "Ransom cut",
+      "tagline": "The key word built from letters cut out of different papers; the rest in clean sans.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-ransom-cut.mp4",
+      "poster": "demos/headlines/hl-ransom-cut.jpg",
+      "full": "full/demos/headlines/hl-ransom-cut.mp4"
+    },
+    {
+      "id": "hl-neon-flicker",
+      "name": "Neon flicker",
+      "tagline": "Neon tubes buzz on letter by letter with a flicker and a soft glow.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-neon-flicker.mp4",
+      "poster": "demos/headlines/hl-neon-flicker.jpg",
+      "full": "full/demos/headlines/hl-neon-flicker.mp4"
+    },
+    {
+      "id": "hl-glitch-split",
+      "name": "Glitch split",
+      "tagline": "Colour-split slices jitter for a few frames, then snap to clean type.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-glitch-split.mp4",
+      "poster": "demos/headlines/hl-glitch-split.jpg",
+      "full": "full/demos/headlines/hl-glitch-split.mp4"
+    },
+    {
+      "id": "hl-light-sweep",
+      "name": "Light sweep",
+      "tagline": "Heavy type with a chrome glint sweeping across, like a film title.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-light-sweep.mp4",
+      "poster": "demos/headlines/hl-light-sweep.jpg",
+      "full": "full/demos/headlines/hl-light-sweep.mp4"
+    },
+    {
+      "id": "hl-liquid-fill",
+      "name": "Liquid fill",
+      "tagline": "The letters fill with a rising wave of colour.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-liquid-fill.mp4",
+      "poster": "demos/headlines/hl-liquid-fill.jpg",
+      "full": "full/demos/headlines/hl-liquid-fill.mp4"
+    },
+    {
+      "id": "hl-3d-flip",
+      "name": "3D flip",
+      "tagline": "Each word flips in on its axis like a turning card, with real perspective.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-3d-flip.mp4",
+      "poster": "demos/headlines/hl-3d-flip.jpg",
+      "full": "full/demos/headlines/hl-3d-flip.mp4"
+    },
+    {
+      "id": "hl-odometer",
+      "name": "Number roll",
+      "tagline": "Digits roll like an odometer up to the number; the line slides in beside it.",
+      "group": "headlines",
+      "aspect": "9:16",
+      "video": "demos/headlines/hl-odometer.mp4",
+      "poster": "demos/headlines/hl-odometer.jpg",
+      "full": "full/demos/headlines/hl-odometer.mp4"
+    }
+  ],
+  "real": [
+    {
+      "id": "dotmirror-1",
+      "title": "What if ChatGPT is recommending your competitors instead of you",
+      "brand": "Dot Mirror",
+      "aspect": "9:16",
+      "video": "real/dotmirror-1.mp4",
+      "poster": "real/dotmirror-1.jpg",
+      "full": "full/real/dotmirror-1.mp4"
+    },
+    {
+      "id": "dotmirror-2",
+      "title": "Twelve clients. Twelve deadlines. One board",
+      "brand": "Dot Mirror",
+      "aspect": "9:16",
+      "video": "real/dotmirror-2.mp4",
+      "poster": "real/dotmirror-2.jpg",
+      "full": "full/real/dotmirror-2.mp4"
+    }
+  ],
+  "beyond": [
+    {
+      "id": "hand-painted",
+      "aspect": "9:16",
+      "video": "beyond/hand-painted.mp4",
+      "poster": "beyond/hand-painted.jpg",
+      "full": "full/beyond/hand-painted.mp4"
+    },
+    {
+      "id": "collage-broll",
+      "aspect": "9:16",
+      "video": "beyond/collage-broll.mp4",
+      "poster": "beyond/collage-broll.jpg",
+      "full": "full/beyond/collage-broll.mp4"
+    },
+    {
+      "id": "film-style",
+      "aspect": "9:16",
+      "video": "beyond/film-style.mp4",
+      "poster": "beyond/film-style.jpg",
+      "full": "full/beyond/film-style.mp4"
+    },
+    {
+      "id": "newsroom-explainer",
+      "aspect": "9:16",
+      "video": "beyond/newsroom-explainer.mp4",
+      "poster": "beyond/newsroom-explainer.jpg",
+      "full": "full/beyond/newsroom-explainer.mp4"
+    },
+    {
+      "id": "anidoodle",
+      "aspect": "1:1",
+      "video": "beyond/anidoodle.mp4",
+      "poster": "beyond/anidoodle.jpg",
+      "full": "full/beyond/anidoodle.mp4"
+    },
+    {
+      "id": "handdraw-story",
+      "aspect": "9:16",
+      "video": "beyond/handdraw-story.mp4",
+      "poster": "beyond/handdraw-story.jpg",
+      "full": "full/beyond/handdraw-story.mp4"
+    },
+    {
+      "id": "dream-loop",
+      "aspect": "16:9",
+      "video": "beyond/dream-loop.mp4",
+      "poster": "beyond/dream-loop.jpg",
+      "full": "full/beyond/dream-loop.mp4"
+    },
+    {
+      "id": "image-to-3d",
+      "aspect": "9:16",
+      "video": "beyond/image-to-3d.mp4",
+      "poster": "beyond/image-to-3d.jpg",
+      "full": "full/beyond/image-to-3d.mp4"
+    },
+    {
+      "id": "code-animation",
+      "aspect": "9:16",
+      "video": "beyond/code-animation.mp4",
+      "poster": "beyond/code-animation.jpg",
+      "full": "full/beyond/code-animation.mp4"
+    },
+    {
+      "id": "shot-recipe",
+      "aspect": "9:16",
+      "video": "beyond/shot-recipe.mp4",
+      "poster": "beyond/shot-recipe.jpg",
+      "full": "full/beyond/shot-recipe.mp4"
+    }
+  ],
+  "host": {
+    "video": "beyond/mirro-host.mp4",
+    "poster": "beyond/mirro-host.jpg",
+    "full": "full/beyond/mirro-host.mp4",
+    "sheet": "beyond/mirro-sheet.jpg",
+    "sheetFull": "full/beyond/mirro-sheet.jpg",
+    "emotions": "beyond/mirro-emotions.jpg",
+    "emotionsFull": "full/beyond/mirro-emotions.jpg"
+  },
+  "carousels": [
+    {
+      "id": "2026-09-24-5-tasks-not-to-give-ai",
+      "hook": "Hand these 5 jobs to AI and you'll lose clients",
+      "caption": "Hand these 5 jobs to AI and you'll lose clients\n\nYes, AI makes work faster. But get some jobs wrong and clients never come back:\n\n1. Replying to an angry client\n2. Setting prices and negotiating\n3. Promising deadlines\n4. The final check before delivery\n5. Owning the client relationship\n\nOne rule: AI writes the draft, you make the call.\n\nWhich job do you never give to AI? Tell me in the comments, and save this post.",
+      "hashtags": [
+        "#aiautomation",
+        "#agencyowner",
+        "#smallbusiness",
+        "#businesssystems",
+        "#founder"
+      ],
+      "slides": [
+        {
+          "src": "carousels/2026-09-24-5-tasks-not-to-give-ai/01.jpg",
+          "full": "full/carousels/2026-09-24-5-tasks-not-to-give-ai/01.jpg"
+        },
+        {
+          "src": "carousels/2026-09-24-5-tasks-not-to-give-ai/02.jpg",
+          "full": "full/carousels/2026-09-24-5-tasks-not-to-give-ai/02.jpg"
+        },
+        {
+          "src": "carousels/2026-09-24-5-tasks-not-to-give-ai/03.jpg",
+          "full": "full/carousels/2026-09-24-5-tasks-not-to-give-ai/03.jpg"
+        },
+        {
+          "src": "carousels/2026-09-24-5-tasks-not-to-give-ai/04.jpg",
+          "full": "full/carousels/2026-09-24-5-tasks-not-to-give-ai/04.jpg"
+        },
+        {
+          "src": "carousels/2026-09-24-5-tasks-not-to-give-ai/05.jpg",
+          "full": "full/carousels/2026-09-24-5-tasks-not-to-give-ai/05.jpg"
+        },
+        {
+          "src": "carousels/2026-09-24-5-tasks-not-to-give-ai/06.jpg",
+          "full": "full/carousels/2026-09-24-5-tasks-not-to-give-ai/06.jpg"
+        },
+        {
+          "src": "carousels/2026-09-24-5-tasks-not-to-give-ai/07.jpg",
+          "full": "full/carousels/2026-09-24-5-tasks-not-to-give-ai/07.jpg"
+        },
+        {
+          "src": "carousels/2026-09-24-5-tasks-not-to-give-ai/08.jpg",
+          "full": "full/carousels/2026-09-24-5-tasks-not-to-give-ai/08.jpg"
+        },
+        {
+          "src": "carousels/2026-09-24-5-tasks-not-to-give-ai/09.jpg",
+          "full": "full/carousels/2026-09-24-5-tasks-not-to-give-ai/09.jpg"
+        }
+      ]
+    },
+    {
+      "id": "2026-09-24-content-os-build-log",
+      "hook": "I stopped asking “what do I post today?”",
+      "caption": "I stopped asking “what do I post today?”\n\nThe problem was simple: generic AI tools don't know my brand and don't remember what I've posted.\n\nSo I built myself a Content OS: structured context, strategy from history, a fixed design engine and automatic QA.\n\nNow the system answers the question. My job is to build and share it.\n\nSave this for the next build log.",
+      "hashtags": ["#buildinpublic", "#founder", "#aiautomation", "#contentsystem"],
+      "slides": [
+        {
+          "src": "carousels/2026-09-24-content-os-build-log/01.jpg",
+          "full": "full/carousels/2026-09-24-content-os-build-log/01.jpg"
+        },
+        {
+          "src": "carousels/2026-09-24-content-os-build-log/02.jpg",
+          "full": "full/carousels/2026-09-24-content-os-build-log/02.jpg"
+        },
+        {
+          "src": "carousels/2026-09-24-content-os-build-log/03.jpg",
+          "full": "full/carousels/2026-09-24-content-os-build-log/03.jpg"
+        },
+        {
+          "src": "carousels/2026-09-24-content-os-build-log/04.jpg",
+          "full": "full/carousels/2026-09-24-content-os-build-log/04.jpg"
+        },
+        {
+          "src": "carousels/2026-09-24-content-os-build-log/05.jpg",
+          "full": "full/carousels/2026-09-24-content-os-build-log/05.jpg"
+        },
+        {
+          "src": "carousels/2026-09-24-content-os-build-log/06.jpg",
+          "full": "full/carousels/2026-09-24-content-os-build-log/06.jpg"
+        },
+        {
+          "src": "carousels/2026-09-24-content-os-build-log/07.jpg",
+          "full": "full/carousels/2026-09-24-content-os-build-log/07.jpg"
+        },
+        {
+          "src": "carousels/2026-09-24-content-os-build-log/08.jpg",
+          "full": "full/carousels/2026-09-24-content-os-build-log/08.jpg"
+        }
+      ]
+    },
+    {
+      "id": "2026-09-27-first-30-days-after-a-saas-launch",
+      "hook": "New SaaS? What I'd do in the first 30 days",
+      "caption": "New SaaS? What I'd do in the first 30 days\n\nLaunch day isn't the finish line. The real work starts then, and most of it is talking to people.\n\nDays 1-7: find the first 10 users by hand\nDays 8-14: fix where users get stuck\nDays 15-21: take the first payment\nDays 22-30: turn what worked into stories\n\nEvery week, AI makes the job faster: call notes, repeat questions, reasons for no, one story into several posts.\n\nWhich week are you in? Tell me in the comments, and save the plan 🚀",
+      "hashtags": ["#saas", "#startup", "#founder", "#buildinpublic", "#ai"],
+      "slides": [
+        {
+          "src": "carousels/2026-09-27-first-30-days-after-a-saas-launch/01.jpg",
+          "full": "full/carousels/2026-09-27-first-30-days-after-a-saas-launch/01.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-first-30-days-after-a-saas-launch/02.jpg",
+          "full": "full/carousels/2026-09-27-first-30-days-after-a-saas-launch/02.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-first-30-days-after-a-saas-launch/03.jpg",
+          "full": "full/carousels/2026-09-27-first-30-days-after-a-saas-launch/03.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-first-30-days-after-a-saas-launch/04.jpg",
+          "full": "full/carousels/2026-09-27-first-30-days-after-a-saas-launch/04.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-first-30-days-after-a-saas-launch/05.jpg",
+          "full": "full/carousels/2026-09-27-first-30-days-after-a-saas-launch/05.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-first-30-days-after-a-saas-launch/06.jpg",
+          "full": "full/carousels/2026-09-27-first-30-days-after-a-saas-launch/06.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-first-30-days-after-a-saas-launch/07.jpg",
+          "full": "full/carousels/2026-09-27-first-30-days-after-a-saas-launch/07.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-first-30-days-after-a-saas-launch/08.jpg",
+          "full": "full/carousels/2026-09-27-first-30-days-after-a-saas-launch/08.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-first-30-days-after-a-saas-launch/09.jpg",
+          "full": "full/carousels/2026-09-27-first-30-days-after-a-saas-launch/09.jpg"
+        }
+      ]
+    },
+    {
+      "id": "2026-09-27-small-team-big-output-with-ai",
+      "hook": "Do more without hiring more people",
+      "caption": "How do you get more done without hiring?\n\nA small team's real problem isn't headcount. It's doing the same work by hand every week.\n\n1. Find the repeat work\n2. Write the steps on one page\n3. Give writing and research to AI\n4. Keep the final check yourself\n\nAnd teach AI your business once: keep prices, rules and writing style in one file, so everyone on the team ships the same quality.\n\nWhich task keeps coming back for your team? Tell me in the comments, and send this to your team 📌",
+      "hashtags": ["#ai", "#automation", "#smallbusiness", "#startup", "#founder"],
+      "slides": [
+        {
+          "src": "carousels/2026-09-27-small-team-big-output-with-ai/01.jpg",
+          "full": "full/carousels/2026-09-27-small-team-big-output-with-ai/01.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-small-team-big-output-with-ai/02.jpg",
+          "full": "full/carousels/2026-09-27-small-team-big-output-with-ai/02.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-small-team-big-output-with-ai/03.jpg",
+          "full": "full/carousels/2026-09-27-small-team-big-output-with-ai/03.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-small-team-big-output-with-ai/04.jpg",
+          "full": "full/carousels/2026-09-27-small-team-big-output-with-ai/04.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-small-team-big-output-with-ai/05.jpg",
+          "full": "full/carousels/2026-09-27-small-team-big-output-with-ai/05.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-small-team-big-output-with-ai/06.jpg",
+          "full": "full/carousels/2026-09-27-small-team-big-output-with-ai/06.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-small-team-big-output-with-ai/07.jpg",
+          "full": "full/carousels/2026-09-27-small-team-big-output-with-ai/07.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-small-team-big-output-with-ai/08.jpg",
+          "full": "full/carousels/2026-09-27-small-team-big-output-with-ai/08.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-small-team-big-output-with-ai/09.jpg",
+          "full": "full/carousels/2026-09-27-small-team-big-output-with-ai/09.jpg"
+        }
+      ]
+    },
+    {
+      "id": "2026-09-27-why-your-idea-will-fail",
+      "hook": "Want to know why your idea will fail?",
+      "caption": "Want to know why your idea will fail?\n\nMost of the time the problem isn't the idea. It's starting in the wrong order.\n\n1. Building before you know anyone will pay\n2. Building for everyone at once\n3. Only asking friends\n4. Building every feature on day one\n\nThe rule is simple: get one person to pay, then build big.\n\nWhich mistake is your idea stuck on? Drop the number in the comments, and save this for next time 💡",
+      "hashtags": ["#business", "#startup", "#founder", "#entrepreneur", "#idea"],
+      "slides": [
+        {
+          "src": "carousels/2026-09-27-why-your-idea-will-fail/01.jpg",
+          "full": "full/carousels/2026-09-27-why-your-idea-will-fail/01.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-why-your-idea-will-fail/02.jpg",
+          "full": "full/carousels/2026-09-27-why-your-idea-will-fail/02.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-why-your-idea-will-fail/03.jpg",
+          "full": "full/carousels/2026-09-27-why-your-idea-will-fail/03.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-why-your-idea-will-fail/04.jpg",
+          "full": "full/carousels/2026-09-27-why-your-idea-will-fail/04.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-why-your-idea-will-fail/05.jpg",
+          "full": "full/carousels/2026-09-27-why-your-idea-will-fail/05.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-why-your-idea-will-fail/06.jpg",
+          "full": "full/carousels/2026-09-27-why-your-idea-will-fail/06.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-why-your-idea-will-fail/07.jpg",
+          "full": "full/carousels/2026-09-27-why-your-idea-will-fail/07.jpg"
+        },
+        {
+          "src": "carousels/2026-09-27-why-your-idea-will-fail/08.jpg",
+          "full": "full/carousels/2026-09-27-why-your-idea-will-fail/08.jpg"
+        }
+      ]
+    }
+  ],
+  "graphics": [
+    {
+      "id": "2026-09-27-ai-prompt-customer-interview-questions",
+      "channel": "instagram",
+      "series": {
+        "id": "ai-prompt",
+        "name": "AI prompt (prompt in the comments)",
+        "part": 3,
+        "track": "business",
+        "topic": "customer-interview-questions"
+      },
+      "hook": "This prompt turns ChatGPT into your customer interviewer",
+      "caption": "This prompt turns ChatGPT into your customer interviewer\nGive it your idea and it writes the questions: who to ask, and what\nIt drops any question that just gets you a polite 'great idea'\nPrompt below",
+      "hashtags": ["#startup", "#startuptips", "#ideavalidation", "#chatgptprompts"],
+      "image": "graphics/2026-09-27-ai-prompt-customer-interview-questions.jpg",
+      "full": "full/graphics/2026-09-27-ai-prompt-customer-interview-questions.jpg"
+    },
+    {
+      "id": "2026-09-27-ai-prompt-customer-messages-to-hooks",
+      "channel": "instagram",
+      "series": {
+        "id": "ai-prompt",
+        "name": "AI prompt (prompt in the comments)",
+        "part": 1,
+        "track": "marketing",
+        "topic": "customer-messages-content-ideas-and-hook"
+      },
+      "hook": "Turn ChatGPT into your own sales analyst",
+      "caption": "Turn ChatGPT into your own sales analyst\nIt reads your inbox and finds the question after which customers stop replying\nThen it tells you which answers to put in your posts up front\nPrompt in comments",
+      "hashtags": ["#smallbusiness", "#salestips", "#customerinsights", "#chatgptprompts"],
+      "image": "graphics/2026-09-27-ai-prompt-customer-messages-to-hooks.jpg",
+      "full": "full/graphics/2026-09-27-ai-prompt-customer-messages-to-hooks.jpg"
+    },
+    {
+      "id": "2026-09-27-ai-prompt-reel-first-line-script",
+      "channel": "instagram",
+      "series": {
+        "id": "ai-prompt",
+        "name": "AI prompt (prompt in the comments)",
+        "part": 2,
+        "track": "creator",
+        "topic": "reel-first-line-30-second-script"
+      },
+      "hook": "Turn ChatGPT into your own reel scriptwriter",
+      "caption": "Turn ChatGPT into your own reel scriptwriter\nGive it your product and one customer question, and it writes a 30-second script\nThe point lands in line one. No 'hey everyone'\nPrompt's in the comments",
+      "hashtags": ["#contentcreator", "#reelstips", "#videoscript", "#chatgptprompts"],
+      "image": "graphics/2026-09-27-ai-prompt-reel-first-line-script.jpg",
+      "full": "full/graphics/2026-09-27-ai-prompt-reel-first-line-script.jpg"
+    },
+    {
+      "id": "2026-10-02-ai-prompt-facebook-ad-copy",
+      "channel": "instagram",
+      "series": {
+        "id": "ai-prompt",
+        "name": "AI prompt (prompt in the comments)",
+        "part": 5,
+        "track": "marketing",
+        "topic": "facebook-ad-copy"
+      },
+      "hook": "Turn ChatGPT into your own Facebook ad copywriter",
+      "caption": "Turn ChatGPT into your own Facebook ad copywriter\nGive it your product and your customers' common questions\nIt answers price and delivery before 'See more' and writes three versions to test\nPrompt's in the comments",
+      "hashtags": ["#digitalmarketing", "#facebookads", "#adcopywriting", "#chatgptprompts"],
+      "image": "graphics/2026-10-02-ai-prompt-facebook-ad-copy.jpg",
+      "full": "full/graphics/2026-10-02-ai-prompt-facebook-ad-copy.jpg"
+    },
+    {
+      "id": "2026-10-02-ai-prompt-feature-request-prioritization",
+      "channel": "instagram",
+      "series": {
+        "id": "ai-prompt",
+        "name": "AI prompt (prompt in the comments)",
+        "part": 4,
+        "track": "saas",
+        "topic": "customer-feature-requests-what-to-build"
+      },
+      "hook": "ChatGPT is now your product manager. Just hand it the requests",
+      "caption": "ChatGPT is now your product manager. Just hand it the requests\nIt starts from a list of who asked for what and how much they pay\nIt ranks by demand and revenue, and tells you what not to build\nFull prompt in comments",
+      "hashtags": ["#saas", "#saasfounder", "#productmanagement", "#chatgptprompts"],
+      "image": "graphics/2026-10-02-ai-prompt-feature-request-prioritization.jpg",
+      "full": "full/graphics/2026-10-02-ai-prompt-feature-request-prioritization.jpg"
+    },
+    {
+      "id": "2026-10-03-agency-playbook-ask-team-before-deadline",
+      "channel": "facebook",
+      "series": {
+        "id": "agency-playbook",
+        "name": "Agency Playbook",
+        "part": 1,
+        "track": "operations",
+        "topic": "deadline-client-team"
+      },
+      "hook": "Promised the client 3 days, then told your team?",
+      "caption": "Promised the client 3 days, then told your team?\nBefore you give a deadline, ask the person doing the work\nTell the client you'll confirm the date this afternoon, then add one day to your team's estimate\nNo late nights for the team, no new date for the client\nSave this",
+      "hashtags": ["#agency", "#clientmanagement", "#projectmanagement", "#teamculture"],
+      "image": "graphics/2026-10-03-agency-playbook-ask-team-before-deadline.jpg",
+      "full": "full/graphics/2026-10-03-agency-playbook-ask-team-before-deadline.jpg"
+    },
+    {
+      "id": "2026-10-03-agency-playbook-delegation-before-the-ta",
+      "channel": "facebook",
+      "series": {
+        "id": "agency-playbook",
+        "name": "Agency Playbook",
+        "part": 2,
+        "track": "team",
+        "topic": "task-delegation"
+      },
+      "hook": "Many agencies redo the same task two or three times",
+      "caption": "Many agencies redo the same task two or three times\nEveryone blames the team, but the problem often starts the moment the task is assigned\nA 5-part task message can prevent most of it\nFull Agency Playbook in the first comment ↓",
+      "hashtags": ["#agencylife", "#delegation", "#teammanagement", "#projectmanagement"],
+      "image": "graphics/2026-10-03-agency-playbook-delegation-before-the-ta.jpg",
+      "full": "full/graphics/2026-10-03-agency-playbook-delegation-before-the-ta.jpg"
+    },
+    {
+      "id": "2026-10-03-agency-playbook-feedback-one-place",
+      "channel": "facebook",
+      "series": {
+        "id": "agency-playbook",
+        "name": "Agency Playbook",
+        "part": 3,
+        "track": "client",
+        "topic": "feedback"
+      },
+      "hook": "Client feedback comes on WhatsApp, email, calls, sometimes voice notes",
+      "caption": "Client feedback comes on WhatsApp, email, calls, sometimes voice notes\nThen a change gets missed, and you hear \"But I told you\"\nThe problem usually isn't the client or the team. It's that feedback has no home\nFull Agency Playbook in the first comment ↓",
+      "hashtags": ["#agency", "#clientcommunication", "#clientmanagement", "#workflow"],
+      "image": "graphics/2026-10-03-agency-playbook-feedback-one-place.jpg",
+      "full": "full/graphics/2026-10-03-agency-playbook-feedback-one-place.jpg"
+    },
+    {
+      "id": "2026-10-03-agency-playbook-late-client-payment",
+      "channel": "facebook",
+      "series": {
+        "id": "agency-playbook",
+        "name": "Agency Playbook",
+        "part": 4,
+        "track": "fix-issues",
+        "topic": "client-payment"
+      },
+      "hook": "Client says 'perfect!', then goes silent on your invoice",
+      "caption": "Client gets the work and writes \"perfect!\"\nThen you send the invoice, and nothing\n\nThe day you sent the final files, your leverage to get paid went with them\n\nHow to prevent it, full breakdown in the first comment ↓",
+      "hashtags": ["#smallbusiness", "#cashflow", "#invoicing", "#clientmanagement"],
+      "image": "graphics/2026-10-03-agency-playbook-late-client-payment.jpg",
+      "full": "full/graphics/2026-10-03-agency-playbook-late-client-payment.jpg"
+    },
+    {
+      "id": "2026-10-03-saas-101-aeo-engine-51-customer",
+      "channel": "facebook",
+      "series": {
+        "id": "saas-101",
+        "name": "SaaS 101",
+        "part": 2,
+        "track": "high-ticket",
+        "topic": "aeo-engine-customer-130-017"
+      },
+      "hook": "Just 51 customers, about $130K MRR (≈ BDT 16M)",
+      "caption": "Just 51 customers, about $130K MRR (≈ BDT 16M)\n\nAEO Engine gets clients named in AI answers. $1,597–$10,000/month\n\nHeadcount isn't the point. It brings customers, so they pay more\n\nCharge more if your work:\n• Brings money\n• Is measurable\n• Is monthly\n\nRevenue Impact → Measurable Result → Monthly Package → High Price\n\nPrice yours: numbers in comments",
+      "hashtags": ["#startup", "#highticket", "#aiseo", "#agencygrowth"],
+      "image": "graphics/2026-10-03-saas-101-aeo-engine-51-customer.jpg",
+      "full": "full/graphics/2026-10-03-saas-101-aeo-engine-51-customer.jpg"
+    },
+    {
+      "id": "2026-10-03-saas-101-trendstory-95-lakh",
+      "channel": "facebook",
+      "series": {
+        "id": "saas-101",
+        "name": "SaaS 101",
+        "part": 1,
+        "track": "fast-growth",
+        "topic": "trendstory-78-533"
+      },
+      "hook": "A 6-month-old SaaS at about $78K MRR (≈ BDT 9.5M)",
+      "caption": "A 6-month-old SaaS at about $78K MRR (≈ BDT 9.5M)\n\nTrendStory turns ideas into short-form videos. No editing needed\n\nIt's not the AI. People pay monthly to kill one recurring hassle\n\nFind a task that's:\n• Repeated\n• Painfully slow\n• Worth paying for\n\nPain → Frequency → Willingness to Pay → Simple MVP\n\nFind your idea: numbers in comments",
+      "hashtags": ["#saas", "#bootstrapped", "#microsaas", "#aitools"],
+      "image": "graphics/2026-10-03-saas-101-trendstory-95-lakh.jpg",
+      "full": "full/graphics/2026-10-03-saas-101-trendstory-95-lakh.jpg"
+    },
+    {
+      "id": "2026-10-03-weak-first-line-nobody-reads",
+      "channel": "facebook",
+      "series": null,
+      "hook": "Nobody reads your posts because your first line is weak",
+      "caption": "Nobody reads your posts because your first line is weak\nOn Facebook, people see only the first few lines before 'See more'\nThat's where they decide: read on or keep scrolling\n\nBefore you write a first line, check three things:\n• Will readers recognise their own problem?\n• Is there a specific moment or number?\n• Did you cut the greeting and the intro?\n\nWeak: Today I want to talk about something important\nStrong: Clients leave when they hear your price? It's not the price, it's your first message\n\nDrop the first line of your last post in the comments",
+      "hashtags": ["#contentcreator", "#copywriting", "#facebookmarketing", "#contentwriting"],
+      "image": "graphics/2026-10-03-weak-first-line-nobody-reads.jpg",
+      "full": "full/graphics/2026-10-03-weak-first-line-nobody-reads.jpg"
+    },
+    {
+      "id": "2026-10-04-agency-playbook-revenue-up-profit-down",
+      "channel": "facebook",
+      "series": {
+        "id": "agency-playbook",
+        "name": "Agency Playbook",
+        "part": 5,
+        "track": "operations",
+        "topic": "revenue-profit"
+      },
+      "hook": "Revenue beat last month. What you kept didn't",
+      "caption": "Revenue beat last month. What you kept didn't\nThe invoice total looked great, then salaries and bills came out, and less was left than before\n\nThe problem often hides inside the client everyone thinks is your best\n\nWhich client, and how to find out, in the first comment ↓",
+      "hashtags": ["#agencylife", "#profitability", "#pricingstrategy", "#businessfinance"],
+      "image": "graphics/2026-10-04-agency-playbook-revenue-up-profit-down.jpg",
+      "full": "full/graphics/2026-10-04-agency-playbook-revenue-up-profit-down.jpg"
+    },
+    {
+      "id": "2026-10-04-ai-prompt-which-tasks-need-ai",
+      "channel": "instagram",
+      "series": {
+        "id": "ai-prompt",
+        "name": "AI prompt (prompt in the comments)",
+        "part": 6,
+        "track": "workflow",
+        "topic": "which-tasks-need-ai-script-agentic-or-au"
+      },
+      "hook": "Turn ChatGPT into your own automation consultant",
+      "caption": "Turn ChatGPT into your own automation consultant\nGive it a list of your business's daily tasks to start\nIt also flags which tasks don't need AI at all, just a script\nPrompt in comments",
+      "hashtags": ["#entrepreneur", "#aiautomation", "#businessautomation", "#chatgptprompts"],
+      "image": "graphics/2026-10-04-ai-prompt-which-tasks-need-ai.jpg",
+      "full": "full/graphics/2026-10-04-ai-prompt-which-tasks-need-ai.jpg"
+    }
+  ]
+}
