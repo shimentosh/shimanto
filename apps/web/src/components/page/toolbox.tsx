@@ -1,5 +1,6 @@
 import { type Accent, Icon, accentBg, cn } from '@shimanto/ui';
 import Image from 'next/image';
+import type { ReactNode } from 'react';
 import { Section, SectionTitle } from '@/components/page/section';
 import type { Tool, ToolboxGroup, ToolboxItem } from '@/content/tools';
 
@@ -326,20 +327,27 @@ export function FaqSection({
   faq,
   eyebrow = 'FAQ',
   title = 'Good questions.',
+  heading,
 }: {
   faq: NonNullable<Tool['faq']>;
   eyebrow?: string;
   title?: string;
+  /** Replaces the default eyebrow + title (its h2 needs `id="faq-title"`). */
+  heading?: ReactNode;
 }) {
   return (
     <Section divided labelledBy="faq-title">
       <div className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
-        <SectionTitle
-          id="faq-title"
-          eyebrow={eyebrow}
-          title={title}
-          className="self-start lg:sticky lg:top-28"
-        />
+        {heading ? (
+          <div className="self-start lg:sticky lg:top-28">{heading}</div>
+        ) : (
+          <SectionTitle
+            id="faq-title"
+            eyebrow={eyebrow}
+            title={title}
+            className="self-start lg:sticky lg:top-28"
+          />
+        )}
         <ul className="border-ink/10 border-b">
           {faq.map((item) => (
             <li key={item.q} className="border-ink/10 border-t">

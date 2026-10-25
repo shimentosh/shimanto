@@ -1,15 +1,14 @@
 /* eslint-disable @next/next/no-img-element -- pre-sized posters and renders from Content OS */
-import { Container, Icon, accentBg, cn } from '@shimanto/ui';
+import { Container, Icon, cn } from '@shimanto/ui';
 import Link from 'next/link';
 import { TrackViewItem } from '@/components/analytics/analytics';
 import { JsonLd } from '@/components/page/json-ld';
 import { PlatformMark, SocialIcon } from '@/components/page/social-icon';
-import { Section, SectionTitle } from '@/components/page/section';
+import { Section } from '@/components/page/section';
 import { FaqSection } from '@/components/page/toolbox';
-import { CONTENT_OS_FALLBACK, CONTENT_OS_SLUG, type ContentOsCopy } from '@/content/content-os';
+import { CONTENT_OS_SLUG, type ContentOsCopy } from '@/content/content-os';
 import type { OutputMedia } from '@/content/content-os/types';
 import {
-  type GraphicDemo,
   beyondDemos,
   carouselDemos,
   demoGroups,
@@ -21,12 +20,27 @@ import {
   videoDemoCount,
 } from '@/content/content-os/demos';
 import { absoluteUrl, site } from '@/lib/site';
-import { type StoreProduct, formatPrice, majorUnits } from '@/lib/store';
+import { type StoreProduct, majorUnits } from '@/lib/store';
 import { BotChat, BotMark, type ChatAttachments } from './bot-chat';
 import { BrandMemory, type OutputAsset } from './brand-memory';
 import { CarouselViewer } from './carousel-viewer';
+import { CommandFlow } from './command-flow';
 import { DemoGallery } from './demo-gallery';
 import { Clip, ClipGallery, HoverClip, StoryVideo } from './media';
+import {
+  BuyButton,
+  Headline,
+  IconTile,
+  PointItem,
+  PostCard,
+  PosterWall,
+  Terminal,
+  offer,
+  platformOf,
+  tint,
+} from './parts';
+import { pressDark } from './press';
+import { ContentOsShell } from './shell';
 
 /** The real work each brand in the memory section points at. */
 const pickCarousel = carouselDemos.find((d) => d.id.includes('small-team')) ?? carouselDemos[0]!;
@@ -52,208 +66,6 @@ const outputMedia: Record<OutputMedia, OutputAsset> = {
   host: reel(hostDemo ?? realDemos[0]!),
 };
 
-/** Soft card tint per accent. */
-const tint = {
-  build: 'bg-build/15',
-  create: 'bg-create/15',
-  spark: 'bg-spark/15',
-  signal: 'bg-signal/15',
-  idea: 'bg-idea/20',
-} as const;
-
-function IconTile({
-  icon,
-  tone,
-  size = 'md',
-}: {
-  icon: Parameters<typeof Icon>[0]['name'];
-  tone: keyof typeof tint;
-  size?: 'md' | 'lg';
-}) {
-  return (
-    <span
-      aria-hidden="true"
-      className={cn(
-        'grid shrink-0 place-items-center rounded-[14px] text-[#2C2E2A]',
-        accentBg[tone],
-        size === 'lg' ? 'size-14' : 'size-11',
-      )}
-    >
-      <Icon name={icon} className={size === 'lg' ? 'size-6' : 'size-5'} />
-    </span>
-  );
-}
-
-function Terminal({ children, className }: { children: React.ReactNode; className?: string }) {
-  return (
-    <code
-      className={cn(
-        'inline-flex max-w-full items-center gap-2 overflow-x-auto rounded-[10px] bg-black/40 px-3 py-2 font-mono text-[13px] whitespace-nowrap text-[#F3EFE4] ring-1 ring-white/10',
-        className,
-      )}
-    >
-      <span aria-hidden="true" className="text-build">
-        ›
-      </span>
-      {children}
-    </code>
-  );
-}
-
-/** A short line with a small icon in an accent tint. */
-function PointItem({
-  point,
-  tone = 'build',
-}: {
-  point: { text: string; icon: Parameters<typeof Icon>[0]['name'] };
-  tone?: keyof typeof tint;
-}) {
-  return (
-    <li className="flex items-center gap-2.5">
-      <span
-        aria-hidden="true"
-        className={cn('grid size-7 shrink-0 place-items-center rounded-[9px]', tint[tone])}
-      >
-        <Icon name={point.icon} className="size-3.5" />
-      </span>
-      {point.text}
-    </li>
-  );
-}
-
-/** Brand names whose logo leads an example chip ("Instagram 4:5" gets the Instagram mark). */
-const PLATFORMS = ['Instagram', 'LinkedIn', 'Facebook', 'TikTok', 'YouTube', 'Threads', 'X'];
-const platformOf = (label: string) => PLATFORMS.find((p) => label.startsWith(`${p} `));
-
-/** The Content OS logo (mark + name), cropped and compressed for the web. */
-function Wordmark({ className }: { className?: string }) {
-  return (
-    <img
-      src="/content-os/logo.webp"
-      alt="Content OS"
-      width={340}
-      height={80}
-      className={cn('h-7 w-auto', className)}
-    />
-  );
-}
-
-/** Primary action: buy (with the price), or a plain "coming soon" until it's on sale. */
-function BuyButton({
-  href,
-  label,
-  comingSoon,
-  size = 'lg',
-  className,
-}: {
-  href: string | null;
-  label: string;
-  comingSoon: string;
-  size?: 'sm' | 'lg';
-  className?: string;
-}) {
-  const base = cn(
-    'rounded-pill inline-flex items-center justify-center gap-2 font-medium whitespace-nowrap',
-    size === 'lg' ? 'px-7 py-4 text-[17px] md:text-lg' : 'px-4 py-2 text-sm',
-    className,
-  );
-  return href ? (
-    <Link
-      href={href}
-      className={cn(
-        base,
-        'group bg-signal text-[#0E0F0C] shadow-[0_10px_40px_-10px_rgba(46,155,247,0.8)] transition hover:brightness-110',
-      )}
-    >
-      {label}
-      <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
-        →
-      </span>
-    </Link>
-  ) : (
-    <span className={cn(base, 'text-ink-soft ring-1 ring-white/20')}>{comingSoon}</span>
-  );
-}
-
-/** Columns of real renders drifting up and down: the hero's backdrop. */
-function PosterWall() {
-  const posters = formatDemos.filter((d) => d.aspect === '9:16').map((d) => d.poster);
-  const columns = Array.from({ length: 8 }, (_, c) =>
-    Array.from({ length: 6 }, (_, r) => posters[(c * 6 + r * 7) % posters.length]!),
-  );
-  return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 flex w-[170%] [transform:translate(-50%,-50%)_perspective(1400px)_rotateX(22deg)_rotateZ(-12deg)] gap-4 md:w-[130%]">
-        {columns.map((column, c) => (
-          <div key={c} className="min-w-0 flex-1 overflow-hidden">
-            <div
-              className={c % 2 ? 'cos-drift-down' : 'cos-drift-up'}
-              style={{ ['--cos-speed' as string]: `${70 + (c % 3) * 18}s` }}
-            >
-              {[...column, ...column].map((src, i) => (
-                <img
-                  key={i}
-                  src={src}
-                  alt=""
-                  width={180}
-                  height={320}
-                  loading={i < 3 ? 'eager' : 'lazy'}
-                  decoding="async"
-                  className="mb-4 aspect-[9/16] w-full rounded-[14px] object-cover opacity-70"
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-      {/* Darken towards the copy and the edges. */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_45%,rgba(14,15,12,0.92)_0%,rgba(14,15,12,0.75)_45%,rgba(14,15,12,0.55)_100%)]" />
-      <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent to-[#0E0F0C]" />
-      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#0E0F0C] to-transparent" />
-    </div>
-  );
-}
-
-function PostCard({ post, readMore }: { post: GraphicDemo; readMore: string }) {
-  return (
-    <li className="group bg-paper flex flex-col overflow-hidden rounded-[20px] ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 hover:shadow-[0_30px_70px_-30px_rgba(0,0,0,0.9)] hover:ring-white/25">
-      <img
-        src={post.image}
-        srcSet={`${post.image} 900w, ${post.full} 1080w`}
-        sizes="(min-width: 1280px) 300px, (min-width: 1024px) 31vw, (min-width: 640px) 45vw, 92vw"
-        alt={post.hook}
-        width={720}
-        height={900}
-        loading="lazy"
-        decoding="async"
-        className="aspect-[4/5] w-full cursor-zoom-in object-cover"
-      />
-      <div className="flex flex-1 flex-col p-4">
-        <p className="text-ink-soft flex min-w-0 items-center gap-2 text-xs">
-          <span className="bg-signal size-1.5 shrink-0 rounded-full" aria-hidden="true" />
-          <span className="truncate">{post.series?.name ?? post.channel}</span>
-          <span aria-hidden="true">·</span>
-          <span className="shrink-0 capitalize">{post.channel}</span>
-        </p>
-        <p className="mt-2 line-clamp-2 min-h-[2.6em] text-[15px] leading-snug font-medium">
-          {post.hook}
-        </p>
-        <details className="group/caption mt-auto pt-3">
-          <summary className="text-ink-soft cursor-pointer list-none text-xs underline underline-offset-4 hover:text-[#F3EFE4] [&::-webkit-details-marker]:hidden">
-            {readMore}
-          </summary>
-          <p className="text-ink-soft mt-3 text-[14px] leading-relaxed whitespace-pre-line">
-            {post.caption}
-          </p>
-          {post.hashtags.length > 0 && (
-            <p className="text-signal mt-3 text-xs">{post.hashtags.join(' ')}</p>
-          )}
-        </details>
-      </div>
-    </li>
-  );
-}
-
 /**
  * The Content OS sales page: a standalone, always-dark landing for ads, rendered entirely from one
  * language's copy. Price and availability come from the store, with the launch price as fallback.
@@ -269,18 +81,13 @@ export function ContentOsLanding({
   lang: string;
   path: string;
 }) {
-  const amount = product?.amount ?? CONTENT_OS_FALLBACK.amount;
-  const currency = product?.amount !== undefined ? product.currency : CONTENT_OS_FALLBACK.currency;
-  const price = formatPrice(amount, currency);
+  const { amount, currency, price, purchasable, buy } = offer(product);
   const fill = (text: string) =>
     text
       .replaceAll('{price}', price)
       .replaceAll('{videos}', `${videoDemoCount}+`)
       .replaceAll('{carousels}', String(carouselDemos.length))
       .replaceAll('{posts}', String(graphicDemos.length));
-  // Until the product is published in the admin, the page sells nothing it can't deliver.
-  const purchasable = product?.status === 'available';
-  const buy = purchasable ? `/checkout?items=${CONTENT_OS_SLUG}` : null;
   const c = copy;
 
   const vertical = formatDemos.filter((d) => d.aspect === '9:16');
@@ -295,7 +102,7 @@ export function ContentOsLanding({
   };
 
   return (
-    <main id="main" lang={lang} data-standalone="" className="cos-dark min-h-dvh">
+    <ContentOsShell copy={c} product={product} lang={lang} path={path} sections={c.nav.links}>
       {purchasable && (
         <TrackViewItem
           item={{
@@ -343,36 +150,6 @@ export function ContentOsLanding({
         }}
       />
 
-      {/* ───────────── Header ───────────── */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0E0F0C]/75 backdrop-blur-xl">
-        <Container className="flex h-16 items-center gap-3 md:gap-5">
-          <a href="#top" className="shrink-0">
-            <Wordmark className="h-6 md:h-7" />
-          </a>
-          <nav aria-label="Content OS" className="ml-auto hidden lg:block">
-            <ul className="flex items-center gap-1">
-              {c.nav.links.map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    className="text-ink-soft rounded-pill px-3 py-2 text-sm transition hover:text-[#F3EFE4]"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-          <BuyButton
-            href={buy ?? '#pricing'}
-            label={fill(c.nav.buy)}
-            comingSoon={c.pricing.comingSoon}
-            size="sm"
-            className="ml-auto lg:ml-0"
-          />
-        </Container>
-      </header>
-
       {/* ───────────── Hero: the bot ───────────── */}
       <section id="top" className="relative isolate overflow-hidden">
         <PosterWall />
@@ -395,7 +172,10 @@ export function ContentOsLanding({
               <BuyButton href={buy} label={fill(c.hero.buy)} comingSoon={c.pricing.comingSoon} />
               <a
                 href="#story"
-                className="rounded-pill inline-flex items-center gap-2 px-6 py-4 text-[17px] font-medium ring-1 ring-white/20 transition hover:bg-white/10"
+                className={cn(
+                  pressDark,
+                  'rounded-pill inline-flex items-center gap-2 px-6 py-4 text-[17px] font-medium',
+                )}
               >
                 <Icon name="play" className="size-4" />
                 {c.hero.watch}
@@ -423,7 +203,7 @@ export function ContentOsLanding({
       </section>
 
       {/* ───────────── Story video ───────────── */}
-      <Section className="scroll-mt-20">
+      <Section className="scroll-mt-8">
         <StoryVideo
           src={storyDemo.full}
           poster={storyDemo.poster}
@@ -435,24 +215,28 @@ export function ContentOsLanding({
       </Section>
 
       {/* ───────────── Brand memory ───────────── */}
-      <Section divided labelledBy="cos-memory">
-        <SectionTitle
+      <Section divided labelledBy="cos-memory" id="memory" className="scroll-mt-8">
+        <Headline
           id="cos-memory"
           eyebrow={c.memory.eyebrow}
+          icon="cpu"
+          tone="signal"
           title={c.memory.title}
           rest={c.memory.rest}
+          intro={c.memory.intro}
         />
-        <p className="text-ink-soft mt-6 max-w-[62ch] text-lg leading-relaxed">{c.memory.intro}</p>
         <div className="mt-10">
           <BrandMemory memory={c.memory} media={outputMedia} />
         </div>
       </Section>
 
       {/* ───────────── What it makes ───────────── */}
-      <Section divided labelledBy="cos-makes" id="makes" className="scroll-mt-20">
-        <SectionTitle
+      <Section divided labelledBy="cos-makes" id="makes" className="scroll-mt-8">
+        <Headline
           id="cos-makes"
           eyebrow={c.makes.eyebrow}
+          icon="spark"
+          tone="spark"
           title={c.makes.title}
           rest={c.makes.rest}
         />
@@ -486,15 +270,15 @@ export function ContentOsLanding({
 
       {/* ───────────── Carousels ───────────── */}
       <Section divided labelledBy="cos-carousels">
-        <SectionTitle
+        <Headline
           id="cos-carousels"
           eyebrow={c.carousels.eyebrow}
+          icon="grid"
+          tone="build"
           title={c.carousels.title}
           rest={c.carousels.rest}
+          intro={c.carousels.intro}
         />
-        <p className="text-ink-soft mt-6 max-w-[62ch] text-lg leading-relaxed">
-          {c.carousels.intro}
-        </p>
         <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-[15px]">
           {c.carousels.points.map((point) => (
             <PointItem key={point.text} point={point} />
@@ -517,13 +301,15 @@ export function ContentOsLanding({
 
       {/* ───────────── Text posts & graphics ───────────── */}
       <Section divided labelledBy="cos-posts">
-        <SectionTitle
+        <Headline
           id="cos-posts"
           eyebrow={c.posts.eyebrow}
+          icon="pen"
+          tone="idea"
           title={c.posts.title}
           rest={c.posts.rest}
+          intro={c.posts.intro}
         />
-        <p className="text-ink-soft mt-6 max-w-[62ch] text-lg leading-relaxed">{c.posts.intro}</p>
         <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-[15px]">
           {c.posts.points.map((point) => (
             <PointItem key={point.text} point={point} tone="idea" />
@@ -539,14 +325,16 @@ export function ContentOsLanding({
       </Section>
 
       {/* ───────────── Every demo ───────────── */}
-      <Section divided labelledBy="cos-demos" id="demos" className="scroll-mt-20">
-        <SectionTitle
+      <Section divided labelledBy="cos-demos" id="demos" className="scroll-mt-8">
+        <Headline
           id="cos-demos"
           eyebrow={c.gallery.eyebrow}
+          icon="video"
+          tone="create"
           title={fill(c.gallery.title)}
           rest={c.gallery.rest}
+          intro={c.gallery.intro}
         />
-        <p className="text-ink-soft mt-6 max-w-[62ch] text-lg leading-relaxed">{c.gallery.intro}</p>
         <div className="mt-10">
           <DemoGallery
             demos={formatDemos}
@@ -570,15 +358,15 @@ export function ContentOsLanding({
       <Section divided labelledBy="cos-beyond">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-end lg:gap-16">
           <div>
-            <SectionTitle
+            <Headline
               id="cos-beyond"
               eyebrow={c.beyond.eyebrow}
+              icon="bulb"
+              tone="create"
               title={c.beyond.title}
               rest={c.beyond.rest}
+              intro={c.beyond.intro}
             />
-            <p className="text-ink-soft mt-6 max-w-[58ch] text-lg leading-relaxed">
-              {c.beyond.intro}
-            </p>
           </div>
           {/* What you could ask for, as chat bubbles */}
           <ul className="flex flex-wrap gap-2.5 lg:justify-end">
@@ -656,10 +444,15 @@ export function ContentOsLanding({
         <Section divided labelledBy="cos-real">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-center lg:gap-16">
             <div>
-              <SectionTitle id="cos-real" eyebrow={c.real.eyebrow} title={c.real.title} />
-              <p className="text-ink-soft mt-5 max-w-[48ch] text-lg leading-relaxed">
-                {c.real.intro}
-              </p>
+              <Headline
+                id="cos-real"
+                eyebrow={c.real.eyebrow}
+                icon="briefcase"
+                tone="signal"
+                title={c.real.title}
+                rest={c.real.rest}
+                intro={c.real.intro}
+              />
             </div>
             <ul className="grid grid-cols-2 gap-4 md:gap-5">
               {realDemos.map((r) => (
@@ -684,9 +477,11 @@ export function ContentOsLanding({
 
       {/* ───────────── Everything it can do ───────────── */}
       <Section divided labelledBy="cos-abilities">
-        <SectionTitle
+        <Headline
           id="cos-abilities"
           eyebrow={c.abilities.eyebrow}
+          icon="layers"
+          tone="build"
           title={c.abilities.title}
           rest={c.abilities.rest}
         />
@@ -712,8 +507,15 @@ export function ContentOsLanding({
       </Section>
 
       {/* ───────────── How it works ───────────── */}
-      <Section divided labelledBy="cos-how" id="how" className="scroll-mt-20">
-        <SectionTitle id="cos-how" eyebrow={c.how.eyebrow} title={c.how.title} rest={c.how.rest} />
+      <Section divided labelledBy="cos-how" id="how" className="scroll-mt-8">
+        <Headline
+          id="cos-how"
+          eyebrow={c.how.eyebrow}
+          icon="compass"
+          tone="spark"
+          title={c.how.title}
+          rest={c.how.rest}
+        />
         <ol className="mt-12 grid gap-4 md:grid-cols-2 md:gap-5 xl:grid-cols-4">
           {c.how.steps.map((step, i) => (
             <li
@@ -739,9 +541,11 @@ export function ContentOsLanding({
 
       {/* ───────────── Why it's different ───────────── */}
       <Section divided labelledBy="cos-different">
-        <SectionTitle
+        <Headline
           id="cos-different"
           eyebrow={c.different.eyebrow}
+          icon="target"
+          tone="idea"
           title={c.different.title}
           rest={c.different.rest}
         />
@@ -760,41 +564,32 @@ export function ContentOsLanding({
       <section aria-labelledby="cos-commands" className="pb-16 md:pb-24">
         <Container>
           <div className="grid gap-10 rounded-[24px] bg-gradient-to-br from-[#12233a] to-[#0E0F0C] p-7 ring-1 ring-white/10 md:p-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
-            <div>
-              <p className="text-ink-soft font-mono text-xs tracking-[0.16em] uppercase">
-                {c.commands.eyebrow}
-              </p>
-              <h2
+            <div className="self-start lg:sticky lg:top-12">
+              <Headline
                 id="cos-commands"
-                className="mt-4 text-[clamp(32px,4vw,52px)] leading-[1] font-medium tracking-[-0.045em]"
-              >
-                {c.commands.title}
-              </h2>
-              <p className="text-ink-soft mt-5 text-lg leading-relaxed">{c.commands.intro}</p>
+                eyebrow={c.commands.eyebrow}
+                icon="code"
+                tone="signal"
+                title={c.commands.title}
+                rest={c.commands.rest}
+                intro={c.commands.intro}
+              />
             </div>
-            <ul className="divide-y divide-white/10 rounded-[16px] bg-black/30 ring-1 ring-white/10">
-              {c.commands.list.map((item) => (
-                <li key={item.command} className="flex gap-4 px-5 py-4 md:px-6">
-                  <span
-                    aria-hidden="true"
-                    className="bg-signal/15 text-signal grid size-9 shrink-0 place-items-center rounded-[10px]"
-                  >
-                    <Icon name={item.icon} className="size-4" />
-                  </span>
-                  <span className="grid min-w-0 gap-1">
-                    <code className="font-mono text-[14px] break-words">{item.command}</code>
-                    <span className="text-ink-soft text-[15px]">{item.does}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
+            <CommandFlow commands={c.commands} />
           </div>
         </Container>
       </section>
 
       {/* ───────────── Platforms + audience ───────────── */}
       <Section divided labelledBy="cos-platforms">
-        <SectionTitle id="cos-platforms" eyebrow={c.platforms.eyebrow} title={c.platforms.title} />
+        <Headline
+          id="cos-platforms"
+          eyebrow={c.platforms.eyebrow}
+          icon="globe"
+          tone="build"
+          title={c.platforms.title}
+          rest={c.platforms.rest}
+        />
         <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {c.platforms.list.map((platform) => (
             <li
@@ -826,7 +621,14 @@ export function ContentOsLanding({
       </Section>
 
       <Section divided labelledBy="cos-audience">
-        <SectionTitle id="cos-audience" eyebrow={c.audience.eyebrow} title={c.audience.title} />
+        <Headline
+          id="cos-audience"
+          eyebrow={c.audience.eyebrow}
+          icon="users"
+          tone="create"
+          title={c.audience.title}
+          rest={c.audience.rest}
+        />
         <ul className="mt-10 grid gap-4 md:grid-cols-3 md:gap-5">
           {c.audience.list.map((item) => (
             <li
@@ -842,14 +644,16 @@ export function ContentOsLanding({
       </Section>
 
       {/* ───────────── Pricing ───────────── */}
-      <Section divided labelledBy="cos-pricing" id="pricing" className="scroll-mt-20">
+      <Section divided labelledBy="cos-pricing" id="pricing" className="scroll-mt-8">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
-          <SectionTitle
+          <Headline
             id="cos-pricing"
             eyebrow={c.pricing.eyebrow}
+            icon="tag"
+            tone="spark"
             title={c.pricing.title}
             rest={c.pricing.rest}
-            className="self-start"
+            className="self-start lg:sticky lg:top-12"
           />
           <div className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#16304f] via-[#141618] to-[#141618] p-7 shadow-[0_40px_120px_-40px_rgba(46,155,247,0.6)] ring-1 ring-white/15 md:p-10">
             <div className="flex flex-wrap items-end justify-between gap-4">
@@ -896,14 +700,15 @@ export function ContentOsLanding({
 
       {/* ───────────── Requirements ───────────── */}
       <Section divided labelledBy="cos-requirements">
-        <SectionTitle
+        <Headline
           id="cos-requirements"
           eyebrow={c.requirements.eyebrow}
+          icon="wrench"
+          tone="idea"
           title={c.requirements.title}
+          rest={c.requirements.rest}
+          intro={c.requirements.intro}
         />
-        <p className="text-ink-soft mt-5 max-w-[62ch] text-lg leading-relaxed">
-          {c.requirements.intro}
-        </p>
         <div className="mt-10 grid gap-5 lg:grid-cols-2">
           <div className="rounded-card p-6 ring-1 ring-white/10 md:p-7">
             <h3 className="text-lg font-medium">{c.requirements.needed.title}</h3>
@@ -946,10 +751,18 @@ export function ContentOsLanding({
         </div>
       </Section>
 
-      <div id="faq" className="scroll-mt-20">
+      <div id="faq" className="scroll-mt-8">
         <FaqSection
-          eyebrow={c.faq.eyebrow}
-          title={c.faq.title}
+          heading={
+            <Headline
+              id="faq-title"
+              eyebrow={c.faq.eyebrow}
+              icon="chat"
+              tone="signal"
+              title={c.faq.title}
+              rest={c.faq.rest}
+            />
+          }
           faq={c.faq.list.map((item) => ({ q: item.q, a: fill(item.a) }))}
         />
       </div>
@@ -973,26 +786,6 @@ export function ContentOsLanding({
           </div>
         </Container>
       </section>
-
-      {/* ───────────── Footer ───────────── */}
-      <footer className="border-t border-white/10 py-10">
-        <Container className="text-ink-soft flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
-          <Wordmark className="h-6" />
-          <span>{c.footer.by}</span>
-          <Link href="/" className="underline underline-offset-4 hover:text-[#F3EFE4]">
-            {c.footer.back}
-          </Link>
-          <ul className="flex gap-4 md:ml-auto">
-            {c.footer.links.map((link) => (
-              <li key={link.href}>
-                <Link href={link.href} className="hover:text-[#F3EFE4]">
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </Container>
-      </footer>
-    </main>
+    </ContentOsShell>
   );
 }

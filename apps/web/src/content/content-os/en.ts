@@ -9,11 +9,18 @@ export const en: ContentOsCopy = {
 
   nav: {
     links: [
-      { href: '#makes', label: 'What it makes' },
-      { href: '#demos', label: 'Demos' },
-      { href: '#how', label: 'How it works' },
-      { href: '#pricing', label: 'Pricing' },
-      { href: '#faq', label: 'FAQ' },
+      { href: '#memory', label: 'Brain', icon: 'cpu' },
+      { href: '#makes', label: 'Makes', icon: 'spark' },
+      { href: '#demos', label: 'Demos', icon: 'play' },
+      { href: '#how', label: 'How', icon: 'compass' },
+      { href: '#pricing', label: 'Pricing', icon: 'tag' },
+      { href: '#faq', label: 'FAQ', icon: 'chat' },
+    ],
+    label: 'Content OS sections',
+    pages: [
+      { href: '/content-os', label: 'Overview', icon: 'home' },
+      { href: '/content-os/features', label: 'Features', icon: 'grid' },
+      { href: '/content-os/guides', label: 'Guides', icon: 'book' },
     ],
     buy: 'Get it · {price}',
   },
@@ -22,7 +29,7 @@ export const en: ContentOsCopy = {
     badge: 'Meet Content OS · your content bot',
     title: { line1: 'Tell it what to post.', line2: 'It makes it.' },
     intro:
-      'Content OS is a content bot that knows your brand: your voice, your audience, your colours and everything you posted before. Ask for carousels, text posts, reels or a YouTube video, and get finished, checked files ready to post. For every page you run.',
+      'A content bot that knows your brand. Ask for a carousel, a post, a reel or a YouTube video. Get files ready to post.',
     buy: 'Get Content OS · {price}',
     watch: 'Watch it work',
     points: [
@@ -38,7 +45,7 @@ export const en: ContentOsCopy = {
       { value: '28', label: 'quality checks', icon: 'shield' },
     ],
     videoLabel: 'Play the Content OS story (1 min 44 s, no sound)',
-    videoCaption: 'The 100-second story: one idea, from the first question to approved posts.',
+    videoCaption: 'One idea to approved posts, in 100 seconds.',
   },
 
   bot: {
@@ -53,6 +60,7 @@ export const en: ContentOsCopy = {
     chats: [
       {
         chip: 'Carousel',
+        chipIcon: { icon: 'grid' },
         prompt: 'Make a carousel about 5 tasks I should never hand to AI',
         steps: [
           'Reading your brand notebook',
@@ -65,6 +73,7 @@ export const en: ContentOsCopy = {
       },
       {
         chip: 'Reel',
+        chipIcon: { platform: 'Instagram' },
         prompt: 'Turn my new offer into a 45-second reel',
         steps: [
           'Script in your voice',
@@ -76,6 +85,7 @@ export const en: ContentOsCopy = {
       },
       {
         chip: 'Text post',
+        chipIcon: { icon: 'pen' },
         prompt: 'Write today’s post. Something from my real work',
         steps: [
           'Found it in your experiences log',
@@ -87,6 +97,7 @@ export const en: ContentOsCopy = {
       },
       {
         chip: 'YouTube',
+        chipIcon: { platform: 'YouTube' },
         prompt: 'Make a YouTube explainer for my channel',
         steps: ['Format picked from 59 landscape formats', 'Chapters, thumbnail, end screen'],
         reply: 'Rendered at 16:9. Three Shorts cut from it, too.',
@@ -98,46 +109,46 @@ export const en: ContentOsCopy = {
   makes: {
     eyebrow: 'What it makes',
     title: 'One bot. Every kind of post.',
-    rest: 'Here’s exactly what you can ask for.',
+    rest: 'Just ask for it.',
     kinds: [
       {
         title: 'Carousels',
-        body: 'Swipe posts that teach, list or tell a story: a scroll-stopping cover, 6–10 slides, a clear ask at the end.',
+        body: 'A scroll-stopping cover, 6–10 slides, a clear ask.',
         examples: ['Instagram 4:5', 'LinkedIn document', 'Facebook', '2–3 cover options'],
         icon: 'grid',
         tone: 'build',
       },
       {
         title: 'Text posts',
-        body: 'Posts and threads in your voice, with a hook under 12 words, a CTA line and exactly four hashtags.',
+        body: 'Your voice. A hook under 12 words. Four hashtags.',
         examples: ['LinkedIn post', 'X thread', 'Facebook post', 'Threads'],
         icon: 'pen',
         tone: 'signal',
       },
       {
         title: 'Graphics',
-        body: 'Single images in your brand kit, from 30 templates: quotes, stories, announcements, tweet cards and more.',
+        body: '30 templates, all in your brand kit.',
         examples: ['Image post', 'Quote', 'Story 9:16', 'Announcement'],
         icon: 'palette',
         tone: 'idea',
       },
       {
         title: 'Reels & short videos',
-        body: 'Script, voice, scenes and a finished render with motion blur, in 80+ vertical formats.',
+        body: 'Script, voice, scenes, render. 80+ vertical formats.',
         examples: ['Instagram Reel', 'TikTok', 'YouTube Short', 'Facebook Reel'],
         icon: 'video',
         tone: 'create',
       },
       {
         title: 'YouTube videos',
-        body: 'Landscape explainers, breakdowns, tutorials and stories in 59 channel formats, with a thumbnail.',
+        body: '59 landscape formats, thumbnail included.',
         examples: ['Explainer', 'Tutorial', 'Case study', 'Thumbnail'],
         icon: 'play',
         tone: 'spark',
       },
       {
         title: 'Voice, music & images',
-        body: 'Optional: your cloned voice, music beds, transcripts and AI images, used only when they’re needed.',
+        body: 'Your cloned voice, music and AI images, when needed.',
         examples: ['Voiceover', 'Music bed', 'Transcript', 'AI image'],
         icon: 'mic',
         tone: 'build',
@@ -148,58 +159,54 @@ export const en: ContentOsCopy = {
   carousels: {
     eyebrow: 'Carousels',
     title: 'Swipe through real ones.',
-    rest: 'Made by Content OS, in a real brand kit.',
-    intro:
-      'These carousels were made by Content OS in Shimanto’s brand kit: same fonts, colours and photos, written for an English page. Pick one and swipe.',
+    rest: 'In a real brand kit.',
+    intro: 'Made by Content OS for Shimanto. Pick one and swipe.',
     pick: 'Pick a carousel',
     slideOf: 'Slide {n} of {total}',
     prev: 'Previous',
     next: 'Next',
     captionLabel: 'Caption',
-    note: 'Each page gets its own language: the same carousels also run in Bangla on Shimanto’s Bangla page.',
+    note: 'The same carousels run in Bangla on the Bangla page.',
     points: [
-      { text: 'Hook, promise, pull, payoff, ask', icon: 'target' },
-      { text: 'At least 3 layouts, never the same one 3 times in a row', icon: 'layers' },
-      { text: '8 headline variants to choose from', icon: 'list' },
+      { text: 'Hook to ask, every time', icon: 'target' },
+      { text: '3+ layouts per carousel', icon: 'layers' },
+      { text: '8 headline options', icon: 'list' },
     ],
   },
 
   posts: {
     eyebrow: 'Text posts & graphics',
-    title: 'A post a day, in your face and voice.',
-    rest: 'Graphic, caption and hashtags, together.',
-    intro:
-      'Every post comes as a set: the graphic, the caption in your voice, and the hashtags. These come from three series in Shimanto’s brand kit, with his own photos.',
-    note: 'Real posts, made with Content OS. Your photos, your brand kit, your series.',
+    title: 'A post a day.',
+    rest: 'In your face and voice.',
+    intro: 'Graphic, caption and hashtags, as one set.',
+    note: 'Real posts. Real photos. Real series.',
     readMore: 'Read the caption',
     points: [
-      { text: 'Your own photos and brand kit', icon: 'user' },
-      { text: 'Series that keep a format', icon: 'repeat' },
-      { text: 'Caption written for the platform', icon: 'pen' },
+      { text: 'Your photos', icon: 'user' },
+      { text: 'Series that stick', icon: 'repeat' },
+      { text: 'Captions per platform', icon: 'pen' },
     ],
   },
 
   gallery: {
     eyebrow: 'Every demo',
     title: '{videos} videos. All made in code.',
-    rest: 'Pick a style, press play.',
-    intro:
-      'Every video format Content OS can make, each with a demo for a made-up brand. Yours come out in your logo, colours and voice.',
+    rest: 'Pick a style. Press play.',
+    intro: 'Every format, with a demo. Yours come out in your brand.',
     all: 'All',
     showMore: 'Show more',
     close: 'Close',
     vertical: '9:16',
     landscape: '16:9',
     wideToo: '16:9 too',
-    note: 'Real renders, made-up brands. Hover to preview, click to watch.',
+    note: 'Hover to preview. Click to watch.',
   },
 
   beyond: {
     eyebrow: 'Beyond the formats',
     title: 'If you can picture it,',
     rest: 'it can make it.',
-    intro:
-      'The 200+ formats are a starting point, not a limit. Every video is built in code, so Claude Code can build a style that doesn’t exist yet: describe it, show a reel you like, or hand it your logo. These were made that way for Dot Mirror.',
+    intro: '200+ formats is just the start. Describe a style, show a reel or hand it your logo.',
     asks: [
       'Make it look hand-painted, like a storybook',
       'Copy the pacing of this reel, not the content',
@@ -258,25 +265,25 @@ export const en: ContentOsCopy = {
     ],
     host: {
       title: 'Your logo, as a host',
-      body: 'Content OS drew Mirro from the Dot Mirror logo: a model sheet, every emotion, and a host who presents the videos. Same character, every time.',
+      body: 'Drawn from the Dot Mirror logo. Every emotion, same character, every time.',
       sheet: 'Mirro’s model sheet',
       emotions: 'Every emotion Mirro can show',
     },
-    note: 'Advanced styles may need optional tools or API keys; the setup guide says which.',
+    note: 'Some styles need an optional API key.',
   },
 
   real: {
     eyebrow: 'Real work',
-    title: 'Reels made for a real brand.',
-    intro: 'Made with Content OS for Dot Mirror, posted as-is.',
+    title: 'Real reels.',
+    rest: 'For a real brand.',
+    intro: 'Made for Dot Mirror. Posted as-is.',
   },
 
   memory: {
     eyebrow: 'Brand memory',
     title: 'It knows your brand.',
     rest: 'Every page gets its own brain.',
-    intro:
-      'Voice, audience, pillars, colours, rules and everything you posted before: Content OS keeps it all per page and reads it before every post. Switch between two real pages and watch the brain change. They never share a thing.',
+    intro: 'Voice, audience, colours, rules, past posts. Switch pages and watch it change.',
     switchLabel: 'Pick a page',
     categories: [
       'Brand',
@@ -346,7 +353,7 @@ export const en: ContentOsCopy = {
         rule: 'Investigate, don’t report: data, pattern, insight, then what to do.',
       },
     ],
-    note: 'Real context and real work from two pages run with Content OS.',
+    note: 'Real context from two real pages.',
     visualLabel:
       'An animation of a page’s brand memory: thirteen kinds of context orbit a glowing core and flow into it, and the core sends out carousels, reels and posts in that brand’s colours.',
   },
@@ -358,7 +365,7 @@ export const en: ContentOsCopy = {
     groups: [
       {
         title: 'Think',
-        blurb: 'Strategy that knows what you posted, what worked and what’s missing.',
+        blurb: 'Knows what worked and what’s missing.',
         icon: 'bulb',
         tone: 'spark',
         items: [
@@ -372,7 +379,7 @@ export const en: ContentOsCopy = {
       },
       {
         title: 'Write',
-        blurb: 'In your voice, for each platform, from your real experiences.',
+        blurb: 'Your voice, on every platform.',
         icon: 'pen',
         tone: 'signal',
         items: [
@@ -386,7 +393,7 @@ export const en: ContentOsCopy = {
       },
       {
         title: 'Make',
-        blurb: 'Carousels, graphics and video in your brand kit, rendered on your computer.',
+        blurb: 'Rendered on your own computer.',
         icon: 'palette',
         tone: 'create',
         items: [
@@ -400,7 +407,7 @@ export const en: ContentOsCopy = {
       },
       {
         title: 'Check & ship',
-        blurb: 'Nothing reaches you unchecked, and everything leaves ready to post.',
+        blurb: 'Checked before you ever see it.',
         icon: 'shield',
         tone: 'build',
         items: [
@@ -417,33 +424,33 @@ export const en: ContentOsCopy = {
 
   how: {
     eyebrow: 'How it works',
-    title: 'You decide. The bot does the rest.',
-    rest: 'Four steps from idea to a ready-to-post file.',
+    title: 'You decide.',
+    rest: 'The bot does the rest.',
     steps: [
       {
         title: 'Give each page a notebook',
-        body: 'Brand, audience, voice, pillars, products, goals and rules: 13 kinds of context, plus a brand kit with your logo, colours and fonts. One page never sees another’s.',
+        body: 'Voice, rules and brand kit. Pages never mix.',
         command: '/new-page "Dot Mirror" en linkedin',
         icon: 'book',
         tone: 'build',
       },
       {
-        title: 'Ask, in plain words',
-        body: 'Ask in Claude Code, in VS Code. It reads the page’s history and pillar balance, your real experiences and the news, then proposes concepts with the reason for each.',
+        title: 'Ask in plain words',
+        body: 'In Claude Code. Every idea comes with a reason.',
         command: '/next-post shimanto',
         icon: 'chat',
         tone: 'signal',
       },
       {
-        title: 'It builds, then checks its own work',
-        body: 'Carousels, posts, graphics and videos rendered on your machine, then reviewed across 28 quality checks: hooks, overflow, brand, facts, timing, audio and more.',
+        title: 'It builds and checks',
+        body: 'Renders on your machine, then 28 quality checks.',
         command: '/carousels shimanto 10',
         icon: 'shield',
         tone: 'idea',
       },
       {
-        title: 'Approve, export, post',
-        body: 'See every slide, the reasoning and the QA notes in the Studio. Approve, and you get a package with the media, caption and hashtags, ready for any scheduler.',
+        title: 'Approve and post',
+        body: 'Media, caption and hashtags, in one package.',
         command: '/export shimanto <id>',
         icon: 'download',
         tone: 'spark',
@@ -454,53 +461,53 @@ export const en: ContentOsCopy = {
   different: {
     eyebrow: 'Why it’s different',
     title: 'Context first.',
-    rest: 'Not another prompt box.',
+    rest: 'Not a prompt box.',
     items: [
       {
         title: 'Every page keeps its own memory',
-        body: 'Voice, history, assets and series stay with their page. Page isolation is rule number one.',
+        body: 'Voice, history and assets stay with their page.',
         icon: 'book',
         tone: 'build',
       },
       {
         title: 'It learns what you like',
-        body: 'Say “never use question hooks” once with /teach and it becomes a rule for that page, for good.',
+        body: 'Say it once with /teach. It’s a rule for good.',
         icon: 'spark',
         tone: 'spark',
       },
       {
         title: 'Your work becomes the content',
-        body: 'Log what you built, what broke and how you fixed it. Ideas come from your real experiences, not from thin air.',
+        body: 'Ideas come from what you really built.',
         icon: 'briefcase',
         tone: 'signal',
       },
       {
         title: 'No invented facts',
-        body: 'Numbers, clients and stories must come from your knowledge files or from you. Stats need a real source.',
+        body: 'Numbers come from your files or a real source.',
         icon: 'shield',
         tone: 'idea',
       },
       {
         title: 'Strategy, not random topics',
-        body: 'Every concept says why: the pillar that’s been quiet, the pain your audience has, what worked before. Repeats are caught.',
+        body: 'Every idea says why. Repeats get caught.',
         icon: 'target',
         tone: 'create',
       },
       {
         title: 'Plain files you own',
-        body: 'No SaaS, no lock-in. Everything is readable files on your computer: easy to back up, move or version.',
+        body: 'Plain files on your computer. No lock-in.',
         icon: 'file',
         tone: 'build',
       },
       {
         title: 'Works with the AI you already use',
-        body: 'Claude Code is the brain. Codex and Gemini CLIs work too.',
+        body: 'Claude Code, Codex or Gemini.',
         icon: 'cpu',
         tone: 'signal',
       },
       {
         title: 'Pay for AI only when it’s needed',
-        body: 'An existing asset, then code, then a template, and only then a paid API. Every paid generation logs a reason.',
+        body: 'Code first. Paid APIs last, with a reason.',
         icon: 'refund',
         tone: 'spark',
       },
@@ -509,52 +516,91 @@ export const en: ContentOsCopy = {
 
   commands: {
     eyebrow: 'Prefer shortcuts?',
-    title: 'One line does a day’s work.',
-    intro:
-      'Plain words work. These shortcuts do the same, faster, and every button in the Studio copies the matching one for you.',
+    title: 'One line.',
+    rest: 'A day’s work.',
+    intro: 'Plain words work. Shortcuts are faster.',
     list: [
       {
         command: '/next-post shimanto',
         does: 'Concepts for the next post, each with its reasoning',
         icon: 'bulb',
+        draft: 'Unlock the power of AI for your business today!',
+        human: 'I gave AI my 5 worst tasks. It failed at 3.',
+        result: '3 concepts, each with a reason',
       },
       {
         command: '/carousels shimanto 10',
         does: 'Ten carousels in one batch, checked and rendered',
         icon: 'grid',
+        draft: '10 Amazing Tips To Boost Your Productivity',
+        human: 'Do more without hiring more people',
+        result: '10 carousels, rendered',
       },
       {
         command: '/video shimanto "launch day" 45s reel',
         does: 'Script, voice, scenes and a finished reel',
         icon: 'video',
+        draft: 'Introducing our revolutionary new launch!',
+        human: 'We shipped at 2 am. Here’s what broke.',
+        result: '45 s reel, 9:16, voice and music',
       },
       {
         command: '/repurpose shimanto <id> --to linkedin-post,x-thread',
         does: 'One idea, rewritten for each platform',
         icon: 'repeat',
+        draft: 'Check out our latest post!',
+        human: 'Same idea, shaped for how each platform reads.',
+        result: 'LinkedIn post + X thread',
       },
       {
         command: '/teach shimanto "never use question hooks"',
         does: 'Feedback that becomes a lasting rule',
         icon: 'spark',
+        draft: 'Have you ever wondered why…?',
+        human: 'Got it: no question hooks on this page, ever.',
+        result: 'Saved as a lasting rule',
       },
       {
         command: '/experience "shipped X, Y broke, fixed with Z"',
         does: 'Your real work, saved as material',
         icon: 'briefcase',
+        draft: 'Hard work always pays off.',
+        human: 'Payments failed for 2 days. One header fixed it.',
+        result: 'Saved as material',
       },
-      { command: '/news', does: 'Relevant news with a business angle', icon: 'megaphone' },
+      {
+        command: '/news',
+        does: 'Relevant news with a business angle',
+        icon: 'megaphone',
+        draft: 'Huge news in AI this week!',
+        human: 'Google changed one thing. Here’s what it means for your clicks.',
+        result: '3 stories with a business angle',
+      },
       {
         command: '/qa shimanto --all --fix',
         does: 'Check everything and fix what fails',
         icon: 'shield',
+        draft: 'Text overflows on slide 4',
+        human: 'Slide 4 fixed: the hook is now 9 words.',
+        result: 'Every check passed',
       },
     ],
+    flow: {
+      context: 'Pulls in your context',
+      contextItems: ['Voice', 'Audience', 'Past posts', 'Pillars', 'Rules', 'Brand kit'],
+      humanize: 'Writes like you, not like AI',
+      draft: 'Generic AI',
+      yours: 'Your voice',
+      output: 'Best version, checked',
+      checks: '28 quality checks',
+      label: 'Run a shortcut',
+    },
   },
 
   platforms: {
     eyebrow: 'Platforms',
-    title: 'Sized and safe for every platform.',
+    title: 'Every platform.',
+    rest: 'Sized and safe.',
     list: [
       {
         name: 'Instagram',
@@ -601,28 +647,29 @@ export const en: ContentOsCopy = {
       },
       { name: 'Threads', formats: [{ label: 'Post', icon: 'pen' }] },
     ],
-    languageNote: 'Each page has its own language, including Bangla with Bangla-safe type.',
+    languageNote: 'Every page picks its language, Bangla included.',
   },
 
   audience: {
     eyebrow: 'Who it’s for',
-    title: 'Made for people who post for more than one brand.',
+    title: 'One person.',
+    rest: 'Many brands.',
     list: [
       {
         title: 'Founders & creators',
-        body: 'Your personal page and your company page, in two voices, without hiring a team.',
+        body: 'Personal and company page. Two voices, no team.',
         icon: 'rocket',
         tone: 'build',
       },
       {
         title: 'Agencies & social media managers',
-        body: 'Every client gets an isolated workspace with their own brand kit, rules and history.',
+        body: 'Every client in their own space.',
         icon: 'users',
         tone: 'signal',
       },
       {
         title: 'Small teams',
-        body: 'Optional team sync on your own server: owners, editors and viewers, each seeing only their pages.',
+        body: 'Optional sync with owner, editor and viewer roles.',
         icon: 'cloud',
         tone: 'idea',
       },
@@ -632,7 +679,7 @@ export const en: ContentOsCopy = {
   pricing: {
     eyebrow: 'Pricing',
     title: 'Pay once. Keep the bot.',
-    rest: 'No subscription for Content OS itself.',
+    rest: 'No subscription.',
     plan: 'Content OS',
     priceNote: 'One-time payment',
     included: [
@@ -658,8 +705,8 @@ export const en: ContentOsCopy = {
   requirements: {
     eyebrow: 'Before you buy',
     title: 'What you need.',
-    intro:
-      'Content OS runs on your own computer and uses your own AI accounts, so you know exactly what it costs to run.',
+    rest: 'Not much.',
+    intro: 'Your computer and your own AI accounts.',
     needed: {
       title: 'Required',
       list: [
@@ -686,13 +733,13 @@ export const en: ContentOsCopy = {
         { key: 'fal.ai', unlocks: 'Image to 3D model', icon: 'box' },
       ],
     },
-    costs:
-      'Without a key, that ability is simply off. Paid APIs bill your own account, and Content OS asks before it spends credits.',
+    costs: 'No key, no feature. Paid APIs bill you, and it asks first.',
   },
 
   faq: {
     eyebrow: 'FAQ',
     title: 'Good questions.',
+    rest: 'Straight answers.',
     list: [
       {
         q: 'Is it a chatbot I log into?',

@@ -431,6 +431,24 @@ body:has(main[data-standalone]) {
 .cos-caret {
   animation: cos-blink 1s step-end infinite;
 }
+/* A bar growing to its width (Studio tour), and a view's time running out. */
+@keyframes cos-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+.cos-grow {
+  transform-origin: left;
+  animation: cos-grow 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes cos-progress {
+  from {
+    transform: scaleX(0);
+  }
+}
+.cos-progress {
+  animation: cos-progress linear both;
+}
 @media (prefers-reduced-motion: reduce) {
   .cos-drift-up,
   .cos-drift-down {

@@ -4,6 +4,7 @@
 import { Icon, cn, usePrefersReducedMotion } from '@shimanto/ui';
 import { useEffect, useRef, useState } from 'react';
 import type { ContentOsCopy } from '@/content/content-os';
+import { SocialIcon } from '@/components/page/social-icon';
 
 export interface ChatAttachments {
   /** First slides of a real carousel (4:5). */
@@ -244,12 +245,25 @@ export function BotChat({ bot, files }: { bot: Bot; files: ChatAttachments }) {
               onClick={() => choose(i)}
               aria-pressed={i === index}
               className={cn(
-                'rounded-pill shrink-0 px-3 py-1.5 text-xs whitespace-nowrap ring-1 transition-colors',
+                'rounded-pill inline-flex shrink-0 items-center gap-1.5 py-1 pr-3 pl-1 text-xs whitespace-nowrap ring-1 transition-colors',
                 i === index
                   ? 'bg-[#F3EFE4] text-[#0E0F0C] ring-transparent'
                   : 'text-[#B9B4A7] ring-white/15 hover:text-[#F3EFE4]',
               )}
             >
+              {'platform' in c.chipIcon ? (
+                <SocialIcon platform={c.chipIcon.platform} className="size-5 rounded-full" />
+              ) : (
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    'grid size-5 place-items-center rounded-full',
+                    i === index ? 'bg-[#0E0F0C] text-[#F3EFE4]' : 'bg-white/10',
+                  )}
+                >
+                  <Icon name={c.chipIcon.icon} className="size-3" />
+                </span>
+              )}
               {c.chip}
             </button>
           ))}

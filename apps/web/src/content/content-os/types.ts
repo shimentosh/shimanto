@@ -15,7 +15,11 @@ export interface ContentOsCopy {
   meta: { title: string; description: string };
 
   nav: {
-    links: Array<{ href: string; label: string }>;
+    links: Array<{ href: string; label: string; icon: IconName }>;
+    /** The dock's accessible name. */
+    label: string;
+    /** The Content OS pages: overview, features, guides. */
+    pages: Array<{ href: string; label: string; icon: IconName }>;
     buy: string;
   };
 
@@ -44,6 +48,8 @@ export interface ContentOsCopy {
     chats: Array<{
       /** Short label on the chip that switches to this chat. */
       chip: string;
+      /** The chip's icon: a platform's logo (by name) or an icon. */
+      chipIcon: { platform: string } | { icon: IconName };
       prompt: string;
       /** What it does before answering, one line each. */
       steps: string[];
@@ -109,6 +115,7 @@ export interface ContentOsCopy {
   real: {
     eyebrow: string;
     title: string;
+    rest: string;
     intro: string;
   };
 
@@ -198,13 +205,33 @@ export interface ContentOsCopy {
   commands: {
     eyebrow: string;
     title: string;
+    rest: string;
     intro: string;
-    list: Array<{ command: string; does: string; icon: IconName }>;
+    /** Per command: a generic AI line, the same idea in the page's voice, and what you get. */
+    list: Array<{
+      command: string;
+      does: string;
+      icon: IconName;
+      draft: string;
+      human: string;
+      result: string;
+    }>;
+    flow: {
+      context: string;
+      contextItems: string[];
+      humanize: string;
+      draft: string;
+      yours: string;
+      output: string;
+      checks: string;
+      label: string;
+    };
   };
 
   platforms: {
     eyebrow: string;
     title: string;
+    rest: string;
     /** `name` is the platform's brand name (its logo is looked up by it). */
     list: Array<{ name: string; formats: Array<{ label: string; icon: IconName }> }>;
     languageNote: string;
@@ -213,6 +240,7 @@ export interface ContentOsCopy {
   audience: {
     eyebrow: string;
     title: string;
+    rest: string;
     list: Array<{ title: string; body: string; icon: IconName; tone: Accent }>;
   };
 
@@ -231,13 +259,14 @@ export interface ContentOsCopy {
   requirements: {
     eyebrow: string;
     title: string;
+    rest: string;
     intro: string;
     needed: { title: string; list: Point[] };
     optional: { title: string; list: Array<{ key: string; unlocks: string; icon: IconName }> };
     costs: string;
   };
 
-  faq: { eyebrow: string; title: string; list: Array<{ q: string; a: string }> };
+  faq: { eyebrow: string; title: string; rest: string; list: Array<{ q: string; a: string }> };
 
   final: { title: string; rest: string; buy: string; note: string };
 
