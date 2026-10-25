@@ -190,31 +190,31 @@ function PosterWall() {
 
 function PostCard({ post, readMore }: { post: GraphicDemo; readMore: string }) {
   return (
-    <li className="bg-paper mb-5 break-inside-avoid overflow-hidden rounded-[18px] ring-1 ring-white/10">
+    <li className="group bg-paper flex flex-col overflow-hidden rounded-[20px] ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 hover:shadow-[0_30px_70px_-30px_rgba(0,0,0,0.9)] hover:ring-white/25">
       <img
         src={post.image}
         srcSet={`${post.image} 900w, ${post.full} 1080w`}
-        sizes="(min-width: 1280px) 300px, (min-width: 640px) 45vw, 92vw"
+        sizes="(min-width: 1280px) 300px, (min-width: 1024px) 31vw, (min-width: 640px) 45vw, 92vw"
         alt={post.hook}
         width={720}
         height={900}
         loading="lazy"
         decoding="async"
-        className="aspect-[4/5] w-full object-cover"
+        className="aspect-[4/5] w-full cursor-zoom-in object-cover"
       />
-      <div className="p-4">
-        <p className="text-ink-soft flex items-center gap-2 text-xs">
-          <span className="bg-signal size-1.5 rounded-full" aria-hidden="true" />
-          {post.series?.name ?? post.channel}
+      <div className="flex flex-1 flex-col p-4">
+        <p className="text-ink-soft flex min-w-0 items-center gap-2 text-xs">
+          <span className="bg-signal size-1.5 shrink-0 rounded-full" aria-hidden="true" />
+          <span className="truncate">{post.series?.name ?? post.channel}</span>
           <span aria-hidden="true">·</span>
-          <span className="capitalize">{post.channel}</span>
+          <span className="shrink-0 capitalize">{post.channel}</span>
         </p>
-        <details className="group mt-2">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-medium [&::-webkit-details-marker]:hidden">
-            <span className="line-clamp-2">{post.hook}</span>
-            <span className="text-ink-soft shrink-0 text-xs underline underline-offset-4 group-open:hidden">
-              {readMore}
-            </span>
+        <p className="mt-2 line-clamp-2 min-h-[2.6em] text-[15px] leading-snug font-medium">
+          {post.hook}
+        </p>
+        <details className="group/caption mt-auto pt-3">
+          <summary className="text-ink-soft cursor-pointer list-none text-xs underline underline-offset-4 hover:text-[#F3EFE4] [&::-webkit-details-marker]:hidden">
+            {readMore}
           </summary>
           <p className="text-ink-soft mt-3 text-[14px] leading-relaxed whitespace-pre-line">
             {post.caption}
@@ -536,8 +536,9 @@ export function ContentOsLanding({
             <PointItem key={point.text} point={point} tone="idea" />
           ))}
         </ul>
-        <ul className="mt-12 columns-1 gap-5 sm:columns-2 lg:columns-3 xl:columns-4">
-          {graphicDemos.map((post) => (
+        {/* 12 posts: full rows at 1, 2, 3 and 4 columns. */}
+        <ul className="mt-12 grid items-start gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {graphicDemos.slice(0, 12).map((post) => (
             <PostCard key={post.id} post={post} readMore={c.posts.readMore} />
           ))}
         </ul>
@@ -605,7 +606,7 @@ export function ContentOsLanding({
         </div>
 
         <ClipGallery
-          className="mt-12 columns-2 gap-4 sm:columns-3 lg:columns-5"
+          className="mt-12 grid grid-cols-2 gap-4 md:grid-cols-5"
           items={c.beyond.styles.flatMap((style) => {
             const clip = beyondDemos.find((b) => b.id === style.id);
             return clip ? [{ ...clip, title: style.title, body: style.body }] : [];

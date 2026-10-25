@@ -356,9 +356,6 @@ export function HoverClip({
   );
 }
 
-const aspectClass = (aspect: string) =>
-  aspect === '16:9' ? 'aspect-video' : aspect === '1:1' ? 'aspect-square' : 'aspect-[9/16]';
-
 /**
  * A masonry of video cards sharing one full-screen player: open any, then slide through the rest
  * (arrows, keys, swipe).
@@ -388,7 +385,7 @@ export function ClipGallery({
     <>
       <ul className={className}>
         {items.map((item, i) => (
-          <li key={item.id} className="mb-4 break-inside-avoid">
+          <li key={item.id}>
             <PreviewCard
               video={item.video}
               poster={item.poster}
@@ -397,7 +394,8 @@ export function ClipGallery({
               onHover={(on) => hover && setHovered(on ? item.id : null)}
               dimmed={hovered !== null && hovered !== item.id}
               paused={open !== null}
-              className={cn('rounded-[18px] ring-1 ring-white/10', aspectClass(item.aspect))}
+              // Same shape in the grid; the player shows each clip at its own shape.
+              className="aspect-[9/16] rounded-[18px] ring-1 ring-white/10"
             />
             <p className="mt-2.5 font-medium">{item.title}</p>
             <p className="text-ink-soft text-[13px] leading-snug">{item.body}</p>
