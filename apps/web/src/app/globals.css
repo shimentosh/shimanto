@@ -442,6 +442,15 @@ body:has(main[data-standalone]) {
 .cos-caret {
   animation: cos-blink 1s step-end infinite;
 }
+/* A slide changing (Studio tour). */
+@keyframes cos-fade {
+  from {
+    opacity: 0;
+  }
+}
+.cos-fade {
+  animation: cos-fade 0.35s ease-out both;
+}
 /* A bar growing to its width (Studio tour), and a view's time running out. */
 @keyframes cos-grow {
   from {

@@ -6,7 +6,6 @@ import type { ContentOsCopy } from '@/content/content-os';
 import {
   beyondDemos,
   carouselDemos,
-  formatDemos,
   graphicDemos,
   videoDemoCount,
 } from '@/content/content-os/demos';
@@ -49,8 +48,6 @@ export function ContentOsFeatures({
       .replaceAll('{carousels}', String(carouselDemos.length))
       .replaceAll('{posts}', String(graphicDemos.length))
       .replaceAll('{styles}', String(styles.length));
-  const shimanto = c.memory.brands[0]!;
-  const vertical = formatDemos.filter((d) => d.aspect === '9:16');
 
   return (
     <ContentOsShell copy={c} product={product} lang={lang} path={path} sections={f.sections}>
@@ -113,19 +110,7 @@ export function ContentOsFeatures({
           intro={f.studio.intro}
         />
         <div className="mt-10">
-          <StudioTour
-            studio={f.studio}
-            media={{
-              slides: (
-                carouselDemos.find((d) => d.id.includes('small-team')) ?? carouselDemos[0]!
-              ).slides.map((s) => s.src),
-              posts: graphicDemos.map((g) => ({ src: g.image, hook: g.hook })),
-              videos: vertical.slice(0, 6).map((v) => ({ poster: v.poster, name: v.name })),
-              categories: c.memory.categories,
-              stats: f.hero.stats.map((s) => ({ value: fill(s.value), label: s.label })),
-              brand: { colors: shimanto.colors, fonts: shimanto.fonts },
-            }}
-          />
+          <StudioTour studio={f.studio} />
         </div>
       </Section>
 

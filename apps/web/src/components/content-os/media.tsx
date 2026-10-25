@@ -160,7 +160,7 @@ export function AutoVideo({
 }
 
 /** Swipe left / right on touch screens: calls `onStep(+1 | -1)`. */
-function useSwipe(onStep?: (delta: number) => void) {
+export function useSwipe(onStep?: (delta: number) => void) {
   const start = useRef<number | null>(null);
   return {
     onTouchStart: (e: React.TouchEvent) => {
