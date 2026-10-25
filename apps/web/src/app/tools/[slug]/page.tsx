@@ -35,9 +35,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     : meta;
 }
 
-/** Icons for the hero's fact cards and tag chips, keyed by their label. */
+/** Icons for the hero's spec rows and tag chips, keyed by their label. */
 const factIcons: Record<string, IconName> = {
-  Price: 'tag',
   'Works on': 'monitor',
   'Works in': 'globe',
   Licence: 'code',
@@ -65,7 +64,7 @@ function GetIt({ href, children }: { href: string; children: string }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group bg-ink text-canvas rounded-pill inline-flex items-center gap-2 px-6 py-3 text-lg font-medium transition-opacity hover:opacity-85"
+      className="group bg-ink text-canvas rounded-pill inline-flex items-center gap-2 px-5 py-3 font-medium whitespace-nowrap transition-opacity hover:opacity-85 md:px-6 md:text-[17px]"
     >
       <span>{children}</span>
       <Icon name="external" className="size-4" />
@@ -81,7 +80,7 @@ function SourceLink({ href }: { href: string }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="border-ink/20 text-ink hover:border-ink/50 rounded-pill inline-flex items-center gap-2 border px-6 py-3 text-lg font-medium transition-colors"
+      className="border-ink/20 text-ink hover:border-ink/50 rounded-pill inline-flex items-center gap-2 border px-5 py-3 font-medium whitespace-nowrap transition-colors md:px-6 md:text-[17px]"
     >
       <Icon name="github" className="size-5" />
       <span>View source</span>
@@ -95,7 +94,6 @@ export default async function ToolPage({ params }: Props) {
   const tool = tools.find((t) => t.slug === slug);
   if (!tool) notFound();
   const others = tools.filter((t) => t.slug !== tool.slug);
-  const facts = [{ term: 'Price', value: priceLabel(tool) }, ...tool.facts];
 
   return (
     <main id="main">
@@ -126,29 +124,30 @@ export default async function ToolPage({ params }: Props) {
           />
           <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center lg:gap-12">
             <div className="min-w-0">
-              <div className="flex items-center gap-4">
+              {/* Logo and what it is on one line; the name gets the full width under it. */}
+              <div className="flex items-center gap-3.5">
                 <Image
                   src={tool.logo.src}
                   alt={tool.logo.alt}
                   width={72}
                   height={72}
                   priority
-                  className="size-14 rounded-2xl md:size-16"
+                  className="size-12 rounded-xl md:size-14 md:rounded-2xl"
                 />
-                <div className="min-w-0">
-                  <h1 className="text-[clamp(36px,4.4vw,56px)] leading-none font-medium tracking-tighter">
-                    {tool.name}
-                  </h1>
-                  <p className="text-ink-soft mt-2 flex items-center gap-3 text-sm font-medium">
-                    {tool.kind}
-                    <Chip variant="status" tone={tool.price ? 'spark' : 'build'}>
-                      {priceLabel(tool)}
-                    </Chip>
-                  </p>
-                </div>
+                <p className="text-ink-soft flex flex-wrap items-center gap-2.5 text-sm font-medium">
+                  {tool.kind}
+                  <Chip variant="status" tone={tool.price ? 'spark' : 'build'}>
+                    {priceLabel(tool)}
+                  </Chip>
+                </p>
               </div>
-              <p className="mt-6 text-xl leading-snug text-balance md:text-2xl">{tool.tagline}</p>
-              <div className="mt-6 flex flex-wrap items-center gap-3">
+              <h1 className="mt-6 text-[clamp(36px,4vw,56px)] leading-[1.02] font-medium tracking-tighter text-balance">
+                {tool.name}
+              </h1>
+              <p className="text-ink-soft mt-5 max-w-[46ch] text-lg leading-relaxed text-pretty md:text-xl md:leading-relaxed">
+                {tool.tagline}
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
                 <GetIt href={tool.href}>{tool.cta}</GetIt>
                 {tool.source ? (
                   <SourceLink href={tool.source} />
@@ -158,30 +157,25 @@ export default async function ToolPage({ params }: Props) {
                   </Button>
                 )}
               </div>
-              <dl className="border-ink/10 mt-8 grid grid-cols-2 overflow-hidden rounded-2xl border">
-                {facts.map((fact, i) => (
+              {/* A spec sheet: the price is already beside the logo. */}
+              <dl className="border-ink/10 mt-10 border-t">
+                {tool.facts.map((fact) => (
                   <div
                     key={fact.term}
-                    className={cn(
-                      'border-ink/10 flex items-center gap-3 px-4 py-4',
-                      i % 2 === 1 && 'border-l',
-                      i >= 2 && 'border-t',
-                    )}
+                    className="border-ink/10 grid grid-cols-[minmax(0,10rem)_minmax(0,1fr)] items-baseline gap-4 border-b py-3.5"
                   >
-                    <span
-                      aria-hidden="true"
-                      className="bg-ink/[0.06] text-ink grid size-9 shrink-0 place-items-center rounded-lg"
-                    >
-                      <Icon name={factIcons[fact.term] ?? 'info'} className="size-[18px]" />
-                    </span>
-                    <div className="min-w-0">
-                      <dt className="text-ink-soft text-xs">{fact.term}</dt>
-                      <dd className="mt-0.5 font-medium">{fact.value}</dd>
-                    </div>
+                    <dt className="text-ink-soft flex items-center gap-2.5 text-sm">
+                      <Icon
+                        name={factIcons[fact.term] ?? 'info'}
+                        className="size-4 shrink-0 translate-y-0.5"
+                      />
+                      {fact.term}
+                    </dt>
+                    <dd className="font-medium">{fact.value}</dd>
                   </div>
                 ))}
               </dl>
-              <ul aria-label="Tags" className="mt-5 flex flex-wrap gap-2">
+              <ul aria-label="Tags" className="mt-6 flex flex-wrap gap-2">
                 {tool.tags.map((tag) => (
                   <li key={tag}>
                     <Chip className="gap-1.5 py-1 pl-2">

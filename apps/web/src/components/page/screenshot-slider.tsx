@@ -189,7 +189,9 @@ export function ScreenshotSlider({
                 {String(index + 1).padStart(2, '0')}
                 <span className="text-ink-soft"> / {String(shots.length).padStart(2, '0')}</span>
               </span>
-              <span className="text-ink-soft truncate">{shots[index]?.alt}</span>
+              <span className="text-ink-soft line-clamp-2 text-[15px] leading-snug">
+                {shots[index]?.alt}
+              </span>
             </p>
             <div className="flex shrink-0 gap-3">
               <button
