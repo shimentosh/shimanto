@@ -10,7 +10,13 @@ export const CONTENT_OS_MEDIA = (
   process.env.NEXT_PUBLIC_CONTENT_OS_MEDIA_URL ?? 'https://media.shimanto.xyz/media/content-os'
 ).replace(/\/+$/, '');
 
-const url = (key: string) => `${CONTENT_OS_MEDIA}/${key}`;
+/**
+ * Bump when the files in R2 change: the CDN caches by URL (a 404 cached before an upload
+ * included), so a new version makes every link fresh.
+ */
+const MEDIA_VERSION = '20261026';
+
+const url = (key: string) => `${CONTENT_OS_MEDIA}/${key}?v=${MEDIA_VERSION}`;
 
 export type DemoGroup = keyof typeof data.groups;
 

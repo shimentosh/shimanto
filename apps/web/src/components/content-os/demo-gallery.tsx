@@ -124,6 +124,8 @@ function Player({
   onStep: (delta: number) => void;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
+  // Swipe left / right to move through the demos on touch screens.
+  const touch = useRef<number | null>(null);
   const [wide, setWide] = useState(false);
   const show = wide && demo.wide ? demo.wide : demo;
   const aspect = wide && demo.wide ? '16:9' : demo.aspect;
@@ -145,7 +147,18 @@ function Player({
       aria-label={demo.name}
       className="lightbox m-auto max-h-[94dvh] w-[min(94vw,1100px)] overflow-visible bg-transparent p-0 text-[#F3EFE4] backdrop:bg-black/85 backdrop:backdrop-blur-sm"
     >
-      <div className="lightbox-media grid gap-5 md:grid-cols-[minmax(0,1fr)_280px] md:items-center">
+      <div
+        className="lightbox-media grid gap-5 md:grid-cols-[minmax(0,1fr)_280px] md:items-center"
+        onTouchStart={(e) => {
+          touch.current = e.touches[0]?.clientX ?? null;
+        }}
+        onTouchEnd={(e) => {
+          const x0 = touch.current;
+          const x1 = e.changedTouches[0]?.clientX;
+          touch.current = null;
+          if (x0 !== null && x1 !== undefined && Math.abs(x1 - x0) >= 50) onStep(x1 < x0 ? 1 : -1);
+        }}
+      >
         <div className="flex justify-center">
           <video
             key={show.full}

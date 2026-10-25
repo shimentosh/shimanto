@@ -120,9 +120,26 @@ export function Clip({
   );
 }
 
+/** Swipe left / right on touch screens: calls `onStep(+1 | -1)`. */
+function useSwipe(onStep?: (delta: number) => void) {
+  const start = useRef<number | null>(null);
+  return {
+    onTouchStart: (e: React.TouchEvent) => {
+      start.current = e.touches[0]?.clientX ?? null;
+    },
+    onTouchEnd: (e: React.TouchEvent) => {
+      const x0 = start.current;
+      const x1 = e.changedTouches[0]?.clientX;
+      start.current = null;
+      if (!onStep || x0 === null || x1 === undefined || Math.abs(x1 - x0) < 50) return;
+      onStep(x1 < x0 ? 1 : -1);
+    },
+  };
+}
+
 /**
  * The original video, full screen: native controls (sound included), Esc or a click outside to
- * close. Used when a preview card is opened.
+ * close. With `onStep` it's a gallery: arrows, ← / → keys and swipe move to the next video.
  */
 export function VideoDialog({
   src,
@@ -131,6 +148,10 @@ export function VideoDialog({
   aspect,
   closeLabel,
   onClose,
+  onStep,
+  prevLabel = 'Previous',
+  nextLabel = 'Next',
+  position,
 }: {
   src: string;
   poster: string;
@@ -138,34 +159,67 @@ export function VideoDialog({
   aspect: string;
   closeLabel: string;
   onClose: () => void;
+  onStep?: (delta: number) => void;
+  prevLabel?: string;
+  nextLabel?: string;
+  /** e.g. "3 / 10". */
+  position?: string;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
+  const swipe = useSwipe(onStep);
   useEffect(() => {
     const d = dialog.current;
     if (d && !d.open) d.showModal();
   }, []);
+  const arrow = (delta: number) =>
+    onStep && (
+      <button
+        type="button"
+        onClick={() => onStep(delta)}
+        aria-label={delta < 0 ? prevLabel : nextLabel}
+        className={cn(
+          'absolute top-1/2 z-10 grid size-12 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-[#0E0F0C] shadow-xl transition hover:bg-white',
+          delta < 0 ? 'left-2 md:-left-16' : 'right-2 md:-right-16',
+        )}
+      >
+        <Icon name={delta < 0 ? 'arrowLeft' : 'arrowRight'} className="size-5" />
+      </button>
+    );
   return (
     <dialog
       ref={dialog}
       onClose={onClose}
       onClick={(e) => e.target === dialog.current && dialog.current?.close()}
+      onKeyDown={(e) => {
+        if (!onStep) return;
+        if (e.key === 'ArrowRight') onStep(1);
+        if (e.key === 'ArrowLeft') onStep(-1);
+      }}
       aria-label={title}
       className="lightbox m-auto max-h-[94dvh] w-[min(94vw,1200px)] overflow-visible bg-transparent p-0 text-[#F3EFE4] backdrop:bg-black/85 backdrop:backdrop-blur-sm"
     >
-      <div className="lightbox-media flex flex-col items-center gap-4">
-        <video
-          src={src}
-          poster={poster}
-          autoPlay
-          controls
-          playsInline
-          className={cn(
-            'rounded-[18px] bg-black shadow-2xl',
-            aspect === '16:9' ? 'aspect-video w-full' : 'aspect-[9/16] h-[82dvh] max-w-full',
-          )}
-        />
+      <div className="lightbox-media flex flex-col items-center gap-4" {...swipe}>
+        <div className="relative flex w-full justify-center">
+          {arrow(-1)}
+          <video
+            key={src}
+            src={src}
+            poster={poster}
+            autoPlay
+            controls
+            playsInline
+            className={cn(
+              'rounded-[18px] bg-black shadow-2xl',
+              aspect === '16:9' ? 'aspect-video w-full' : 'aspect-[9/16] h-[82dvh] max-w-full',
+            )}
+          />
+          {arrow(1)}
+        </div>
         <div className="flex w-full max-w-[640px] items-center justify-between gap-4">
-          <p className="font-medium">{title}</p>
+          <p className="font-medium">
+            {title}
+            {position && <span className="ml-3 font-mono text-sm text-[#B9B4A7]">{position}</span>}
+          </p>
           <button
             type="button"
             onClick={() => dialog.current?.close()}
@@ -179,10 +233,51 @@ export function VideoDialog({
   );
 }
 
-/**
- * A card that loops a light, silent preview while hovered, and opens the original (with sound)
- * full screen when clicked.
- */
+/** A card that loops a light, silent preview while hovered; `onOpen` on click. */
+function PreviewCard({
+  video,
+  poster,
+  title,
+  onOpen,
+  className,
+}: {
+  video: string;
+  poster: string;
+  title: string;
+  onOpen: () => void;
+  className?: string;
+}) {
+  const [previewing, setPreviewing] = useState(false);
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      onMouseEnter={() => setPreviewing(true)}
+      onMouseLeave={() => setPreviewing(false)}
+      aria-label={title}
+      data-cursor="Play"
+      className={cn('group relative block w-full overflow-hidden bg-black', className)}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={poster} alt="" loading="lazy" decoding="async" className="size-full object-cover" />
+      {previewing && (
+        <video
+          src={video}
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 size-full object-cover"
+        />
+      )}
+      <span className="absolute right-2.5 bottom-2.5 grid size-9 place-items-center rounded-full bg-white text-[#0E0F0C] shadow-lg transition group-hover:scale-110">
+        <Icon name="play" className="size-4" />
+      </span>
+    </button>
+  );
+}
+
+/** One video card that opens its original full screen. */
 export function HoverClip({
   video,
   poster,
@@ -200,41 +295,16 @@ export function HoverClip({
   closeLabel: string;
   className?: string;
 }) {
-  const [previewing, setPreviewing] = useState(false);
   const [open, setOpen] = useState(false);
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        onMouseEnter={() => setPreviewing(true)}
-        onMouseLeave={() => setPreviewing(false)}
-        aria-label={title}
-        data-cursor="Play"
-        className={cn('group relative block w-full overflow-hidden bg-black', className)}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={poster}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="size-full object-cover"
-        />
-        {previewing && (
-          <video
-            src={video}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 size-full object-cover"
-          />
-        )}
-        <span className="absolute right-2.5 bottom-2.5 grid size-9 place-items-center rounded-full bg-white text-[#0E0F0C] shadow-lg transition group-hover:scale-110">
-          <Icon name="play" className="size-4" />
-        </span>
-      </button>
+      <PreviewCard
+        video={video}
+        poster={poster}
+        title={title}
+        onOpen={() => setOpen(true)}
+        className={className}
+      />
       {open && (
         <VideoDialog
           src={full}
@@ -243,6 +313,69 @@ export function HoverClip({
           aspect={aspect}
           closeLabel={closeLabel}
           onClose={() => setOpen(false)}
+        />
+      )}
+    </>
+  );
+}
+
+const aspectClass = (aspect: string) =>
+  aspect === '16:9' ? 'aspect-video' : aspect === '1:1' ? 'aspect-square' : 'aspect-[9/16]';
+
+/**
+ * A masonry of video cards sharing one full-screen player: open any, then slide through the rest
+ * (arrows, keys, swipe).
+ */
+export function ClipGallery({
+  items,
+  labels,
+  className,
+}: {
+  items: Array<{
+    id: string;
+    title: string;
+    body: string;
+    aspect: string;
+    video: string;
+    poster: string;
+    full: string;
+  }>;
+  labels: { close: string; prev: string; next: string };
+  className?: string;
+}) {
+  const [open, setOpen] = useState<number | null>(null);
+  const current = open === null ? null : items[open];
+  return (
+    <>
+      <ul className={className}>
+        {items.map((item, i) => (
+          <li key={item.id} className="mb-4 break-inside-avoid">
+            <PreviewCard
+              video={item.video}
+              poster={item.poster}
+              title={item.title}
+              onOpen={() => setOpen(i)}
+              className={cn('rounded-[18px] ring-1 ring-white/10', aspectClass(item.aspect))}
+            />
+            <p className="mt-2.5 font-medium">{item.title}</p>
+            <p className="text-ink-soft text-[13px] leading-snug">{item.body}</p>
+          </li>
+        ))}
+      </ul>
+      {current && open !== null && (
+        <VideoDialog
+          src={current.full}
+          poster={current.poster}
+          title={current.title}
+          aspect={current.aspect}
+          closeLabel={labels.close}
+          prevLabel={labels.prev}
+          nextLabel={labels.next}
+          position={`${open + 1} / ${items.length}`}
+          onClose={() => setOpen(null)}
+          onStep={(delta) =>
+            setOpen((o) => (o === null ? o : (o + delta + items.length) % items.length))
+          }
         />
       )}
     </>

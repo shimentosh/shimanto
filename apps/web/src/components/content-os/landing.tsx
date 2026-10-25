@@ -24,7 +24,7 @@ import { type StoreProduct, formatPrice, majorUnits } from '@/lib/store';
 import { BotChat, BotMark, type ChatAttachments } from './bot-chat';
 import { CarouselViewer } from './carousel-viewer';
 import { DemoGallery } from './demo-gallery';
-import { Clip, HoverClip, StoryVideo } from './media';
+import { Clip, ClipGallery, HoverClip, StoryVideo } from './media';
 
 /** Soft card tint per accent. */
 const tint = {
@@ -604,34 +604,14 @@ export function ContentOsLanding({
           </ul>
         </div>
 
-        <ul className="mt-12 columns-2 gap-4 sm:columns-3 lg:columns-5">
-          {c.beyond.styles.map((style) => {
+        <ClipGallery
+          className="mt-12 columns-2 gap-4 sm:columns-3 lg:columns-5"
+          items={c.beyond.styles.flatMap((style) => {
             const clip = beyondDemos.find((b) => b.id === style.id);
-            if (!clip) return null;
-            return (
-              <li key={style.id} className="mb-4 break-inside-avoid">
-                <HoverClip
-                  video={clip.video}
-                  poster={clip.poster}
-                  full={clip.full}
-                  title={style.title}
-                  aspect={clip.aspect}
-                  closeLabel={c.gallery.close}
-                  className={cn(
-                    'rounded-[18px] ring-1 ring-white/10',
-                    clip.aspect === '16:9'
-                      ? 'aspect-video'
-                      : clip.aspect === '1:1'
-                        ? 'aspect-square'
-                        : 'aspect-[9/16]',
-                  )}
-                />
-                <p className="mt-2.5 font-medium">{style.title}</p>
-                <p className="text-ink-soft text-[13px] leading-snug">{style.body}</p>
-              </li>
-            );
+            return clip ? [{ ...clip, title: style.title, body: style.body }] : [];
           })}
-        </ul>
+          labels={{ close: c.gallery.close, prev: c.carousels.prev, next: c.carousels.next }}
+        />
 
         {hostDemo && (
           <div className="mt-10 grid gap-5 rounded-[24px] bg-white/[0.03] p-5 ring-1 ring-white/10 md:p-7 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.6fr)] lg:items-center lg:gap-8">
