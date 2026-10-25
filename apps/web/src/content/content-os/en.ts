@@ -8,7 +8,6 @@ export const en: ContentOsCopy = {
   },
 
   nav: {
-    back: 'Shimanto',
     links: [
       { href: '#makes', label: 'What it makes' },
       { href: '#demos', label: 'Demos' },
@@ -277,7 +276,7 @@ export const en: ContentOsCopy = {
     title: 'It knows your brand.',
     rest: 'Every page gets its own brain.',
     intro:
-      'Voice, audience, pillars, colours, rules and everything you posted before: Content OS keeps it all per page and reads it before every post. Switch between three real pages and watch the brain change. They never share a thing.',
+      'Voice, audience, pillars, colours, rules and everything you posted before: Content OS keeps it all per page and reads it before every post. Switch between two real pages and watch the brain change. They never share a thing.',
     switchLabel: 'Pick a page',
     categories: [
       'Brand',
@@ -294,7 +293,7 @@ export const en: ContentOsCopy = {
       'History',
       'Knowledge',
     ],
-    outputs: ['Carousel', 'Reel', 'Post'],
+    hint: 'Drag to turn it. Click to wake it up.',
     labels: {
       voice: 'Voice',
       audience: 'Audience',
@@ -309,7 +308,13 @@ export const en: ContentOsCopy = {
       {
         id: 'shimanto',
         name: 'Shimanto',
+        logo: 'shimanto',
         handle: '@sh1manto',
+        outputs: [
+          { label: 'Carousel', media: 'carousel' },
+          { label: 'Post', media: 'post' },
+          { label: 'Video', media: 'story' },
+        ],
         platform: 'Instagram',
         colors: ['#0A7BE0', '#C6F500', '#FAFAF7', '#0C0C0E'],
         fonts: 'Anek Bangla · Hind Siliguri',
@@ -323,7 +328,13 @@ export const en: ContentOsCopy = {
       {
         id: 'dotmirror',
         name: 'Dot Mirror',
+        logo: 'dotmirror',
         handle: '@dotmirrorltd',
+        outputs: [
+          { label: 'Reel', media: 'real-1' },
+          { label: 'Reel', media: 'real-2' },
+          { label: 'Brand host', media: 'host' },
+        ],
         platform: 'LinkedIn',
         colors: ['#0057FC', '#FFFFFF', '#0B0B0E'],
         fonts: 'Inter',
@@ -334,18 +345,8 @@ export const en: ContentOsCopy = {
           'Competitor intelligence · Search & AI · Digital PR · Link value · Business of visibility',
         rule: 'Investigate, don’t report: data, pattern, insight, then what to do.',
       },
-      {
-        id: 'a-better-mind',
-        name: 'A Better Mind',
-        handle: 'YouTube channel',
-        platform: 'YouTube',
-        colors: ['#E8A54B', '#F2EEE7', '#101114'],
-        fonts: 'Fraunces · Inter',
-        language: 'English',
-        pillars: 'Focus: attention, deep work, flow, distraction',
-      },
     ],
-    note: 'Real context from three pages run with Content OS.',
+    note: 'Real context and real work from two pages run with Content OS.',
     visualLabel:
       'An animation of a page’s brand memory: thirteen kinds of context orbit a glowing core and flow into it, and the core sends out carousels, reels and posts in that brand’s colours.',
   },

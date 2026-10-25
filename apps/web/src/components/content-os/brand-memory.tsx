@@ -1,12 +1,21 @@
 'use client';
 
-import { Icon, type IconName, cn, usePrefersReducedMotion } from '@shimanto/ui';
+/* eslint-disable @next/next/no-img-element -- pre-sized renders and brand logos */
+import { BrandMark, Icon, type IconName, cn, usePrefersReducedMotion } from '@shimanto/ui';
 import { useEffect, useRef, useState } from 'react';
 import { SocialIcon } from '@/components/page/social-icon';
 import type { ContentOsCopy } from '@/content/content-os';
+import type { OutputMedia } from '@/content/content-os/types';
+import { AutoVideo } from './media';
 
 type Memory = ContentOsCopy['memory'];
 type Brand = Memory['brands'][number];
+
+/** A real output, ready to show: a fan of slides, an image or a video. */
+export type OutputAsset =
+  | { kind: 'stack'; images: string[] }
+  | { kind: 'image'; src: string }
+  | { kind: 'video'; video: string; poster: string; aspect: '9:16' | '16:9' };
 
 /** Points on a sphere, evenly spread (Fibonacci lattice). */
 function sphere(n: number): Array<[number, number, number]> {
@@ -25,28 +34,67 @@ const hexToRgb = (hex: string): [number, number, number] => {
 };
 const mix = (a: number[], b: number[], t: number) => a.map((v, i) => v + (b[i]! - v) * t);
 
-/** Dark or light text, whichever reads on this colour. */
-const textOn = (hex: string) => {
-  const [r, g, b] = hexToRgb(hex).map((v) => {
-    const c = v / 255;
-    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-  }) as [number, number, number];
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.35 ? '#0E0F0C' : '#FFFFFF';
-};
-
 /** Three tilted orbits for the context categories: radius, tilt (x), tilt (z), speed. */
 const RINGS = [
-  { radius: 2.05, tiltX: 1.15, tiltZ: 0.25, speed: 0.16 },
-  { radius: 2.45, tiltX: 1.35, tiltZ: -0.55, speed: -0.11 },
-  { radius: 2.85, tiltX: 0.95, tiltZ: 0.9, speed: 0.08 },
+  { radius: 1.85, tiltX: 1.15, tiltZ: 0.25, speed: 0.16 },
+  { radius: 2.2, tiltX: 1.35, tiltZ: -0.55, speed: -0.11 },
+  { radius: 2.55, tiltX: 0.95, tiltZ: 0.9, speed: 0.08 },
 ];
+
+/** Rotate a point around x then z (a ring's tilt). */
+function tilt(x: number, y: number, z: number, ax: number, az: number) {
+  const y1 = y * Math.cos(ax) - z * Math.sin(ax);
+  const z1 = y * Math.sin(ax) + z * Math.cos(ax);
+  return [x * Math.cos(az) - y1 * Math.sin(az), x * Math.sin(az) + y1 * Math.cos(az), z1] as const;
+}
+
+/** One real output as a small card the stream flows into. */
+function OutputCard({ label, asset }: { label: string; asset: OutputAsset }) {
+  const frame = 'rounded-[10px] shadow-xl shadow-black/50 ring-1 ring-white/15';
+  return (
+    <figure className="w-[84px] sm:w-[120px]">
+      {asset.kind === 'stack' ? (
+        <div className="relative aspect-[4/5]">
+          {asset.images.slice(0, 3).map((src, i, all) => {
+            const back = all.length - 1 - i;
+            return (
+              <img
+                key={src}
+                src={src}
+                alt=""
+                className={cn('absolute inset-0 size-full object-cover', frame)}
+                style={{ transform: `translateX(${back * 8}px) rotate(${back * 6}deg)`, zIndex: i }}
+              />
+            );
+          })}
+        </div>
+      ) : asset.kind === 'image' ? (
+        <img src={asset.src} alt="" className={cn('aspect-[4/5] w-full object-cover', frame)} />
+      ) : (
+        <div
+          className={cn(
+            'relative overflow-hidden bg-black',
+            frame,
+            asset.aspect === '16:9' ? 'aspect-video' : 'mx-auto aspect-[9/16] w-[62px] sm:w-[92px]',
+          )}
+        >
+          <AutoVideo src={asset.video} poster={asset.poster} />
+        </div>
+      )}
+      <figcaption className="mt-1.5 text-center text-[11px] font-medium text-[#F3EFE4] sm:text-xs">
+        {label}
+      </figcaption>
+    </figure>
+  );
+}
 
 /**
  * The brand brain: a glowing core of points in the page's colour, the context categories
- * orbiting it on three tilted rings and streaming into it, and finished work streaming out to
- * the outputs. Canvas 2D with a hand-rolled projection (like the site's other visuals, no
- * library); labels are HTML, positioned every frame. Pauses offscreen and in hidden tabs; one
- * still frame under reduced motion.
+ * orbiting it on three tilted rings and streaming into it, and finished work streaming out to the
+ * page's real outputs. Drag to turn it (with inertia), the cursor pushes the points aside and
+ * lights up nearby context, a click makes the core flare. Canvas 2D with a hand-rolled projection
+ * (like the site's other visuals, no library); labels are HTML, positioned every frame. Pauses
+ * offscreen and in hidden tabs; one still frame under reduced motion.
  */
 function Brain({
   categories,
@@ -55,23 +103,35 @@ function Brain({
   accent,
   pulse,
   label,
+  hint,
 }: {
   categories: string[];
-  outputs: string[];
+  outputs: Array<{ label: string; asset: OutputAsset }>;
   color: string;
   accent: string;
   /** Changes when the brand changes: the core flares. */
   pulse: number;
   label: string;
+  hint: string;
 }) {
   const wrap = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const labels = useRef<Array<HTMLSpanElement | null>>([]);
-  const outs = useRef<Array<HTMLSpanElement | null>>([]);
+  const column = useRef<HTMLDivElement>(null);
+  const cards = useRef<Array<HTMLDivElement | null>>([]);
   const reduced = usePrefersReducedMotion();
-  // Animated values the draw loop reads without re-rendering.
+  const [dragging, setDragging] = useState(false);
+  // Values the draw loop reads without re-rendering.
   const target = useRef({ color: hexToRgb(color), accent: hexToRgb(accent) });
   const current = useRef({ color: hexToRgb(color), accent: hexToRgb(accent), flare: 0 });
+  const pointer = useRef({ x: 0, y: 0, inside: false });
+  const view = useRef({
+    yaw: 0,
+    pitch: 0.35,
+    vYaw: 0.25,
+    vPitch: 0,
+    drag: null as null | { x: number; y: number; moved: number },
+  });
 
   useEffect(() => {
     target.current = { color: hexToRgb(color), accent: hexToRgb(accent) };
@@ -86,19 +146,18 @@ function Brain({
     const ctx = el?.getContext('2d');
     if (!el || !box || !ctx) return;
 
-    const core = sphere(900);
+    const core = sphere(1100);
     const nodes = categories.map((_, i) => ({
       ring: RINGS[i % RINGS.length]!,
       phase: (i / categories.length) * Math.PI * 2 + (i % 3) * 0.7,
     }));
-    // Context flowing in (node → core) and work flowing out (core → output).
-    const inflow = Array.from({ length: 70 }, (_, i) => ({
+    const inflow = Array.from({ length: 80 }, (_, i) => ({
       node: i % nodes.length,
       t: Math.random(),
       speed: 0.25 + Math.random() * 0.35,
     }));
-    const outflow = Array.from({ length: 30 }, (_, i) => ({
-      out: i % outputs.length,
+    const outflow = Array.from({ length: 48 }, (_, i) => ({
+      out: i,
       t: Math.random(),
       speed: 0.3 + Math.random() * 0.3,
     }));
@@ -135,42 +194,51 @@ function Brain({
       if (!reduced) time += dt;
       const cur = current.current;
       const tgt = target.current;
+      const v = view.current;
+      const ptr = pointer.current;
       cur.color = mix(cur.color, tgt.color, Math.min(1, dt * 4)) as typeof cur.color;
       cur.accent = mix(cur.accent, tgt.accent, Math.min(1, dt * 4)) as typeof cur.accent;
       cur.flare = Math.max(0, cur.flare - dt * 1.2);
 
-      // Core on the left two thirds; outputs on the right edge.
-      const cx = w * 0.42;
-      const cy = h * 0.5;
-      const unit = Math.min(w * 0.62, h) / 6.6;
-      const spin = time * 0.25;
-      const cos = Math.cos(spin);
-      const sin = Math.sin(spin);
+      // Turning: a drag sets the angle directly; let go, it glides and eases back to a slow spin.
+      if (v.drag) {
+        v.vYaw *= Math.max(0, 1 - dt * 10);
+        v.vPitch *= Math.max(0, 1 - dt * 10);
+      } else if (!reduced) {
+        v.vYaw += (0.25 - v.vYaw) * Math.min(1, dt * 1.2);
+        v.vPitch *= Math.max(0, 1 - dt * 3);
+        v.yaw += v.vYaw * dt;
+        v.pitch = Math.max(-0.9, Math.min(1.2, v.pitch + v.vPitch * dt));
+      }
+
+      // The brain fills the space left of the output cards.
+      const col = column.current;
+      const room = col ? col.offsetLeft : w * 0.78;
+      const cx = room * 0.52;
+      const cy = h * 0.48;
+      const unit = Math.min(room * 0.85, h * 0.95) / 5.1;
+      const cyaw = Math.cos(v.yaw);
+      const syaw = Math.sin(v.yaw);
+      const cp = Math.cos(v.pitch);
+      const sp = Math.sin(v.pitch);
       const project = (x: number, y: number, z: number) => {
-        // Spin around y, then a slight forward tilt.
-        const rx = x * cos - z * sin;
-        const rz = x * sin + z * cos;
-        const ty = y * Math.cos(0.35) - rz * Math.sin(0.35);
-        const tz = y * Math.sin(0.35) + rz * Math.cos(0.35);
+        const rx = x * cyaw - z * syaw;
+        const rz = x * syaw + z * cyaw;
+        const ty = y * cp - rz * sp;
+        const tz = y * sp + rz * cp;
         const p = FOCAL / (FOCAL + tz);
         return { x: cx + rx * unit * p, y: cy + ty * unit * p, z: tz, p };
       };
       const ring = (i: number) => {
         const n = nodes[i]!;
         const a = n.phase + time * n.ring.speed;
-        // A circle on the ring's plane, tilted about x then z.
-        let x = Math.cos(a) * n.ring.radius;
-        let y = 0;
-        let z = Math.sin(a) * n.ring.radius;
-        const y1 = y * Math.cos(n.ring.tiltX) - z * Math.sin(n.ring.tiltX);
-        const z1 = y * Math.sin(n.ring.tiltX) + z * Math.cos(n.ring.tiltX);
-        y = y1;
-        z = z1;
-        const x2 = x * Math.cos(n.ring.tiltZ) - y * Math.sin(n.ring.tiltZ);
-        const y2 = x * Math.sin(n.ring.tiltZ) + y * Math.cos(n.ring.tiltZ);
-        x = x2;
-        y = y2;
-        return [x, y, z] as const;
+        return tilt(
+          Math.cos(a) * n.ring.radius,
+          0,
+          Math.sin(a) * n.ring.radius,
+          n.ring.tiltX,
+          n.ring.tiltZ,
+        );
       };
 
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -180,8 +248,8 @@ function Brain({
       const [ar, ag, ab] = cur.accent.map(Math.round) as [number, number, number];
 
       // Halo behind the core.
-      const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, unit * (2.4 + cur.flare));
-      halo.addColorStop(0, `rgba(${r},${g},${b},${0.32 + cur.flare * 0.3})`);
+      const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, unit * (2.6 + cur.flare * 1.4));
+      halo.addColorStop(0, `rgba(${r},${g},${b},${0.3 + cur.flare * 0.35})`);
       halo.addColorStop(1, `rgba(${r},${g},${b},0)`);
       ctx.fillStyle = halo;
       ctx.fillRect(0, 0, w, h);
@@ -190,93 +258,110 @@ function Brain({
       ctx.lineWidth = 1;
       for (const rg of RINGS) {
         ctx.beginPath();
-        for (let k = 0; k <= 64; k++) {
-          const a = (k / 64) * Math.PI * 2;
-          let x = Math.cos(a) * rg.radius;
-          let y = 0;
-          let z = Math.sin(a) * rg.radius;
-          const y1 = y * Math.cos(rg.tiltX) - z * Math.sin(rg.tiltX);
-          z = y * Math.sin(rg.tiltX) + z * Math.cos(rg.tiltX);
-          y = y1;
-          const x2 = x * Math.cos(rg.tiltZ) - y * Math.sin(rg.tiltZ);
-          y = x * Math.sin(rg.tiltZ) + y * Math.cos(rg.tiltZ);
-          x = x2;
+        for (let k = 0; k <= 72; k++) {
+          const a = (k / 72) * Math.PI * 2;
+          const [x, y, z] = tilt(
+            Math.cos(a) * rg.radius,
+            0,
+            Math.sin(a) * rg.radius,
+            rg.tiltX,
+            rg.tiltZ,
+          );
           const p = project(x, y, z);
           if (k === 0) ctx.moveTo(p.x, p.y);
           else ctx.lineTo(p.x, p.y);
         }
-        ctx.strokeStyle = `rgba(${r},${g},${b},0.16)`;
+        ctx.strokeStyle = `rgba(${r},${g},${b},0.18)`;
         ctx.stroke();
       }
 
-      // The core: points breathing, brighter in front.
-      const breathe = 1 + Math.sin(time * 1.6) * 0.03 + cur.flare * 0.25;
+      // The core: points breathing, brighter in front, pushed aside by the cursor.
+      const breathe = 1.15 + Math.sin(time * 1.6) * 0.03 + cur.flare * 0.3;
+      const reach = unit * 1.1;
       for (const [x, y, z] of core) {
-        const wob = 1 + Math.sin(time * 2 + x * 4 + y * 3) * 0.04;
-        const p = project(x * breathe * wob, y * breathe * wob, z * breathe * wob);
+        const wob = breathe * (1 + Math.sin(time * 2 + x * 4 + y * 3) * 0.04);
+        const p = project(x * wob, y * wob, z * wob);
+        let px = p.x;
+        let py = p.y;
+        if (ptr.inside) {
+          const dx = px - ptr.x;
+          const dy = py - ptr.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < reach * reach) {
+            const d = Math.sqrt(d2) || 1;
+            const push = (1 - d / reach) ** 2 * unit * 0.6;
+            px += (dx / d) * push;
+            py += (dy / d) * push;
+          }
+        }
         const depth = (1 - p.z) / 2; // 0 back … 1 front
-        const size = (0.6 + depth * 1.4) * p.p;
-        ctx.fillStyle = `rgba(${r},${g},${b},${0.12 + depth * 0.55})`;
-        ctx.fillRect(p.x - size / 2, p.y - size / 2, size, size);
+        const size = (0.7 + depth * 1.5) * p.p;
+        ctx.fillStyle = `rgba(${r},${g},${b},${0.14 + depth * 0.6})`;
+        ctx.fillRect(px - size / 2, py - size / 2, size, size);
       }
 
-      // Context nodes and their streams into the core.
+      // Context nodes, lit up near the cursor, and their streams into the core.
       const nodeScreen = nodes.map((_, i) => {
-        const [x, y, z] = ring(i);
-        return { ...project(x, y, z), world: [x, y, z] as const };
+        const world = ring(i);
+        const p = project(world[0], world[1], world[2]);
+        const near = ptr.inside ? Math.max(0, 1 - Math.hypot(p.x - ptr.x, p.y - ptr.y) / 90) : 0;
+        return { ...p, world, near };
       });
       for (const f of inflow) {
-        f.t += dt * f.speed * (reduced ? 0 : 1);
+        const n = nodeScreen[f.node]!;
+        if (!reduced) f.t += dt * f.speed * (1 + n.near * 2);
         if (f.t > 1) f.t -= 1;
-        const [x, y, z] = nodeScreen[f.node]!.world;
-        const k = 1 - f.t * f.t; // accelerate into the core
-        const p = project(x * k, y * k, z * k);
-        const alpha = Math.sin(f.t * Math.PI) * 0.9;
-        ctx.fillStyle = `rgba(${ar},${ag},${ab},${alpha})`;
+        const k = 1 - f.t * f.t;
+        const p = project(n.world[0] * k, n.world[1] * k, n.world[2] * k);
+        ctx.fillStyle = `rgba(${ar},${ag},${ab},${Math.sin(f.t * Math.PI) * 0.9})`;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 1.6 * p.p, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, 1.7 * p.p * (1 + n.near * 0.6), 0, Math.PI * 2);
         ctx.fill();
       }
       nodeScreen.forEach((p, i) => {
-        const depth = (1 - p.z / 3) / 2;
-        const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 10 * p.p);
+        const depth = Math.max(0, Math.min(1, (1 - p.z / 3) / 2));
+        const radius = (10 + p.near * 16) * p.p;
+        const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius);
         glow.addColorStop(0, `rgba(${ar},${ag},${ab},${0.5 + depth * 0.5})`);
         glow.addColorStop(1, `rgba(${ar},${ag},${ab},0)`);
         ctx.fillStyle = glow;
-        ctx.fillRect(p.x - 12, p.y - 12, 24, 24);
-        const el2 = labels.current[i];
-        if (el2) {
-          el2.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%, -150%)`;
-          el2.style.opacity = String(0.3 + Math.max(0, Math.min(1, depth)) * 0.7);
-          el2.style.zIndex = String(Math.round(depth * 20));
+        ctx.fillRect(p.x - radius, p.y - radius, radius * 2, radius * 2);
+        const tag = labels.current[i];
+        if (tag) {
+          tag.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%, -150%) scale(${1 + p.near * 0.25})`;
+          tag.style.opacity = String(Math.max(p.near, 0.3 + depth * 0.7));
+          tag.style.zIndex = String(Math.round(depth * 20 + p.near * 20));
+          tag.style.borderColor = p.near > 0.3 ? `rgb(${ar},${ag},${ab})` : '';
         }
       });
 
-      // Finished work streaming out to the outputs on the right.
-      // Chips hang off the right edge; particles aim at their left half.
-      const anchors = outputs.map((_, i) => ({
-        x: w - 56,
-        y: h * (0.3 + (i * 0.4) / Math.max(1, outputs.length - 1)),
-      }));
-      for (const f of outflow) {
-        f.t += dt * f.speed * (reduced ? 0 : 1);
-        if (f.t > 1) f.t -= 1;
-        const a = anchors[f.out]!;
-        const e = f.t * f.t * (3 - 2 * f.t);
-        // A gentle curve from the core to the output.
-        const mx = (cx + a.x) / 2;
-        const my = Math.min(cy, a.y) - unit * 0.6;
-        const x = (1 - e) * (1 - e) * cx + 2 * (1 - e) * e * mx + e * e * a.x;
-        const y = (1 - e) * (1 - e) * cy + 2 * (1 - e) * e * my + e * e * a.y;
-        ctx.fillStyle = `rgba(${r},${g},${b},${Math.sin(f.t * Math.PI) * 0.95})`;
-        ctx.beginPath();
-        ctx.arc(x, y, 2, 0, Math.PI * 2);
-        ctx.fill();
+      // Finished work streaming out to the real outputs.
+      const anchors = cards.current.flatMap((card) =>
+        card && col
+          ? [
+              {
+                x: col.offsetLeft + card.offsetLeft - 4,
+                y: col.offsetTop + card.offsetTop + card.offsetHeight * 0.42,
+              },
+            ]
+          : [],
+      );
+      if (anchors.length) {
+        for (const f of outflow) {
+          const a = anchors[f.out % anchors.length]!;
+          if (!reduced) f.t += dt * f.speed;
+          if (f.t > 1) f.t -= 1;
+          const e = f.t * f.t * (3 - 2 * f.t);
+          const mx = (cx + a.x) / 2;
+          const my = (cy + a.y) / 2 - unit * 0.4;
+          const x = (1 - e) * (1 - e) * cx + 2 * (1 - e) * e * mx + e * e * a.x;
+          const y = (1 - e) * (1 - e) * cy + 2 * (1 - e) * e * my + e * e * a.y;
+          ctx.fillStyle = `rgba(${r},${g},${b},${Math.sin(f.t * Math.PI) * 0.95})`;
+          ctx.beginPath();
+          ctx.arc(x, y, 2.1, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
-      anchors.forEach((a, i) => {
-        const el3 = outs.current[i];
-        if (el3) el3.style.transform = `translate(${w - 8}px, ${a.y}px) translate(-100%, -50%)`;
-      });
       ctx.globalCompositeOperation = 'source-over';
 
       if (reduced) return; // one still frame
@@ -297,42 +382,94 @@ function Brain({
       ro.disconnect();
       io.disconnect();
     };
-  }, [categories, outputs, reduced]);
+  }, [categories, reduced]);
+
+  const local = (e: React.PointerEvent) => {
+    const r = wrap.current!.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  };
+  const endDrag = (e: React.PointerEvent) => {
+    const v = view.current;
+    // A click without a drag wakes the core up.
+    if (v.drag && v.drag.moved < 6) current.current.flare = 1;
+    v.drag = null;
+    setDragging(false);
+    if (e.currentTarget.hasPointerCapture(e.pointerId))
+      e.currentTarget.releasePointerCapture(e.pointerId);
+  };
 
   return (
-    <div
-      ref={wrap}
-      role="img"
-      aria-label={label}
-      className="relative h-[420px] w-full overflow-hidden sm:h-[520px]"
-    >
-      <canvas ref={canvas} className="absolute inset-0 size-full" />
-      {categories.map((name, i) => (
-        <span
-          key={name}
-          ref={(el) => {
-            labels.current[i] = el;
-          }}
-          aria-hidden="true"
-          className="pointer-events-none absolute top-0 left-0 rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-medium whitespace-nowrap text-[#F3EFE4] ring-1 ring-white/15 backdrop-blur sm:text-[11px]"
+    <div>
+      {/* Touch: vertical swipes still scroll the page, horizontal ones turn the brain */}
+      <div
+        ref={wrap}
+        role="img"
+        aria-label={label}
+        className={cn(
+          'relative h-[420px] w-full touch-pan-y overflow-hidden select-none sm:h-[540px]',
+          dragging ? 'cursor-grabbing' : 'cursor-grab',
+        )}
+        onPointerDown={(e) => {
+          view.current.drag = { ...local(e), moved: 0 };
+          setDragging(true);
+          e.currentTarget.setPointerCapture(e.pointerId);
+        }}
+        onPointerMove={(e) => {
+          const p = local(e);
+          pointer.current = { ...p, inside: e.pointerType === 'mouse' };
+          const v = view.current;
+          if (!v.drag) return;
+          const dx = p.x - v.drag.x;
+          const dy = p.y - v.drag.y;
+          v.yaw += dx * 0.008;
+          v.pitch = Math.max(-0.9, Math.min(1.2, v.pitch + dy * 0.006));
+          v.vYaw = dx * 0.5;
+          v.vPitch = dy * 0.36;
+          v.drag = { ...p, moved: v.drag.moved + Math.abs(dx) + Math.abs(dy) };
+        }}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        onPointerLeave={() => {
+          pointer.current.inside = false;
+        }}
+      >
+        <canvas ref={canvas} className="absolute inset-0 size-full" />
+        {categories.map((name, i) => (
+          <span
+            key={name}
+            ref={(el) => {
+              labels.current[i] = el;
+            }}
+            aria-hidden="true"
+            className="pointer-events-none absolute top-0 left-0 rounded-full border border-white/15 bg-black/60 px-2 py-0.5 text-[10px] font-medium whitespace-nowrap text-[#F3EFE4] backdrop-blur sm:text-[11px]"
+          >
+            {name}
+          </span>
+        ))}
+        {/* The page's real outputs, where the stream lands */}
+        <div
+          ref={column}
+          className="pointer-events-none absolute inset-y-0 right-0 flex flex-col justify-center gap-3 sm:right-2 sm:gap-4"
         >
-          {name}
-        </span>
-      ))}
-      {outputs.map((name, i) => (
-        <span
-          key={name}
-          ref={(el) => {
-            outs.current[i] = el;
-          }}
-          aria-hidden="true"
-          className="absolute top-0 left-0 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium shadow-lg transition-colors duration-500"
-          style={{ background: color, color: textOn(color) }}
-        >
-          <Icon name={i === 0 ? 'grid' : i === 1 ? 'video' : 'pen'} className="size-3.5" />
-          {name}
-        </span>
-      ))}
+          {outputs.map((o, i) => (
+            <div
+              key={`${o.label}-${i}`}
+              ref={(el) => {
+                cards.current[i] = el;
+              }}
+              aria-hidden="true"
+              className="cos-rise"
+              style={{ animationDelay: `${i * 90}ms` }}
+            >
+              <OutputCard label={o.label} asset={o.asset} />
+            </div>
+          ))}
+        </div>
+      </div>
+      <p className="text-ink-soft mt-2 flex items-center justify-center gap-2 text-sm">
+        <Icon name="repeat" className="size-4" />
+        {hint}
+      </p>
     </div>
   );
 }
@@ -345,19 +482,49 @@ const factIcon: Record<string, IconName> = {
   language: 'globe',
 };
 
+/** The page's own logo: a mark (switcher) or the full lockup (card). */
+function BrandLogo({ logo, size }: { logo: Brand['logo']; size: 'mark' | 'full' }) {
+  if (logo === 'dotmirror') {
+    return size === 'mark' ? (
+      <img src="/content-os/brands/dotmirror-mark.svg" alt="" className="size-6 rounded-[6px]" />
+    ) : (
+      <img src="/content-os/brands/dotmirror-logo.svg" alt="Dot Mirror" className="h-7 w-auto" />
+    );
+  }
+  return size === 'mark' ? (
+    <BrandMark className="size-6" />
+  ) : (
+    <span className="inline-flex items-center gap-2.5" aria-label="shimanto.xyz">
+      <BrandMark className="size-8" />
+      <span
+        aria-hidden="true"
+        className="font-logo text-[19px] leading-none font-bold tracking-[-0.045em] lowercase"
+      >
+        shimanto<span className="text-build">.</span>xyz
+      </span>
+    </span>
+  );
+}
+
 /** The brand memory section: page switcher, what it knows about that page, and the brain. */
-export function BrandMemory({ memory }: { memory: Memory }) {
+export function BrandMemory({
+  memory,
+  media,
+}: {
+  memory: Memory;
+  media: Record<OutputMedia, OutputAsset>;
+}) {
   const [active, setActive] = useState(0);
   const [pulse, setPulse] = useState(0);
   const brand: Brand = memory.brands[active]!;
-  const accent = brand.colors[1] && brand.colors[1] !== '#FFFFFF' ? brand.colors[1] : '#F3EFE4';
+  const accent = brand.colors[1] && brand.colors[1] !== '#FFFFFF' ? brand.colors[1] : '#9EC2FF';
 
   const facts = (['voice', 'audience', 'pillars', 'rule', 'language'] as const).flatMap((key) =>
     brand[key] ? [{ key, label: memory.labels[key], value: brand[key]! }] : [],
   );
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center lg:gap-10">
+    <div className="grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-center">
       <div>
         <p className="text-ink-soft text-sm font-medium">{memory.switchLabel}</p>
         <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label={memory.switchLabel}>
@@ -371,17 +538,13 @@ export function BrandMemory({ memory }: { memory: Memory }) {
                 setPulse((n) => n + 1);
               }}
               className={cn(
-                'rounded-pill inline-flex items-center gap-2 px-4 py-2 text-sm font-medium ring-1 transition',
+                'rounded-pill inline-flex items-center gap-2 py-1.5 pr-4 pl-1.5 text-sm font-medium ring-1 transition',
                 i === active
                   ? 'bg-[#F3EFE4] text-[#0E0F0C] ring-transparent'
                   : 'text-ink-soft ring-white/15 hover:text-[#F3EFE4]',
               )}
             >
-              <span
-                aria-hidden="true"
-                className="size-2.5 rounded-full"
-                style={{ background: b.colors[0] }}
-              />
+              <BrandLogo logo={b.logo} size="mark" />
               {b.name}
             </button>
           ))}
@@ -393,14 +556,12 @@ export function BrandMemory({ memory }: { memory: Memory }) {
           className="cos-rise mt-6 rounded-[24px] bg-white/[0.03] p-5 ring-1 ring-white/10 md:p-6"
           aria-live="polite"
         >
-          <div className="flex items-center gap-3">
-            <SocialIcon platform={brand.platform} className="size-10" />
-            <div className="min-w-0">
-              <p className="text-lg font-medium">{brand.name}</p>
-              <p className="text-ink-soft truncate text-sm">
-                {brand.handle} · {memory.labels.platform}: {brand.platform}
-              </p>
-            </div>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <BrandLogo logo={brand.logo} size="full" />
+            <span className="text-ink-soft inline-flex items-center gap-2 text-sm">
+              <SocialIcon platform={brand.platform} className="size-6 rounded-md" />
+              {brand.handle}
+            </span>
           </div>
           <dl className="mt-5 grid gap-3.5 text-[15px]">
             {facts.map((f) => (
@@ -444,11 +605,12 @@ export function BrandMemory({ memory }: { memory: Memory }) {
 
       <Brain
         categories={memory.categories}
-        outputs={memory.outputs}
+        outputs={brand.outputs.map((o) => ({ label: o.label, asset: media[o.media] }))}
         color={brand.colors[0]!}
         accent={accent}
         pulse={pulse}
         label={memory.visualLabel}
+        hint={memory.hint}
       />
     </div>
   );

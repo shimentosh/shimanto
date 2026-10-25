@@ -3,6 +3,9 @@ import type { Accent, IconName } from '@shimanto/ui';
 /** A short line with its icon. */
 export type Point = { text: string; icon: IconName };
 
+/** Real outputs the brand memory visual can show. */
+export type OutputMedia = 'carousel' | 'post' | 'story' | 'real-1' | 'real-2' | 'host';
+
 /**
  * Every word on the Content OS landing page, per language. The page renders only from this, so a
  * new language is a new copy file plus a route: `en.ts` → `/content-os`, `bn.ts` → `/bn/content-os`.
@@ -12,7 +15,6 @@ export interface ContentOsCopy {
   meta: { title: string; description: string };
 
   nav: {
-    back: string;
     links: Array<{ href: string; label: string }>;
     buy: string;
   };
@@ -136,8 +138,8 @@ export interface ContentOsCopy {
     switchLabel: string;
     /** The context categories orbiting the core. */
     categories: string[];
-    /** Where the core sends finished work. */
-    outputs: string[];
+    /** Hint under the visual (drag to turn it). */
+    hint: string;
     labels: {
       voice: string;
       audience: string;
@@ -151,7 +153,11 @@ export interface ContentOsCopy {
     brands: Array<{
       id: string;
       name: string;
+      /** Which logo to show. */
+      logo: 'shimanto' | 'dotmirror';
       handle: string;
+      /** Real work it made for this page, shown as the brain's output (keys into demos). */
+      outputs: Array<{ label: string; media: OutputMedia }>;
       /** Brand name of the platform (its logo is looked up by it). */
       platform: string;
       colors: string[];

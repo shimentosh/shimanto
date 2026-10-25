@@ -7,6 +7,7 @@ import { PlatformMark, SocialIcon } from '@/components/page/social-icon';
 import { Section, SectionTitle } from '@/components/page/section';
 import { FaqSection } from '@/components/page/toolbox';
 import { CONTENT_OS_FALLBACK, CONTENT_OS_SLUG, type ContentOsCopy } from '@/content/content-os';
+import type { OutputMedia } from '@/content/content-os/types';
 import {
   type GraphicDemo,
   beyondDemos,
@@ -22,10 +23,34 @@ import {
 import { absoluteUrl, site } from '@/lib/site';
 import { type StoreProduct, formatPrice, majorUnits } from '@/lib/store';
 import { BotChat, BotMark, type ChatAttachments } from './bot-chat';
-import { BrandMemory } from './brand-memory';
+import { BrandMemory, type OutputAsset } from './brand-memory';
 import { CarouselViewer } from './carousel-viewer';
 import { DemoGallery } from './demo-gallery';
 import { Clip, ClipGallery, HoverClip, StoryVideo } from './media';
+
+/** The real work each brand in the memory section points at. */
+const pickCarousel = carouselDemos.find((d) => d.id.includes('small-team')) ?? carouselDemos[0]!;
+const pickPost = graphicDemos.find((d) => d.id.includes('weak-first-line')) ?? graphicDemos[0]!;
+const reel = (demo: { video: string; poster: string }): OutputAsset => ({
+  kind: 'video',
+  video: demo.video,
+  poster: demo.poster,
+  aspect: '9:16',
+});
+const outputMedia: Record<OutputMedia, OutputAsset> = {
+  carousel: {
+    kind: 'stack',
+    images: pickCarousel.slides
+      .slice(0, 3)
+      .map((s) => s.src)
+      .reverse(),
+  },
+  post: { kind: 'image', src: pickPost.image },
+  story: { kind: 'video', video: storyDemo.video, poster: storyDemo.poster, aspect: '16:9' },
+  'real-1': reel(realDemos[0]!),
+  'real-2': reel(realDemos[1] ?? realDemos[0]!),
+  host: reel(hostDemo ?? realDemos[0]!),
+};
 
 /** Soft card tint per accent. */
 const tint = {
@@ -321,13 +346,6 @@ export function ContentOsLanding({
       {/* ───────────── Header ───────────── */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0E0F0C]/75 backdrop-blur-xl">
         <Container className="flex h-16 items-center gap-3 md:gap-5">
-          <Link
-            href="/"
-            className="text-ink-soft rounded-pill flex shrink-0 items-center gap-1.5 px-2.5 py-1.5 text-sm ring-1 ring-white/15 transition hover:text-[#F3EFE4] hover:ring-white/30"
-          >
-            <Icon name="arrowLeft" className="size-3.5" />
-            {c.nav.back}
-          </Link>
           <a href="#top" className="shrink-0">
             <Wordmark className="h-6 md:h-7" />
           </a>
@@ -426,7 +444,7 @@ export function ContentOsLanding({
         />
         <p className="text-ink-soft mt-6 max-w-[62ch] text-lg leading-relaxed">{c.memory.intro}</p>
         <div className="mt-10">
-          <BrandMemory memory={c.memory} />
+          <BrandMemory memory={c.memory} media={outputMedia} />
         </div>
       </Section>
 
