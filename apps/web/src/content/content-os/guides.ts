@@ -6,7 +6,9 @@ export type GuideBlock =
   | { kind: 'code'; code: string }
   | { kind: 'steps'; items: string[] }
   | { kind: 'table'; head: [string, string]; rows: Array<[string, string]> }
-  | { kind: 'tip'; text: string };
+  | { kind: 'tip'; text: string }
+  /** A ready prompt to paste into Claude Code, Codex or Gemini. */
+  | { kind: 'prompt'; label: string; text: string };
 
 export interface Guide {
   id: string;
@@ -25,6 +27,8 @@ export interface GuidesCopy {
   toc: string;
   copy: string;
   copied: string;
+  /** Says who the prompt is for, on the prompt card. */
+  promptFor: string;
   guides: Guide[];
   help: { title: string; body: string };
 }
@@ -43,7 +47,7 @@ export const guidesEn: GuidesCopy = {
     time: 'About 20 minutes to set up',
   },
   sections: [
-    { href: '#quick-start', label: 'Quick start', icon: 'rocket' },
+    { href: '#ai-setup', label: 'AI setup', icon: 'spark' },
     { href: '#first-page', label: 'First page', icon: 'book' },
     { href: '#daily', label: 'Daily use', icon: 'calendar' },
     { href: '#shortcuts', label: 'Shortcuts', icon: 'code' },
@@ -52,13 +56,42 @@ export const guidesEn: GuidesCopy = {
   toc: 'On this page',
   copy: 'Copy',
   copied: 'Copied',
+  promptFor: 'Paste into Claude Code, Codex or Gemini',
   guides: [
+    {
+      id: 'ai-setup',
+      title: 'The easy way: let AI set it up',
+      icon: 'spark',
+      tone: 'spark',
+      lead: 'Open the folder, start your AI, paste one prompt.',
+      blocks: [
+        {
+          kind: 'steps',
+          items: [
+            'Accept the GitHub invite, then clone the repository it shows you.',
+            'Open the contentos folder: in VS Code, File → Open Folder.',
+            'Start your AI there: the Claude Code panel in VS Code, or claude, codex or gemini in its terminal.',
+            'Paste the prompt below and answer its questions.',
+          ],
+        },
+        { kind: 'code', code: 'cd contentos\nclaude' },
+        {
+          kind: 'prompt',
+          label: 'Setup prompt',
+          text: 'Set up Content OS on this computer. The project is this folder.\n\n1. Check Node.js 22+, pnpm, Git and FFmpeg. If one is missing, tell me the command and install it after I say yes.\n2. Run pnpm install, then pnpm exec playwright install chromium.\n3. Copy .env.example to .env.local. Leave the keys empty; I will add mine.\n4. Run pnpm cos doctor and fix every ✗ it shows.\n5. Start the Studio with pnpm dev and give me the link.\n\nOne short line per step. Stop and ask before anything that needs my password or costs money.',
+        },
+        {
+          kind: 'tip',
+          text: 'Content OS ships with CLAUDE.md, AGENTS.md and GEMINI.md, so Claude Code, Codex and Gemini all follow the same rules.',
+        },
+      ],
+    },
     {
       id: 'quick-start',
       title: 'Quick start',
       icon: 'rocket',
       tone: 'signal',
-      lead: 'The whole setup, in six lines.',
+      lead: 'Rather do it yourself? Six lines.',
       blocks: [
         {
           kind: 'code',
@@ -68,7 +101,7 @@ export const guidesEn: GuidesCopy = {
           kind: 'p',
           text: 'Then open localhost:3000/studio, and open the folder in VS Code with Claude Code.',
         },
-        { kind: 'tip', text: 'New here? The next four guides walk through each line.' },
+        { kind: 'tip', text: 'The next four guides walk through each line.' },
       ],
     },
     {
@@ -171,6 +204,11 @@ export const guidesEn: GuidesCopy = {
             'Open Studio → Context to see exactly what the AI reads.',
           ],
         },
+        {
+          kind: 'prompt',
+          label: 'First page prompt',
+          text: 'Make a new Content OS page for my brand.\n\nName: <your brand>\nLanguage: English\nMain platform: Instagram\nLogo and photos: <folder with your files>\n\nAsk me one question at a time about my audience, my voice, what I sell and my rules. Then set up the brand kit and show me the page in the Studio.',
+        },
       ],
     },
     {
@@ -192,6 +230,11 @@ export const guidesEn: GuidesCopy = {
         {
           kind: 'tip',
           text: 'Log real work with /experience. Teach it a rule once with /teach.',
+        },
+        {
+          kind: 'prompt',
+          label: 'Daily prompt',
+          text: 'What should <my-brand> post today? Give me three ideas with a reason each. Then make a carousel from the one I pick, run QA, and export it.',
         },
       ],
     },

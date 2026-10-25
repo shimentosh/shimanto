@@ -3,29 +3,40 @@
 import { Icon, cn } from '@shimanto/ui';
 import { useState } from 'react';
 
-/** A code block with a copy button: each line gets a prompt, the button copies them all. */
+/**
+ * A code block with a copy button: each line gets a prompt, the button copies them all. As a
+ * `prompt`, it's a ready message for the AI instead: plain text, kept as written.
+ */
 export function CopyCode({
   code,
   copyLabel,
   copiedLabel,
+  prompt = false,
 }: {
   code: string;
   copyLabel: string;
   copiedLabel: string;
+  prompt?: boolean;
 }) {
   const [copied, setCopied] = useState(false);
   return (
     <div className="group relative rounded-[14px] bg-black/50 ring-1 ring-white/10">
-      <pre className="overflow-x-auto py-3.5 pr-24 pl-4 font-mono text-[13px] leading-relaxed md:text-[14px]">
-        {code.split('\n').map((line, i) => (
-          <span key={i} className="block">
-            <span aria-hidden="true" className="text-build mr-2 select-none">
-              ›
+      {prompt ? (
+        <p className="px-4 pt-12 pb-4 text-[15px] leading-relaxed whitespace-pre-line md:pt-4 md:pr-28">
+          {code}
+        </p>
+      ) : (
+        <pre className="overflow-x-auto py-3.5 pr-24 pl-4 font-mono text-[13px] leading-relaxed md:text-[14px]">
+          {code.split('\n').map((line, i) => (
+            <span key={i} className="block">
+              <span aria-hidden="true" className="text-build mr-2 select-none">
+                ›
+              </span>
+              {line}
             </span>
-            {line}
-          </span>
-        ))}
-      </pre>
+          ))}
+        </pre>
+      )}
       <button
         type="button"
         onClick={() => {

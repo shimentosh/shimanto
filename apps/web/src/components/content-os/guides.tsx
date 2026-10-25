@@ -55,6 +55,17 @@ function Block({ block, g }: { block: GuideBlock; g: GuidesCopy }) {
           </table>
         </div>
       );
+    case 'prompt':
+      return (
+        <div className="rounded-[18px] bg-gradient-to-br from-[#16304f] to-[#141618] p-1.5 ring-1 ring-white/15">
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1 px-3 pt-2 pb-2.5 text-sm">
+            <BotMark className="size-5 rounded-full text-[8px]" />
+            <span className="font-medium">{block.label}</span>
+            <span className="text-ink-soft">· {g.promptFor}</span>
+          </p>
+          <CopyCode code={block.text} copyLabel={g.copy} copiedLabel={g.copied} prompt />
+        </div>
+      );
     case 'tip':
       return (
         <p className="bg-idea/10 ring-idea/25 flex gap-2.5 rounded-[14px] px-4 py-3 text-[15px] leading-snug ring-1">
