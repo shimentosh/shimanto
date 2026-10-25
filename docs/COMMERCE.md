@@ -74,12 +74,15 @@ connection; it never shows secret values.
 
 Without `RESEND_API_KEY`, email goes to `SMTP_URL` (Mailpit at http://localhost:8025 locally).
 
-### Cloudflare R2 (private files)
+### Cloudflare R2 (files)
 
 1. Create a bucket (e.g. `shimanto-media`). Keep it **private**. For public cover images, connect
-   a custom domain and allow public reads for the `media/` prefix only.
+   a custom domain (or enable the r2.dev URL) and allow public reads for the `media/` prefix only.
 2. Create an R2 API token with Object Read & Write on that bucket.
-3. Set:
+3. Connect it in **Admin → Settings → Storage**: account id, bucket, public URL, access key id and
+   secret. The connection is tested before it's saved, the secret is stored encrypted, and once
+   saved it's used instead of the `S3_*` environment variables (**Use environment settings**
+   switches back). Or set it in the environment:
    ```
    S3_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
    S3_REGION=auto
@@ -92,21 +95,68 @@ Without `RESEND_API_KEY`, email goes to `SMTP_URL` (Mailpit at http://localhost:
    ```
 4. Admin → Settings → Storage → "Test storage connection".
 
+Switching storage doesn't copy files: files uploaded before stay in the old bucket. Copy them
+across (e.g. `rclone sync`) before switching a store that already has files.
+
 Product files live under `private/files/…` (older uploads under `private/<year>/…`), support
-attachments under `private/support/…`. Uploads stream through the API (admin → API → R2).
-Customers only ever get 5-minute signed URLs, created after checking the delivery belongs to them,
-is `READY`, and its order is active.
+attachments under `private/support/…`, payment screenshots under `private/payments/…`. Uploads
+stream through the API (admin → API → R2). Customers only ever get 5-minute signed URLs, created
+after checking the delivery belongs to them, is `READY`, and its order is active.
 
-### Stripe (payments)
+### Payments
 
-1. Set `STRIPE_SECRET_KEY` (test key first).
+Everything is set up in **Admin → Settings → Payments**. Checkout offers, for the cart's currency:
+card (Stripe), PayPal, then the manual methods, in that order.
+
+Provider keys entered in the admin are stored encrypted with `SETTINGS_ENCRYPTION_KEY` (set it in
+production: `openssl rand -base64 48`; without it a key is derived from `JWT_ACCESS_SECRET`, so
+rotating that secret would drop the stored keys). Keys set in the environment win over the admin
+and lock those fields.
+
+#### Stripe
+
+1. Admin → Settings → Payments → Stripe: paste the secret key (test key first), or set
+   `STRIPE_SECRET_KEY`.
 2. Add a webhook endpoint `https://api.shimanto.xyz/v1/webhooks/stripe` with the events
    `checkout.session.completed`, `checkout.session.async_payment_succeeded`,
-   `checkout.session.async_payment_failed`, `checkout.session.expired`, `charge.refunded`.
-3. Set `STRIPE_WEBHOOK_SECRET=whsec_…`.
-4. Locally: `stripe listen --forward-to localhost:4000/v1/webhooks/stripe`.
+   `checkout.session.async_payment_failed`, `checkout.session.expired`, `charge.refunded`, and
+   paste its signing secret (`whsec_…`), or set `STRIPE_WEBHOOK_SECRET`.
+3. Locally: `stripe listen --forward-to localhost:4000/v1/webhooks/stripe`.
 
-Without Stripe keys, paid checkout is disabled (free products and $0 orders still work).
+#### PayPal
+
+1. Create a REST app at developer.paypal.com (sandbox first) and paste its client id and secret
+   (or set `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `PAYPAL_MODE`).
+2. Add a webhook to the app: `https://api.shimanto.xyz/v1/webhooks/paypal` with
+   `CHECKOUT.ORDER.APPROVED`, `PAYMENT.CAPTURE.COMPLETED`, `PAYMENT.CAPTURE.DENIED` and
+   `PAYMENT.CAPTURE.REFUNDED`, and paste its webhook id (or `PAYPAL_WEBHOOK_ID`). Webhooks are
+   verified with PayPal's `verify-webhook-signature`.
+3. Flow: checkout creates a PayPal order → the buyer approves on PayPal → PayPal returns them to
+   `/v1/checkout/paypal/return`, which captures the payment and confirms the order when the
+   captured amount matches. The webhook covers buyers who close the tab after approving.
+   Refunds go through PayPal.
+
+PayPal is only offered for the currencies it accepts (USD, EUR, GBP… — not BDT).
+
+#### Manual payments (bKash, Nagad, bank transfer…)
+
+Add methods with the presets (bKash, Nagad, Rocket, bank transfer) or a custom one: account
+details (copyable at checkout), steps, an optional logo and QR code, which currencies it's
+offered for, what the buyer must send (transaction id, the account they paid from, a
+screenshot: off / optional / required).
+
+1. The buyer picks the method; the order is reserved (nothing delivered) and they get the
+   instructions on screen and by email, with a deadline (the payment window, 48 h by default).
+2. They pay, then send the transaction id (and screenshot) on their order page (or right at
+   checkout). The admin gets an email; the order shows under **Orders → Payments to verify**.
+3. The admin checks the money arrived and **confirms** (the order is delivered, the buyer gets a
+   receipt) or **rejects** with a reason (the buyer is emailed and can send it again, with at
+   least 24 h more). A reference already used on another order is flagged.
+4. Unpaid orders get a reminder halfway to the deadline and are cancelled after it. Orders with
+   proof waiting for review are never cancelled for being slow to review. Card / PayPal
+   checkouts abandoned for 3 hours are cancelled too.
+
+Without any payment method, paid checkout is disabled (free products and $0 orders still work).
 
 ### GitHub App (repository delivery)
 

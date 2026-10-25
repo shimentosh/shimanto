@@ -6,3 +6,5 @@ export * from './account.js';
 export * from './support.js';
 export * from './admin.js';
 export * from './analytics.js';
+export * from './email-templates.js';
+export * from './email-settings.js';

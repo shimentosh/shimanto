@@ -16,6 +16,7 @@ import {
 } from '@shimanto/ui';
 import { useParams } from 'next/navigation';
 import { DeliveryBlock } from '@/components/delivery';
+import { ManualPaymentPanel } from '@/components/manual-payment';
 import { useApi } from '@/lib/use-api';
 
 const paymentText: Record<string, string> = {
@@ -80,10 +81,18 @@ export function OrderView() {
         }
       />
 
-      {order.status === 'PENDING' && order.paymentStatus === 'PENDING' && (
-        <Notice tone="info" className="mb-6" title="Waiting for payment confirmation">
-          This usually takes a few seconds. We’ll email you as soon as the payment is confirmed.
-        </Notice>
+      {order.manualPayment ? (
+        <ManualPaymentPanel
+          order={{ ...order, manualPayment: order.manualPayment }}
+          onChange={setData}
+        />
+      ) : (
+        order.status === 'PENDING' &&
+        order.paymentStatus === 'PENDING' && (
+          <Notice tone="info" className="mb-6" title="Waiting for payment confirmation">
+            This usually takes a few seconds. We’ll email you as soon as the payment is confirmed.
+          </Notice>
+        )
       )}
       {order.status === 'CANCELLED' && (
         <Notice tone="warning" className="mb-6">

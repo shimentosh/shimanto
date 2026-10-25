@@ -93,6 +93,8 @@ export const CustomerMeSchema = z.object({
     /** The store can connect GitHub accounts (OAuth configured). */
     available: z.boolean(),
   }),
+  /** Admin panel URL when this email also has an active admin account (the team); else null. */
+  adminUrl: z.string().nullable(),
 });
 export type CustomerMe = z.infer<typeof CustomerMeSchema>;
 

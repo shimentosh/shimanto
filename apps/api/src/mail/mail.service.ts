@@ -4,6 +4,7 @@ import { ENV } from '../config/config.module.js';
 import type { Env } from '../config/env.js';
 import type { JobMap } from '../jobs/jobs.types.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { EmailConfigService } from './email-config.service.js';
 
 export interface SentMail {
   provider: 'resend' | 'smtp' | 'log';
@@ -13,30 +14,29 @@ export interface SentMail {
 const RESEND_URL = 'https://api.resend.com/emails';
 
 /**
- * Delivers one email. Resend's HTTP API in production (RESEND_API_KEY), SMTP in local dev
- * (Mailpit at http://localhost:8025), JSON logging in tests. When the message belongs to an
- * EmailEvent, its status is updated (SENT with the provider message id, or FAILED with the reason).
+ * Delivers one email. Resend's HTTP API when a key is set (Admin → Settings → Emails, or
+ * RESEND_API_KEY), otherwise SMTP in local dev (Mailpit at http://localhost:8025) or JSON logging
+ * in tests. When the message belongs to an EmailEvent, its status is updated (SENT with the
+ * provider message id, or FAILED with the reason).
  */
 @Injectable()
 export class MailService {
   private readonly logger = new Logger('Mail');
-  private readonly transport?: Transporter;
+  private transport?: Transporter;
 
   constructor(
     @Inject(ENV) private readonly env: Env,
     private readonly prisma: PrismaService,
-  ) {
-    if (!env.RESEND_API_KEY) {
-      this.transport =
-        env.SMTP_URL === 'json'
-          ? nodemailer.createTransport({ jsonTransport: true })
-          : nodemailer.createTransport(env.SMTP_URL);
-    }
-  }
+    private readonly config: EmailConfigService,
+  ) {}
 
-  get provider(): SentMail['provider'] {
-    if (this.env.RESEND_API_KEY) return 'resend';
-    return this.env.SMTP_URL === 'json' ? 'log' : 'smtp';
+  /** SMTP (or JSON logging), created the first time it's needed. */
+  private smtp(): Transporter {
+    this.transport ??=
+      this.env.SMTP_URL === 'json'
+        ? nodemailer.createTransport({ jsonTransport: true })
+        : nodemailer.createTransport(this.env.SMTP_URL);
+    return this.transport;
   }
 
   /** Job handler: send, then record the outcome on the email event. Rethrows so the queue retries. */
@@ -62,7 +62,11 @@ export class MailService {
         await this.prisma.emailEvent
           .update({
             where: { id: message.eventId },
-            data: { status: 'FAILED', provider: this.provider, failureReason: reason },
+            data: {
+              status: 'FAILED',
+              provider: this.config.current().provider,
+              failureReason: reason,
+            },
           })
           .catch(() => undefined);
       }
@@ -72,17 +76,18 @@ export class MailService {
 
   private async deliver(message: JobMap['mail.send']): Promise<SentMail> {
     const replyTo = message.replyTo ?? this.env.MAIL_REPLY_TO;
-    if (this.env.RESEND_API_KEY) {
+    const config = await this.config.config();
+    if (config.resendKey) {
       const res = await fetch(RESEND_URL, {
         method: 'POST',
         headers: {
-          authorization: `Bearer ${this.env.RESEND_API_KEY}`,
+          authorization: `Bearer ${config.resendKey}`,
           'content-type': 'application/json',
           // Resend de-duplicates retries of the same event for 24h.
           ...(message.eventId ? { 'idempotency-key': message.eventId } : {}),
         },
         body: JSON.stringify({
-          from: this.env.MAIL_FROM,
+          from: config.from,
           to: [message.to],
           subject: message.subject,
           html: message.html,
@@ -100,14 +105,14 @@ export class MailService {
         throw new Error(`Resend ${res.status}: ${body.message ?? body.name ?? 'request failed'}`);
       return { provider: 'resend', messageId: body.id ?? null };
     }
-    const info = (await this.transport!.sendMail({
-      from: this.env.MAIL_FROM,
+    const info = (await this.smtp().sendMail({
+      from: config.from,
       to: message.to,
       subject: message.subject,
       text: message.text,
       html: message.html,
       replyTo,
     })) as { messageId?: string };
-    return { provider: this.provider, messageId: info.messageId ?? null };
+    return { provider: config.provider, messageId: info.messageId ?? null };
   }
 }

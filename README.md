@@ -47,7 +47,7 @@ Local services (`docker compose up -d`):
 | RustFS (S3) | 9000 (API), 9001 (console)                   | File storage                     |
 | Mailpit     | 1025 (SMTP), **http://localhost:8025** inbox | Every email sent in dev          |
 
-If native services already use these ports, set `POSTGRES_HOST_PORT` / `REDIS_HOST_PORT` in a root `.env` (see `.env.example`) and match the URLs in `apps/api/.env`.
+If native services already use these ports, set `POSTGRES_HOST_PORT` / `REDIS_HOST_PORT` / `STORAGE_HOST_PORT` / `STORAGE_CONSOLE_HOST_PORT` in a root `.env` (see `.env.example`) and match the URLs in `apps/api/.env`.
 
 ## Requirements
 

@@ -64,10 +64,16 @@ message when a required one is missing.
 | `ADMIN_EMAIL`, `ADMIN_PASSWORD`              | First super admin (password ≥ 12 chars), used once |
 
 **Optional** (defaults in [`infra/dokploy.env.example`](../infra/dokploy.env.example)):
-storage, needed for image and product-file uploads (`S3_ENDPOINT`, `S3_ACCESS_KEY`,
-`S3_SECRET_KEY` from Cloudflare R2, see [COMMERCE.md](COMMERCE.md#cloudflare-r2-private-files); `S3_REGION`, `S3_BUCKET`, `S3_FORCE_PATH_STYLE`, `MEDIA_PUBLIC_URL`, `FILE_UPLOAD_MAX_MB`),
-email (`RESEND_API_KEY`, `MAIL_FROM`, `MAIL_REPLY_TO`, `NOTIFY_EMAIL`, `CONTACT_EMAIL`), Stripe
-(`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`), analytics (`GA4_*`, `GTM_CONTAINER_ID`, `META_*`,
+`SETTINGS_ENCRYPTION_KEY` (strongly recommended: encrypts the payment and storage keys entered
+in the admin; `openssl rand -base64 48`, set once and keep it),
+storage, needed for image and product-file uploads (Cloudflare R2: connect it in Admin → Settings
+→ Storage, or set `S3_ENDPOINT`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, see
+[COMMERCE.md](COMMERCE.md#cloudflare-r2-files); `S3_REGION`, `S3_BUCKET`, `S3_FORCE_PATH_STYLE`,
+`MEDIA_PUBLIC_URL`, `FILE_UPLOAD_MAX_MB`),
+email (`RESEND_API_KEY`, `MAIL_FROM`, `MAIL_REPLY_TO`, `NOTIFY_EMAIL`, `CONTACT_EMAIL`), payments
+(Stripe, PayPal and manual methods are set up in Admin → Settings → Payments; or
+`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`,
+`PAYPAL_MODE`, `PAYPAL_WEBHOOK_ID`, see [COMMERCE.md](COMMERCE.md#payments)), analytics (`GA4_*`, `GTM_CONTAINER_ID`, `META_*`,
 `GOOGLE_ADS_*`), GitHub delivery (`GITHUB_*`), and the domains (`SITE_URL`, `API_PUBLIC_URL`,
 `ADMIN_URL`, `PORTAL_URL`, `COOKIE_DOMAIN`, `OWN_HOSTS`).
 

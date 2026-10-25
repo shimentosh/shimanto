@@ -71,7 +71,8 @@ enum PaymentProvider {
   /// $0 total: no gateway involved.
   FREE
   STRIPE
-  /// Created by an admin; any payment happened outside the store.
+  PAYPAL
+  /// Paid by hand (bank transfer, bKash…) and confirmed by an admin, or an admin-created order.
   MANUAL
 }
 
@@ -214,10 +215,11 @@ model Media {
   uploadedById String?
   createdAt    DateTime @default(now())
 
-  uploadedBy   User?            @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
-  productFiles ProductFile[]
-  coverOf      Product[]
-  attachments  SupportMessage[]
+  uploadedBy    User?            @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  productFiles  ProductFile[]
+  coverOf       Product[]
+  attachments   SupportMessage[]
+  paymentProofs Payment[]
 }
 
 // ─────────────────────────────── Products ───────────────────────────────
@@ -393,6 +395,9 @@ model Order {
   /// Internal admin note.
   note              String?
   createdById       String?
+  /// Manual payments: unpaid orders are cancelled after this, with a reminder before it.
+  paymentDueAt      DateTime?
+  paymentRemindedAt DateTime?
   paidAt            DateTime?
   completedAt       DateTime?
   cancelledAt       DateTime?
@@ -446,18 +451,31 @@ model Payment {
   currency          String
   /// Checkout session id (Stripe cs_…).
   providerRef       String?         @unique
-  /// Charge reference used for refunds (Stripe PaymentIntent pi_…).
+  /// Charge reference used for refunds (Stripe PaymentIntent pi_…, PayPal capture id).
   providerPaymentId String?
   failureReason     String?
+  /// Manual payments: the store's method id ("bkash") and a snapshot of how to pay at order time
+  /// ({ name, kind, fields, instructions, referenceLabel, … }), so later edits don't change it.
+  method            String?
+  methodDetails     Json?
+  /// Manual payments: the customer's proof. `reference` is the bank / wallet transaction id.
+  reference         String?
+  senderAccount     String?
+  proofId           String?
+  submittedAt       DateTime?
+  /// Why an admin rejected the submitted proof; the customer can send it again.
+  rejectedReason    String?
   paidAt            DateTime?
   refundedAt        DateTime?
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
 
-  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  proof Media? @relation(fields: [proofId], references: [id], onDelete: SetNull)
 
   @@index([orderId])
   @@index([providerPaymentId])
+  @@index([reference])
 }
 
 /// Gateway webhook events already processed. Gateways retry, so handling must be idempotent.

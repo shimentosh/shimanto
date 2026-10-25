@@ -25,6 +25,7 @@ import type { OrderMailData } from '../mail/transactional.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { FulfillmentService } from './fulfillment.service.js';
 import { PaymentsGateway } from './payments.gateway.js';
+import { PaypalGateway } from './paypal.gateway.js';
 import {
   type CartLine,
   type CouponRule,
@@ -51,6 +52,8 @@ export interface CreateOrderArgs {
   tracking?: TrackingContext | null;
   note?: string | null;
   createdById?: string | null;
+  /** Paid checkout's provider (default Stripe). */
+  provider?: 'STRIPE' | 'PAYPAL' | 'MANUAL';
 }
 
 export type ConfirmationEmail = 'free' | 'paid' | 'admin' | null;
@@ -64,6 +67,8 @@ export interface OrderFilter {
   productId?: string;
   /** Customer email, or an order number. */
   q?: string;
+  /** Manual payments with proof sent, waiting for an admin. */
+  toVerify?: boolean;
 }
 
 const SYSTEM: Actor = { type: 'system' };
@@ -81,6 +86,7 @@ export class OrdersService {
     private readonly prisma: PrismaService,
     private readonly fulfillment: FulfillmentService,
     private readonly payments: PaymentsGateway,
+    private readonly paypal: PaypalGateway,
     private readonly customers: CustomerAuthService,
     private readonly email: EmailService,
     private readonly jobs: JobsService,
@@ -127,7 +133,7 @@ export class OrdersService {
         status: 'PENDING',
         paymentStatus: free ? 'NOT_REQUIRED' : 'PENDING',
         fulfillmentStatus: 'PENDING',
-        provider: free ? 'FREE' : args.source === 'ADMIN' ? 'MANUAL' : 'STRIPE',
+        provider: free ? 'FREE' : args.source === 'ADMIN' ? 'MANUAL' : (args.provider ?? 'STRIPE'),
         currency: cart.currency,
         subtotal: cart.subtotal,
         discount: cart.discount,
@@ -296,7 +302,19 @@ export class OrdersService {
       include: adminOrderDetailInclude,
     });
     if (!order) throw new NotFoundException('Order not found');
-    return toAdminOrderDetail(order);
+    // The same transaction id on another order usually means a reused (fake) proof.
+    const references = order.payments.map((p) => p.reference).filter((r): r is string => !!r);
+    const others = references.length
+      ? await this.prisma.payment.findMany({
+          where: { reference: { in: references }, orderId: { not: id } },
+          select: { reference: true, order: { select: { number: true } } },
+        })
+      : [];
+    const duplicates = new Map<string, number[]>();
+    for (const p of others) {
+      duplicates.set(p.reference!, [...(duplicates.get(p.reference!) ?? []), p.order.number]);
+    }
+    return toAdminOrderDetail(order, duplicates);
   }
 
   /** Admin-created order: same pipeline as checkout, never a shortcut around it. */
@@ -417,7 +435,7 @@ export class OrdersService {
     return this.detail(id);
   }
 
-  /** Stripe payments are refunded through Stripe; manual payments are recorded as refunded. */
+  /** Stripe / PayPal payments are refunded through them; manual ones are recorded as refunded. */
   async refund(id: string, actor: Actor) {
     const order = await this.prisma.order.findUnique({
       where: { id },
@@ -426,11 +444,18 @@ export class OrdersService {
     if (!order) throw new NotFoundException('Order not found');
     if (order.paymentStatus !== 'PAID') unprocessable('Only paid orders can be refunded');
     const payment = order.payments.find((p) => p.status === 'PAID');
-    if (payment?.provider === 'STRIPE') {
-      if (!payment.providerPaymentId) unprocessable('This order has no Stripe payment to refund');
-      await this.payments.refund(payment.providerPaymentId);
+    const provider = payment?.provider;
+    if (provider === 'STRIPE' || provider === 'PAYPAL') {
+      const name = provider === 'STRIPE' ? 'Stripe' : 'PayPal';
+      if (!payment!.providerPaymentId) unprocessable(`This order has no ${name} payment to refund`);
+      if (provider === 'STRIPE') await this.payments.refund(payment!.providerPaymentId);
+      else await this.paypal.refund(payment!.providerPaymentId);
     }
-    await this.markRefunded(id, actor, payment?.provider === 'STRIPE' ? 'stripe' : 'manual');
+    await this.markRefunded(
+      id,
+      actor,
+      provider === 'STRIPE' || provider === 'PAYPAL' ? provider.toLowerCase() : 'manual',
+    );
     return this.detail(id);
   }
 
@@ -514,6 +539,13 @@ export class OrdersService {
       source: query.source,
       customerId: query.customerId,
       ...(query.productId ? { items: { some: { productId: query.productId } } } : {}),
+      ...(query.toVerify
+        ? {
+            payments: {
+              some: { provider: 'MANUAL', status: 'PENDING', submittedAt: { not: null } },
+            },
+          }
+        : {}),
       ...(q
         ? {
             OR: [

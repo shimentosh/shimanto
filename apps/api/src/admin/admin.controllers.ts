@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   HttpCode,
   NotFoundException,
@@ -26,6 +27,10 @@ import {
   GitHubRepoSchema,
   IntegrationCheckSchema,
   OkSchema,
+  PaymentSettingsUpdateSchema,
+  PaymentSettingsViewSchema,
+  StorageConfigInputSchema,
+  StorageSettingsViewSchema,
   TestEmailInputSchema,
   pageSchema,
 } from '@shimanto/types';
@@ -34,7 +39,9 @@ import { customerTouch } from '../analytics/attribution.js';
 import { AuditService } from '../audit/audit.service.js';
 import type { AuthUser } from '../auth/auth.types.js';
 import { AdminAuth, Auth, CurrentUser } from '../auth/guards.js';
+import { PaymentConfigService } from '../commerce/payment-config.service.js';
 import { PaymentsGateway } from '../commerce/payments.gateway.js';
+import { PaypalGateway } from '../commerce/paypal.gateway.js';
 import { ENTITLED_ORDER } from '../commerce/status.js';
 import {
   adminOrderSummaryInclude,
@@ -49,6 +56,7 @@ import { ApiZodResponse, ZodBody, ZodQuery } from '../common/zod.js';
 import { CustomerAuthService } from '../customers/customer-auth.service.js';
 import { GitHubClient } from '../github/github.client.js';
 import { EmailService } from '../mail/email.service.js';
+import { StorageSettingsService } from '../media/storage-settings.service.js';
 import { StorageService } from '../media/storage.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { SettingsService } from '../settings/settings.service.js';
@@ -75,6 +83,7 @@ export class AdminDashboardController {
       total,
       openTickets,
       attention,
+      toVerify,
       recent,
       recentCustomers,
       tickets,
@@ -102,6 +111,9 @@ export class AdminDashboardController {
           status: { in: ['FAILED', 'ACTION_REQUIRED', 'EXPIRED'] },
           order: { status: { in: ENTITLED_ORDER } },
         },
+      }),
+      this.prisma.payment.count({
+        where: { provider: 'MANUAL', status: 'PENDING', submittedAt: { not: null } },
       }),
       this.prisma.order.findMany({
         where: { NOT: { status: 'CANCELLED', paidAt: null, source: 'CHECKOUT' } },
@@ -132,6 +144,7 @@ export class AdminDashboardController {
       products: { published, total },
       openTickets,
       deliveriesNeedingAttention: attention,
+      paymentsToVerify: toVerify,
       recentOrders: recent.map(toAdminOrderSummary),
       recentCustomers: recentCustomers.map(toAdminCustomerSummary),
       tickets: tickets.map((t) => ({
@@ -279,13 +292,34 @@ export class AdminSettingsController {
     private readonly email: EmailService,
     private readonly storage: StorageService,
     private readonly payments: PaymentsGateway,
+    private readonly paypal: PaypalGateway,
+    private readonly paymentConfig: PaymentConfigService,
+    private readonly storageSettings: StorageSettingsService,
     private readonly github: GitHubClient,
   ) {}
 
+  private async all() {
+    const integrations = this.settings.integrations();
+    // Storage can be connected in the admin (R2), so report what's live, not just the env.
+    const live = this.storage.summary();
+    return {
+      general: await this.settings.general(),
+      integrations: {
+        ...integrations,
+        storage: {
+          ...integrations.storage,
+          configured: live.configured,
+          provider: live.provider,
+          bucket: live.bucket,
+        },
+      },
+    };
+  }
+
   @Get()
   @ApiZodResponse(AdminSettingsSchema)
-  async get() {
-    return { general: await this.settings.general(), integrations: this.settings.integrations() };
+  get() {
+    return this.all();
   }
 
   @Put('general')
@@ -295,10 +329,25 @@ export class AdminSettingsController {
     @ZodBody(GeneralSettingsSchema) body: z.output<typeof GeneralSettingsSchema>,
     @CurrentUser() user: AuthUser,
   ) {
-    return {
-      general: await this.settings.updateGeneral(body, actor(user)),
-      integrations: this.settings.integrations(),
-    };
+    await this.settings.updateGeneral(body, actor(user));
+    return this.all();
+  }
+
+  /** Stripe, PayPal and manual methods. Secret keys are write-only (hints only). */
+  @Get('payments')
+  @ApiZodResponse(PaymentSettingsViewSchema)
+  paymentSettings() {
+    return this.paymentConfig.view();
+  }
+
+  @Put('payments')
+  @Auth('SUPER_ADMIN')
+  @ApiZodResponse(PaymentSettingsViewSchema)
+  updatePayments(
+    @ZodBody(PaymentSettingsUpdateSchema) body: z.output<typeof PaymentSettingsUpdateSchema>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.paymentConfig.update(body, actor(user));
   }
 
   @Post('test-email')
@@ -336,6 +385,47 @@ export class AdminSettingsController {
   @ApiZodResponse(IntegrationCheckSchema)
   checkPayments() {
     return this.payments.check();
+  }
+
+  /** Cloudflare R2 / S3 connection entered here (wins over S3_* env). Secret is write-only. */
+  @Get('storage')
+  @ApiZodResponse(StorageSettingsViewSchema)
+  storageSettingsView() {
+    return this.storageSettings.view();
+  }
+
+  /** Tests the connection first; refuses to save one that can't reach the bucket. */
+  @Put('storage')
+  @Auth('SUPER_ADMIN')
+  @ApiZodResponse(StorageSettingsViewSchema)
+  saveStorage(
+    @ZodBody(StorageConfigInputSchema) body: z.output<typeof StorageConfigInputSchema>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.storageSettings.save(body, actor(user));
+  }
+
+  @Post('storage/test')
+  @HttpCode(200)
+  @Auth('SUPER_ADMIN')
+  @ApiZodResponse(IntegrationCheckSchema)
+  testStorage(@ZodBody(StorageConfigInputSchema) body: z.output<typeof StorageConfigInputSchema>) {
+    return this.storageSettings.test(body);
+  }
+
+  /** Forget the saved connection: storage goes back to the S3_* environment variables. */
+  @Delete('storage')
+  @Auth('SUPER_ADMIN')
+  @ApiZodResponse(StorageSettingsViewSchema)
+  clearStorage(@CurrentUser() user: AuthUser) {
+    return this.storageSettings.clear(actor(user));
+  }
+
+  @Post('check/paypal')
+  @HttpCode(200)
+  @ApiZodResponse(IntegrationCheckSchema)
+  checkPaypal() {
+    return this.paypal.check();
   }
 
   /** Can the configured GitHub App / token invite collaborators to this repository? */

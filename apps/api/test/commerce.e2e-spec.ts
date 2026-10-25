@@ -1,4 +1,5 @@
 import sharp from 'sharp';
+import { ManualPaymentsService } from '../src/commerce/manual-payments.service.js';
 import {
   type Harness,
   cookieHeader,
@@ -14,6 +15,36 @@ import {
 } from './harness.js';
 
 const PDF = Buffer.from('%PDF-1.4\n% deliverable\n');
+const bkash = {
+  id: 'bkash',
+  kind: 'MOBILE_WALLET',
+  name: 'bKash',
+  enabled: true,
+  description: 'Send Money from any bKash account',
+  logoId: null,
+  qrId: null,
+  fields: [{ label: 'bKash number', value: '01700000000' }],
+  instructions: 'Open bKash and choose Send Money.\nSend the exact amount.',
+  referenceLabel: 'Transaction ID (TrxID)',
+  senderLabel: 'bKash number you sent from',
+  proof: 'OPTIONAL',
+  currencies: ['BDT'],
+};
+const bank = {
+  ...bkash,
+  id: 'bank',
+  kind: 'BANK_TRANSFER',
+  name: 'Bank transfer',
+  description: null,
+  fields: [
+    { label: 'Account name', value: 'Shimanto' },
+    { label: 'Account number', value: '1234567890' },
+  ],
+  instructions: 'Transfer the exact amount.',
+  referenceLabel: 'Transfer reference',
+  senderLabel: 'Account you paid from',
+  currencies: [],
+};
 const ZIP = Buffer.concat([Buffer.from('PK\x03\x04', 'binary'), Buffer.alloc(64, 1)]);
 
 describe('Store: files, products, checkout, orders (e2e)', () => {
@@ -613,6 +644,480 @@ describe('Store: files, products, checkout, orders (e2e)', () => {
     });
   });
 
+  describe('payment settings', () => {
+    const settings = () => h.http.get('/v1/admin/settings/payments').set('Cookie', admin);
+    const update = (body: Record<string, unknown>) =>
+      h.http.put('/v1/admin/settings/payments').set('Cookie', admin).send(body);
+
+    it('keeps provider keys encrypted and only ever returns a hint', async () => {
+      const res = await update({
+        stripe: { secretKey: 'sk_test_51Abcdefgh4242', webhookSecret: 'whsec_abcdef123456' },
+        paypal: { clientId: 'AbCdEfGhIjKlMnOp', clientSecret: 'EFGHsecretpaypal9876' },
+      }).expect(200);
+      expect(res.body.stripe).toMatchObject({
+        source: 'admin',
+        mode: 'test',
+        secretKeyHint: 'sk_test_…4242',
+        webhookSecretSet: true,
+      });
+      expect(res.body.paypal).toMatchObject({
+        source: 'admin',
+        mode: 'sandbox',
+        clientId: 'AbCdEfGhIjKlMnOp',
+        clientSecretHint: '…9876',
+      });
+      const all = JSON.stringify((await settings().expect(200)).body);
+      expect(all).not.toMatch(/sk_test_51Abcdefgh4242|whsec_abcdef123456|EFGHsecretpaypal9876/);
+      const stored = JSON.stringify(await h.prisma.setting.findMany());
+      expect(stored).not.toMatch(/sk_test_51Abcdefgh4242|whsec_abcdef123456|EFGHsecretpaypal9876/);
+
+      await update({ stripe: { secretKey: null, webhookSecret: null } }).expect(200);
+      expect((await settings()).body.stripe).toMatchObject({ source: null, secretKeyHint: null });
+    });
+
+    it('validates keys and is for super admins only', async () => {
+      await update({ stripe: { secretKey: 'pk_test_publishable' } }).expect(400);
+      await update({
+        manual: {
+          windowHours: 48,
+          methods: [
+            { ...bkash, id: 'dup' },
+            { ...bank, id: 'dup' },
+          ],
+        },
+      }).expect(400);
+      await createAdmin(h.prisma, 'EDITOR', 'payments-editor@shimanto.test');
+      const editor = cookieHeader(await loginCookies(h, 'payments-editor@shimanto.test'));
+      await h.http
+        .put('/v1/admin/settings/payments')
+        .set('Cookie', editor)
+        .send({ stripe: { enabled: false } })
+        .expect(403);
+    });
+  });
+
+  describe('manual payment', () => {
+    let buyer: string;
+    let orderId: string;
+    let orderNumber: number;
+    const quote = () =>
+      h.http
+        .post('/v1/checkout/quote')
+        .send({ items: [{ slug: 'content-os' }] })
+        .expect(200);
+    const submit = (number: number, cookie: string) =>
+      h.http.post(`/v1/account/orders/${number}/manual-payment`).set('Cookie', cookie);
+
+    it('offers enabled methods for the cart’s currency, after card and PayPal', async () => {
+      await h.http
+        .put('/v1/admin/settings/payments')
+        .set('Cookie', admin)
+        .send({
+          manual: {
+            windowHours: 48,
+            methods: [bkash, bank, { ...bank, id: 'old-bank', name: 'Old bank', enabled: false }],
+          },
+        })
+        .expect(200);
+      const res = await quote();
+      // bKash is BDT-only and PayPal has no keys yet; this cart is in USD.
+      expect(res.body.paymentOptions.map((o: { id: string }) => o.id)).toEqual([
+        'stripe',
+        'manual:bank',
+      ]);
+      expect(res.body.paymentOptions[1].manual).toMatchObject({
+        name: 'Bank transfer',
+        fields: bank.fields,
+        referenceLabel: 'Transfer reference',
+        proof: 'OPTIONAL',
+      });
+      expect(res.body.paymentWindowHours).toBe(48);
+    });
+
+    it('reserves the order, sets a deadline and emails how to pay', async () => {
+      buyer = (await registerCustomer(h, 'manual@example.com', 'Manual Buyer')).cookie;
+      await checkout(
+        { items: [{ slug: 'content-os' }], paymentOption: 'manual:bkash' },
+        buyer,
+      ).expect(422);
+      const res = await checkout(
+        { items: [{ slug: 'content-os' }], paymentOption: 'manual:bank' },
+        buyer,
+      ).expect(200);
+      expect(res.body).toMatchObject({ kind: 'manual', signedIn: true });
+      orderNumber = res.body.orderNumber;
+
+      const order = await h.prisma.order.findFirstOrThrow({
+        where: { number: orderNumber },
+        include: { payments: true, deliveries: true },
+      });
+      orderId = order.id;
+      expect(order).toMatchObject({ status: 'PENDING', provider: 'MANUAL', total: 4900 });
+      const hours = (order.paymentDueAt!.getTime() - order.createdAt.getTime()) / 3_600_000;
+      expect(Math.round(hours)).toBe(48);
+      expect(order.payments).toMatchObject([
+        { provider: 'MANUAL', status: 'PENDING', method: 'bank' },
+      ]);
+      expect(order.deliveries).toHaveLength(0);
+      const mail = lastMailTo(h, 'manual@example.com');
+      expect(mail?.subject).toBe(`How to pay for order #${orderNumber} (Bank transfer)`);
+      expect(mail?.text).toContain('1234567890');
+      expect(mail?.text).toContain('within 48 hours');
+    });
+
+    it('keeps the method as it was at order time', async () => {
+      await h.http
+        .put('/v1/admin/settings/payments')
+        .set('Cookie', admin)
+        .send({
+          manual: {
+            windowHours: 48,
+            methods: [bkash, { ...bank, fields: [{ label: 'Account', value: '999' }] }],
+          },
+        })
+        .expect(200);
+      const view = await h.http
+        .get(`/v1/account/orders/${orderNumber}`)
+        .set('Cookie', buyer)
+        .expect(200);
+      expect(view.body.manualPayment).toMatchObject({
+        state: 'AWAITING',
+        method: { id: 'bank', fields: bank.fields },
+        reference: null,
+      });
+      expect(view.body.manualPayment.dueAt).toBeTruthy();
+    });
+
+    it('takes the reference, sender and a screenshot, only on the buyer’s own order', async () => {
+      const other = (await registerCustomer(h, 'other-manual@example.com')).cookie;
+      await submit(orderNumber, other).send({ reference: 'TRX123456' }).expect(404);
+      // The bank method asks which account the money came from.
+      await submit(orderNumber, buyer).send({ reference: 'TRX123456' }).expect(422);
+      await submit(orderNumber, buyer)
+        .field('reference', 'TRX123456')
+        .field('senderAccount', 'City Bank 0011')
+        .attach('proof', Buffer.from('not an image'), 'proof.png')
+        .expect(422);
+      const png = await sharp({
+        create: { width: 20, height: 20, channels: 3, background: '#ffffff' },
+      })
+        .png()
+        .toBuffer();
+      const sent = await submit(orderNumber, buyer)
+        .field('reference', 'TRX123456')
+        .field('senderAccount', 'City Bank 0011')
+        .attach('proof', png, 'receipt.png')
+        .expect(200);
+      expect(sent.body.manualPayment).toMatchObject({
+        state: 'SUBMITTED',
+        reference: 'TRX123456',
+        senderAccount: 'City Bank 0011',
+        proof: { filename: 'receipt.png' },
+      });
+      expect(sent.body.paymentStatus).toBe('PENDING');
+      expect(lastMailTo(h, 'owner@shimanto.test')?.subject).toContain(
+        'Verify Bank transfer payment',
+      );
+
+      const dash = await h.http.get('/v1/admin/dashboard').set('Cookie', admin).expect(200);
+      expect(dash.body.paymentsToVerify).toBe(1);
+      const list = await h.http
+        .get('/v1/admin/orders?toVerify=true')
+        .set('Cookie', admin)
+        .expect(200);
+      expect(list.body.items.map((o: { number: number }) => o.number)).toEqual([orderNumber]);
+    });
+
+    it('lets an admin reject the proof; the buyer is told why and can send it again', async () => {
+      await h.http
+        .post(`/v1/admin/orders/${orderId}/payment/reject`)
+        .set('Cookie', admin)
+        .send({ reason: 'No transfer with this reference arrived' })
+        .expect(200);
+      const view = await h.http
+        .get(`/v1/account/orders/${orderNumber}`)
+        .set('Cookie', buyer)
+        .expect(200);
+      expect(view.body.manualPayment).toMatchObject({
+        state: 'REJECTED',
+        rejectedReason: 'No transfer with this reference arrived',
+      });
+      expect(lastMailTo(h, 'manual@example.com')?.text).toContain(
+        'No transfer with this reference arrived',
+      );
+      await submit(orderNumber, buyer)
+        .send({ reference: 'TRX654321', senderAccount: 'City Bank 0011' })
+        .expect(200);
+    });
+
+    it('shows the admin the proof and flags a reference used on another order', async () => {
+      const second = (await registerCustomer(h, 'copycat@example.com')).cookie;
+      const res = await checkout(
+        { items: [{ slug: 'content-os' }], paymentOption: 'manual:bank' },
+        second,
+      ).expect(200);
+      await submit(res.body.orderNumber, second)
+        .send({ reference: 'TRX654321', senderAccount: 'x' })
+        .expect(200);
+      const detail = await h.http
+        .get(`/v1/admin/orders/${orderId}`)
+        .set('Cookie', admin)
+        .expect(200);
+      const payment = detail.body.payments[0];
+      expect(payment.manual).toMatchObject({
+        state: 'SUBMITTED',
+        reference: 'TRX654321',
+        proof: { filename: 'receipt.png', mimeType: 'image/png' },
+        duplicateOrders: [res.body.orderNumber],
+      });
+      const link = await h.http
+        .post(`/v1/admin/orders/${orderId}/payments/${payment.id}/proof`)
+        .set('Cookie', admin)
+        .expect(200);
+      expect(link.body.url).toContain('signed=1');
+      // Clean up: the copycat order is cancelled.
+      const copy = await h.prisma.order.findFirstOrThrow({
+        where: { number: res.body.orderNumber },
+      });
+      await h.http.post(`/v1/admin/orders/${copy.id}/cancel`).set('Cookie', admin).expect(200);
+    });
+
+    it('delivers once an admin confirms the payment, and only once', async () => {
+      const res = await h.http
+        .post(`/v1/admin/orders/${orderId}/payment/confirm`)
+        .set('Cookie', admin)
+        .expect(200);
+      expect(res.body).toMatchObject({ paymentStatus: 'PAID' });
+      expect(res.body.payments[0]).toMatchObject({
+        provider: 'MANUAL',
+        status: 'PAID',
+        manual: { state: 'CONFIRMED', reference: 'TRX654321' },
+      });
+      const order = await h.prisma.order.findUniqueOrThrow({
+        where: { id: orderId },
+        include: { deliveries: true },
+      });
+      expect(order.deliveries).toHaveLength(1);
+      expect(
+        mailsTo(h, 'manual@example.com').filter((m) => m.subject.includes('Payment received')),
+      ).toHaveLength(1);
+      await h.http
+        .post(`/v1/admin/orders/${orderId}/payment/confirm`)
+        .set('Cookie', admin)
+        .expect(422);
+      await submit(orderNumber, buyer)
+        .send({ reference: 'TRX999', senderAccount: 'x' })
+        .expect(422);
+    });
+
+    it('records a refund of a manual payment and revokes access', async () => {
+      await h.http.post(`/v1/admin/orders/${orderId}/refund`).set('Cookie', admin).expect(200);
+      const order = await h.prisma.order.findUniqueOrThrow({ where: { id: orderId } });
+      expect(order).toMatchObject({ status: 'REFUNDED', paymentStatus: 'REFUNDED' });
+    });
+
+    it('reminds halfway to the deadline, then cancels unpaid orders', async () => {
+      const late = (await registerCustomer(h, 'manual-late@example.com')).cookie;
+      const res = await checkout(
+        { items: [{ slug: 'content-os' }], paymentOption: 'manual:bank' },
+        late,
+      ).expect(200);
+      const order = await h.prisma.order.findFirstOrThrow({
+        where: { number: res.body.orderNumber },
+      });
+      const sweeper = h.app.get(ManualPaymentsService);
+      const hour = 3_600_000;
+      await sweeper.sweep(new Date(order.createdAt.getTime() + 10 * hour));
+      expect(
+        mailsTo(h, 'manual-late@example.com').some((m) => m.subject.includes('Reminder')),
+      ).toBe(false);
+      await sweeper.sweep(new Date(order.createdAt.getTime() + 25 * hour));
+      await sweeper.sweep(new Date(order.createdAt.getTime() + 26 * hour));
+      expect(
+        mailsTo(h, 'manual-late@example.com').filter((m) => m.subject.includes('Reminder')),
+      ).toHaveLength(1);
+      await sweeper.sweep(new Date(order.createdAt.getTime() + 49 * hour));
+      const cancelled = await h.prisma.order.findUniqueOrThrow({ where: { id: order.id } });
+      expect(cancelled).toMatchObject({ status: 'CANCELLED', paymentStatus: 'FAILED' });
+      expect(lastMailTo(h, 'manual-late@example.com')?.text).toContain('in time');
+    });
+
+    it('never cancels an order whose proof is waiting for review', async () => {
+      const slow = (await registerCustomer(h, 'manual-slow@example.com')).cookie;
+      const res = await checkout(
+        {
+          items: [{ slug: 'content-os' }],
+          paymentOption: 'manual:bank',
+          manualProof: { reference: 'TRX-AT-CHECKOUT', senderAccount: 'Bank 1' },
+        },
+        slow,
+      ).expect(200);
+      const order = await h.prisma.order.findFirstOrThrow({
+        where: { number: res.body.orderNumber },
+        include: { payments: true },
+      });
+      expect(order.payments[0]).toMatchObject({ reference: 'TRX-AT-CHECKOUT' });
+      await h.app.get(ManualPaymentsService).sweep(new Date(Date.now() + 100 * 3_600_000));
+      expect((await h.prisma.order.findUniqueOrThrow({ where: { id: order.id } })).status).toBe(
+        'PENDING',
+      );
+      await h.http.post(`/v1/admin/orders/${order.id}/cancel`).set('Cookie', admin).expect(200);
+    });
+
+    it('is refused once the method is turned off', async () => {
+      await h.http
+        .put('/v1/admin/settings/payments')
+        .set('Cookie', admin)
+        .send({ manual: { windowHours: 48, methods: [{ ...bank, enabled: false }] } })
+        .expect(200);
+      await checkout(
+        { items: [{ slug: 'content-os' }], paymentOption: 'manual:bank' },
+        (await registerCustomer(h, 'manual-off@example.com')).cookie,
+      ).expect(422);
+    });
+  });
+
+  describe('PayPal', () => {
+    const paypalBuyer = 'paypal@example.com';
+    let buyer: string;
+    let orderId: string;
+
+    it('is offered once its keys are set, for currencies PayPal takes', async () => {
+      h.paypal.on = true;
+      const res = await h.http
+        .post('/v1/checkout/quote')
+        .send({ items: [{ slug: 'content-os' }] })
+        .expect(200);
+      expect(res.body.paymentOptions.map((o: { id: string }) => o.id)).toEqual([
+        'stripe',
+        'paypal',
+      ]);
+    });
+
+    it('sends the buyer to PayPal, then captures on return and confirms once', async () => {
+      buyer = (await registerCustomer(h, paypalBuyer)).cookie;
+      const res = await checkout(
+        { items: [{ slug: 'content-os' }], paymentOption: 'paypal' },
+        buyer,
+      ).expect(200);
+      expect(res.body).toMatchObject({
+        kind: 'redirect',
+        url: expect.stringContaining('paypal.test'),
+      });
+      const order = await h.prisma.order.findFirstOrThrow({
+        where: { number: res.body.orderNumber },
+        include: { payments: true },
+      });
+      orderId = order.id;
+      const token = `PAYPAL-${orderId}`;
+      expect(order).toMatchObject({ provider: 'PAYPAL', status: 'PENDING' });
+      expect(order.payments).toMatchObject([{ provider: 'PAYPAL', providerRef: token }]);
+      expect(h.paypal.orders.get(token)?.successUrl).toContain('/v1/checkout/paypal/return');
+
+      const back = await h.http.get(`/v1/checkout/paypal/return?token=${token}&PayerID=X`);
+      expect(back.status).toBe(303);
+      expect(back.headers.location).toContain(
+        `/checkout/success?order=${res.body.orderNumber}&session=${token}`,
+      );
+      // The capture webhook arrives as well: nothing happens twice.
+      await h.http
+        .post('/v1/webhooks/paypal')
+        .set('paypal-transmission-sig', 'valid')
+        .set('content-type', 'application/json')
+        .send({
+          id: 'WH-capture-1',
+          type: 'checkout.paid',
+          orderId,
+          sessionId: token,
+          paymentRef: `CAPTURE-${token}`,
+          amount: 4900,
+          currency: 'USD',
+        })
+        .expect(200);
+
+      const paid = await h.prisma.order.findUniqueOrThrow({
+        where: { id: orderId },
+        include: { payments: true, deliveries: true },
+      });
+      expect(paid).toMatchObject({ paymentStatus: 'PAID' });
+      expect(paid.payments).toMatchObject([
+        { status: 'PAID', providerPaymentId: `CAPTURE-${token}` },
+      ]);
+      expect(paid.deliveries).toHaveLength(1);
+      expect(
+        mailsTo(h, paypalBuyer).filter((m) => m.subject.includes('Payment received')),
+      ).toHaveLength(1);
+      const confirmation = await h.http
+        .get(`/v1/checkout/confirmation?session=${token}`)
+        .expect(200);
+      expect(confirmation.body.status).toBe('confirmed');
+    });
+
+    it('rejects unverified webhooks', async () => {
+      await h.http
+        .post('/v1/webhooks/paypal')
+        .set('paypal-transmission-sig', 'forged')
+        .send({ id: 'WH-x', type: 'charge.refunded', paymentRef: 'x' })
+        .expect(400);
+    });
+
+    it('refunds through PayPal', async () => {
+      await h.http.post(`/v1/admin/orders/${orderId}/refund`).set('Cookie', admin).expect(200);
+      expect(h.paypal.refunds).toEqual([`CAPTURE-PAYPAL-${orderId}`]);
+    });
+
+    it('cancels the order quietly when the buyer cancels on PayPal', async () => {
+      const res = await checkout(
+        { items: [{ slug: 'content-os' }], paymentOption: 'paypal' },
+        (await registerCustomer(h, 'paypal-cancel@example.com')).cookie,
+      ).expect(200);
+      const order = await h.prisma.order.findFirstOrThrow({
+        where: { number: res.body.orderNumber },
+      });
+      const back = await h.http.get(`/v1/checkout/paypal/cancel?token=PAYPAL-${order.id}`);
+      expect(back.status).toBe(303);
+      expect(back.headers.location).toContain('/checkout?items=content-os&cancelled=1');
+      expect((await h.prisma.order.findUniqueOrThrow({ where: { id: order.id } })).status).toBe(
+        'CANCELLED',
+      );
+    });
+
+    it('does not fulfil when PayPal captured a different amount', async () => {
+      const res = await checkout(
+        { items: [{ slug: 'content-os' }], paymentOption: 'paypal' },
+        (await registerCustomer(h, 'paypal-short@example.com')).cookie,
+      ).expect(200);
+      const order = await h.prisma.order.findFirstOrThrow({
+        where: { number: res.body.orderNumber },
+      });
+      const token = `PAYPAL-${order.id}`;
+      h.paypal.captures.set(token, { amount: 100 });
+      await h.http.get(`/v1/checkout/paypal/return?token=${token}`).expect(303);
+      const after = await h.prisma.order.findUniqueOrThrow({
+        where: { id: order.id },
+        include: { payments: true },
+      });
+      expect(after.paymentStatus).toBe('PENDING');
+      expect(after.payments[0]?.failureReason).toContain('expected 4900');
+      await h.http.post(`/v1/admin/orders/${order.id}/cancel`).set('Cookie', admin).expect(200);
+    });
+
+    it('cancels card / PayPal checkouts abandoned for hours', async () => {
+      const res = await checkout(
+        { items: [{ slug: 'content-os' }], paymentOption: 'stripe' },
+        (await registerCustomer(h, 'abandoned@example.com')).cookie,
+      ).expect(200);
+      const order = await h.prisma.order.findFirstOrThrow({
+        where: { number: res.body.orderNumber },
+      });
+      await h.app.get(ManualPaymentsService).sweep(new Date(Date.now() + 4 * 3_600_000));
+      expect((await h.prisma.order.findUniqueOrThrow({ where: { id: order.id } })).status).toBe(
+        'CANCELLED',
+      );
+      expect(h.payments.cancelled).toContain(`cs_test_${order.id}`);
+    });
+  });
+
   describe('admin orders', () => {
     it('creates a gift order through the same pipeline', async () => {
       const res = await h.http
@@ -687,7 +1192,8 @@ describe('Store: files, products, checkout, orders (e2e)', () => {
         .get('/v1/admin/orders?status=REFUNDED')
         .set('Cookie', admin)
         .expect(200);
-      expect(refunded.body.items).toHaveLength(1);
+      // The Stripe, manual-payment and PayPal refunds.
+      expect(refunded.body.items).toHaveLength(3);
       const admins = await h.http
         .get('/v1/admin/orders?source=ADMIN')
         .set('Cookie', admin)
@@ -755,6 +1261,64 @@ describe('Store: files, products, checkout, orders (e2e)', () => {
       });
       expect(res.body.integrations.email.provider).toBe('log');
       expect(JSON.stringify(res.body)).not.toMatch(/secret|sk_|whsec_|PRIVATE KEY|test-access/i);
+    });
+
+    it('connects Cloudflare R2 from the admin, testing it before saving', async () => {
+      const r2 = {
+        provider: 'r2',
+        accountId: '0123456789abcdef0123456789abcdef',
+        bucket: 'wrong-bucket',
+        publicUrl: 'https://media.example.com/',
+        accessKeyId: 'r2-access-key-id',
+        secretAccessKey: 'r2-secret-access-key-123',
+      };
+      await h.http
+        .put('/v1/admin/settings/storage')
+        .set('Cookie', admin)
+        .send({ ...r2, accountId: 'nope' })
+        .expect(400);
+      const refused = await h.http
+        .put('/v1/admin/settings/storage')
+        .set('Cookie', admin)
+        .send(r2)
+        .expect(422);
+      expect(refused.body.message).toContain('Could not reach bucket');
+      const test = await h.http
+        .post('/v1/admin/settings/storage/test')
+        .set('Cookie', admin)
+        .send({ ...r2, bucket: 'r2-bucket' })
+        .expect(200);
+      expect(test.body.ok).toBe(true);
+
+      const saved = await h.http
+        .put('/v1/admin/settings/storage')
+        .set('Cookie', admin)
+        .send({ ...r2, bucket: 'r2-bucket' })
+        .expect(200);
+      expect(saved.body.saved).toMatchObject({
+        provider: 'r2',
+        bucket: 'r2-bucket',
+        publicUrl: 'https://media.example.com',
+        accessKeyId: 'r2-access-key-id',
+        secretKeyHint: '…-123',
+      });
+      expect(JSON.stringify(saved.body)).not.toContain('r2-secret-access-key-123');
+      const row = await h.prisma.setting.findUniqueOrThrow({ where: { key: 'storage' } });
+      expect(JSON.stringify(row.value)).not.toContain('r2-secret-access-key-123');
+
+      // The secret can be left out to keep the saved one.
+      const { secretAccessKey: _, ...withoutSecret } = r2;
+      await h.http
+        .put('/v1/admin/settings/storage')
+        .set('Cookie', admin)
+        .send({ ...withoutSecret, bucket: 'r2-bucket', publicUrl: 'https://cdn.example.com' })
+        .expect(200);
+
+      const cleared = await h.http
+        .delete('/v1/admin/settings/storage')
+        .set('Cookie', admin)
+        .expect(200);
+      expect(cleared.body.saved).toBeNull();
     });
 
     it('lets super admins change store settings and send a test email', async () => {

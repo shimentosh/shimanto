@@ -13,13 +13,15 @@ type Props = {
   searchParams: Promise<{
     order?: string | string[];
     free?: string | string[];
+    manual?: string | string[];
     account?: string | string[];
     session?: string | string[];
   }>;
 };
 
 /**
- * Stripe's success URL (`/checkout/success?order=N`) and the landing for $0 orders. Nothing here
+ * Stripe's success URL (`/checkout/success?order=N`) and the landing for $0 and manual-payment
+ * orders. Nothing here
  * trusts the URL: the order is confirmed by the payment webhook and shown in the customer portal.
  */
 export default async function CheckoutSuccessPage({ searchParams }: Props) {
@@ -27,6 +29,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
   const raw = Array.isArray(query.order) ? query.order[0] : query.order;
   const order = raw && /^\d{1,10}$/.test(raw) ? raw : undefined;
   const free = Boolean(query.free);
+  const manual = !free && Boolean(query.manual);
   const signedIn = Boolean(query.account);
   const rawSession = Array.isArray(query.session) ? query.session[0] : query.session;
   const session = rawSession && /^[\w-]{8,200}$/.test(rawSession) ? rawSession : undefined;
@@ -44,19 +47,27 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
                 {order ? `Order #${order}` : 'Your order'}
               </p>
               <h1 className="mt-4 max-w-[16ch] text-[clamp(38px,5.4vw,68px)] leading-[1.02] font-medium tracking-[-0.045em]">
-                {free ? 'It’s yours.' : 'Thank you!'} <Squiggle world="build">Check</Squiggle> your
-                inbox.
+                {free ? 'It’s yours.' : manual ? 'Order placed.' : 'Thank you!'}{' '}
+                <Squiggle world="build">Check</Squiggle> your inbox.
               </h1>
               <p className="text-ink-soft mt-5 max-w-[56ch] text-lg leading-relaxed md:text-xl">
                 {free
                   ? 'Your order is confirmed and delivered to your account.'
-                  : 'We’re confirming your payment with Stripe; it takes a few seconds. Your receipt follows by email.'}{' '}
-                {signedIn
-                  ? 'Open your account to download files or manage repository access.'
-                  : 'We’ve emailed you a link to your account, where your downloads and repository access live. Check spam or promotions if you don’t see it.'}
+                  : manual
+                    ? 'Your order is reserved. Pay as described in the email we just sent (the same steps are on your order page), then send us the transaction details and a screenshot from your order page. We deliver as soon as we confirm the payment.'
+                    : 'We’re confirming your payment; it takes a few seconds. Your receipt follows by email.'}{' '}
+                {manual
+                  ? signedIn
+                    ? ''
+                    : 'We’ve also emailed you a sign-in link to your order. Check spam or promotions if you don’t see it.'
+                  : signedIn
+                    ? 'Open your account to download files or manage repository access.'
+                    : 'We’ve emailed you a link to your account, where your downloads and repository access live. Check spam or promotions if you don’t see it.'}
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Button href={orderUrl}>Open your account</Button>
+                <Button href={orderUrl}>
+                  {manual ? 'Send payment details' : 'Open your account'}
+                </Button>
                 <Button href="/products" variant="secondary">
                   Back to the store
                 </Button>

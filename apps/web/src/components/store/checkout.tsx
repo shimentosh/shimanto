@@ -10,6 +10,7 @@ import { analytics } from '@/components/analytics/analytics';
 import { Turnstile } from '@/components/page/turnstile';
 import { PORTAL_URL, PUBLIC_API_URL, PUBLIC_SITE_URL } from '@/lib/public-env';
 import { formatPrice } from '@/lib/store';
+import { type ManualProofDraft, PaymentOptions } from './payment-options';
 
 const api = createHttpClient({ baseUrl: PUBLIC_API_URL });
 
@@ -54,6 +55,15 @@ export function Checkout() {
   const [error, setError] = useState<string | null>(null);
   const [fields, setFields] = useState<Record<string, string>>({});
   const [blocked, setBlocked] = useState<Blocked>(null);
+  const [chosenOption, setChosenOption] = useState<string | null>(null);
+  const [manualProof, setManualProof] = useState<ManualProofDraft>({
+    reference: '',
+    senderAccount: '',
+  });
+  // The buyer's choice while it's still offered (a coupon can't change the currency, but be safe),
+  // else the store's first way to pay.
+  const option =
+    quote?.paymentOptions.find((o) => o.id === chosenOption) ?? quote?.paymentOptions[0] ?? null;
 
   // Signed in? (optional: guests check out with an email)
   useEffect(() => {
@@ -146,10 +156,25 @@ export function Checkout() {
           turnstileToken: token,
           utm: Object.keys(utm).length ? utm : undefined,
           attribution: analytics.attributionPayload(),
+          ...(quote.paymentRequired && option ? { paymentOption: option.id } : {}),
+          ...(quote.paymentRequired && option?.type === 'manual' && manualProof.reference.trim()
+            ? {
+                manualProof: {
+                  reference: manualProof.reference.trim(),
+                  senderAccount: manualProof.senderAccount.trim() || undefined,
+                },
+              }
+            : {}),
           website,
         });
         if (result.kind === 'redirect') {
           window.location.assign(result.url);
+          return;
+        }
+        if (result.kind === 'manual') {
+          router.push(
+            `/checkout/success?order=${result.orderNumber}&manual=1${result.signedIn ? '&account=1' : ''}`,
+          );
           return;
         }
         // $0 order: confirmed by the server in this response, so pixels may count it now.
@@ -174,7 +199,21 @@ export function Checkout() {
         setBusy(false);
       }
     },
-    [quote, me, email, token, params, items, name, withPassword, password, website, router],
+    [
+      quote,
+      me,
+      email,
+      token,
+      params,
+      items,
+      name,
+      withPassword,
+      password,
+      website,
+      router,
+      option,
+      manualProof,
+    ],
   );
 
   if (!items.length) {
@@ -193,6 +232,9 @@ export function Checkout() {
   }
 
   const free = quote ? !quote.paymentRequired : false;
+  const manual = !free && option?.type === 'manual';
+  const paypal = !free && option?.type === 'paypal';
+  const cannotPay = Boolean(quote && !free && !option);
 
   return (
     <div className="grid gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
@@ -352,6 +394,22 @@ export function Checkout() {
             </div>
           )}
 
+          {quote && !free && (
+            <fieldset>
+              <legend className="mb-3 text-xl font-medium tracking-[-0.02em]">Payment</legend>
+              <PaymentOptions
+                options={quote.paymentOptions}
+                selected={option}
+                onSelect={setChosenOption}
+                total={quote.total}
+                currency={quote.currency}
+                windowHours={quote.paymentWindowHours}
+                proof={manualProof}
+                onProof={setManualProof}
+              />
+            </fieldset>
+          )}
+
           <Turnstile onToken={setToken} resetSignal={resetSignal} />
 
           {error && (
@@ -362,23 +420,35 @@ export function Checkout() {
 
           <Button
             type="submit"
-            disabled={busy || !quote || me === undefined}
+            disabled={busy || !quote || me === undefined || cannotPay}
             className="w-full justify-center py-3 text-lg sm:w-auto"
           >
             {busy
               ? free
                 ? 'Claiming…'
-                : 'Starting payment…'
+                : manual
+                  ? 'Placing order…'
+                  : paypal
+                    ? 'Opening PayPal…'
+                    : 'Starting payment…'
               : !quote
                 ? 'Loading…'
                 : free
                   ? 'Get it free'
-                  : `Pay ${money(quote.total, quote.currency)}`}
+                  : manual
+                    ? `Place order · ${money(quote.total, quote.currency)}`
+                    : paypal
+                      ? 'Continue to PayPal'
+                      : `Pay ${money(quote.total, quote.currency)}`}
           </Button>
           <p className="text-ink-soft text-sm">
             {free
               ? 'No card needed. Your order goes through the same secure process as any purchase.'
-              : 'You’ll pay on Stripe’s secure page. Card details never touch this site.'}{' '}
+              : manual
+                ? `Nothing is charged now. You pay by ${option?.name} and we confirm it, usually within a day.`
+                : paypal
+                  ? 'You’ll approve the payment on PayPal and come straight back here.'
+                  : 'You’ll pay on Stripe’s secure page. Card details never touch this site.'}{' '}
             By continuing you agree to the{' '}
             <Link href="/legal/terms" className="underline underline-offset-4">
               terms

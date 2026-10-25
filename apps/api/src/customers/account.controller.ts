@@ -1,5 +1,18 @@
-import { Controller, Get, HttpCode, Param, ParseIntPipe, Patch, Post, Res } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Res,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import {
   type ChangePasswordInput,
@@ -10,6 +23,8 @@ import {
   DownloadItemSchema,
   OrderDetailSchema,
   OrderSummarySchema,
+  type ManualPaymentSubmit,
+  ManualPaymentSubmitSchema,
   OwnedProductSchema,
   type ProfileInput,
   ProfileInputSchema,
@@ -19,7 +34,8 @@ import type { Response } from 'express';
 import { z } from 'zod';
 import { CustomerSessionService } from '../auth/customer-session.service.js';
 import { CurrentCustomerId, CustomerAuth } from '../auth/guards.js';
-import { ApiZodResponse, ZodBody } from '../common/zod.js';
+import { PROOF_MAX_BYTES, ManualPaymentsService } from '../commerce/manual-payments.service.js';
+import { ApiZodResponse, ZodBody, ZodPipe } from '../common/zod.js';
 import { AccountService } from './account.service.js';
 import { CustomerAuthService } from './customer-auth.service.js';
 
@@ -32,6 +48,7 @@ export class AccountController {
     private readonly account: AccountService,
     private readonly auth: CustomerAuthService,
     private readonly sessions: CustomerSessionService,
+    private readonly manual: ManualPaymentsService,
   ) {}
 
   @Get('me')
@@ -79,6 +96,37 @@ export class AccountController {
   @Get('orders/:number')
   @ApiZodResponse(OrderDetailSchema)
   order(@CurrentCustomerId() customerId: string, @Param('number', ParseIntPipe) number: number) {
+    return this.account.order(customerId, number);
+  }
+
+  /**
+   * Manual payment: the transaction reference, the account it came from and (field `proof`) a
+   * screenshot or receipt. An admin checks it; nothing is granted until they confirm.
+   */
+  @Post('orders/:number/manual-payment')
+  @HttpCode(200)
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
+  @UseInterceptors(FileInterceptor('proof', { limits: { fileSize: PROOF_MAX_BYTES, files: 1 } }))
+  @ApiConsumes('multipart/form-data', 'application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['reference'],
+      properties: {
+        reference: { type: 'string' },
+        senderAccount: { type: 'string' },
+        proof: { type: 'string', format: 'binary' },
+      },
+    },
+  })
+  @ApiZodResponse(OrderDetailSchema)
+  async manualPayment(
+    @CurrentCustomerId() customerId: string,
+    @Param('number', ParseIntPipe) number: number,
+    @Body(new ZodPipe(ManualPaymentSubmitSchema)) body: ManualPaymentSubmit,
+    @UploadedFile() proof?: Express.Multer.File,
+  ) {
+    await this.manual.submit(customerId, number, body, proof);
     return this.account.order(customerId, number);
   }
 

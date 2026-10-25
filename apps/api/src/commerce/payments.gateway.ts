@@ -1,7 +1,6 @@
-import { Inject, Injectable, ServiceUnavailableException } from '@nestjs/common';
+import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 import Stripe from 'stripe';
-import { ENV } from '../config/config.module.js';
-import type { Env } from '../config/env.js';
+import { PaymentConfigService } from './payment-config.service.js';
 
 export interface CheckoutLine {
   name: string;
@@ -41,20 +40,22 @@ export type PaymentEvent =
       /** `expired`: abandoned checkout. `failed`: the payment itself failed. */
       reason: 'expired' | 'failed';
     }
+  /** PayPal: the buyer approved the order; capturing it takes the money. */
+  | { id: string; type: 'checkout.approved'; sessionId: string }
   | { id: string; type: 'charge.refunded'; paymentRef: string }
   | { id: string; type: 'ignored'; stripeType: string };
 
 /**
- * Payment provider port. Only providers that are configured are enabled: Stripe when its keys
- * are set. Tests swap in a fake. Secrets never leave the server.
+ * Card payment port (Stripe). Enabled when switched on in the admin and a key is set (admin or
+ * environment). Tests swap in a fake. Secrets never leave the server.
  */
 export abstract class PaymentsGateway {
-  abstract readonly enabled: boolean;
+  abstract enabled(): Promise<boolean>;
   abstract createCheckout(args: CheckoutSessionArgs): Promise<{ id: string; url: string }>;
   /** Best effort: stops an open checkout session from being paid (order cancelled meanwhile). */
   abstract cancelCheckout(sessionId: string): Promise<void>;
   /** Verifies the signature and maps the event. Throws on a bad signature. */
-  abstract parseWebhook(rawBody: Buffer, signature: string): PaymentEvent;
+  abstract parseWebhook(rawBody: Buffer, signature: string): Promise<PaymentEvent>;
   abstract refund(paymentRef: string): Promise<void>;
   /** Connectivity check for the admin settings page. */
   abstract check(): Promise<{ ok: boolean; message: string }>;
@@ -62,24 +63,36 @@ export abstract class PaymentsGateway {
 
 @Injectable()
 export class StripeGateway extends PaymentsGateway {
-  private readonly stripe?: Stripe;
+  /** One client per key, so a key changed in the admin is used right away. */
+  private clients = new Map<string, Stripe>();
 
-  constructor(@Inject(ENV) private readonly env: Env) {
+  constructor(private readonly config: PaymentConfigService) {
     super();
-    if (env.STRIPE_SECRET_KEY) this.stripe = new Stripe(env.STRIPE_SECRET_KEY);
   }
 
-  get enabled() {
-    return Boolean(this.stripe);
+  private stripeFor(secretKey: string): Stripe {
+    let client = this.clients.get(secretKey);
+    if (!client) {
+      client = new Stripe(secretKey);
+      this.clients = new Map([[secretKey, client]]);
+    }
+    return client;
   }
 
-  private client(): Stripe {
-    if (!this.stripe) throw new ServiceUnavailableException('Card payments are not configured yet');
-    return this.stripe;
+  async enabled() {
+    return Boolean(await this.config.stripe());
+  }
+
+  /** New checkouts need Stripe switched on; refunds and webhooks only need the key. */
+  private async client(forNewCheckout = false): Promise<Stripe> {
+    const config = forNewCheckout ? await this.config.stripe() : await this.config.stripeWebhook();
+    if (!config) throw new ServiceUnavailableException('Card payments are not configured yet');
+    return this.stripeFor(config.secretKey);
   }
 
   async createCheckout(args: CheckoutSessionArgs) {
-    const session = await this.client().checkout.sessions.create(
+    const stripe = await this.client(true);
+    const session = await stripe.checkout.sessions.create(
       {
         mode: 'payment',
         client_reference_id: args.orderId,
@@ -116,19 +129,20 @@ export class StripeGateway extends PaymentsGateway {
 
   async cancelCheckout(sessionId: string) {
     try {
-      await this.client().checkout.sessions.expire(sessionId);
+      await (await this.client()).checkout.sessions.expire(sessionId);
     } catch {
-      // Already expired or completed: nothing to stop.
+      // Already expired or completed, or Stripe isn't configured: nothing to stop.
     }
   }
 
-  parseWebhook(rawBody: Buffer, signature: string): PaymentEvent {
-    if (!this.env.STRIPE_WEBHOOK_SECRET)
+  async parseWebhook(rawBody: Buffer, signature: string): Promise<PaymentEvent> {
+    const config = await this.config.stripeWebhook();
+    if (!config?.webhookSecret)
       throw new ServiceUnavailableException('Webhook secret not configured');
-    const event = this.client().webhooks.constructEvent(
+    const event = this.stripeFor(config.secretKey).webhooks.constructEvent(
       rawBody,
       signature,
-      this.env.STRIPE_WEBHOOK_SECRET,
+      config.webhookSecret,
     );
 
     switch (event.type) {
@@ -182,21 +196,21 @@ export class StripeGateway extends PaymentsGateway {
   }
 
   async refund(paymentRef: string) {
-    await this.client().refunds.create(
-      { payment_intent: paymentRef },
-      { idempotencyKey: `refund:${paymentRef}` },
-    );
+    await (
+      await this.client()
+    ).refunds.create({ payment_intent: paymentRef }, { idempotencyKey: `refund:${paymentRef}` });
   }
 
   async check() {
-    if (!this.stripe) return { ok: false, message: 'Stripe is not configured (STRIPE_SECRET_KEY)' };
+    const config = await this.config.stripeWebhook();
+    if (!config) return { ok: false, message: 'Stripe has no secret key yet' };
     try {
-      await this.stripe.balance.retrieve();
+      await this.stripeFor(config.secretKey).balance.retrieve();
       return {
         ok: true,
-        message: this.env.STRIPE_WEBHOOK_SECRET
+        message: config.webhookSecret
           ? 'Connected to Stripe; webhook secret set'
-          : 'Connected to Stripe, but STRIPE_WEBHOOK_SECRET is missing',
+          : 'Connected to Stripe, but the webhook signing secret is missing',
       };
     } catch (error) {
       return { ok: false, message: `Stripe rejected the key: ${(error as Error).message}` };

@@ -1,9 +1,14 @@
 import Stripe from 'stripe';
-import type { Env } from '../config/env.js';
+import type { PaymentConfigService, StripeConfig } from './payment-config.service.js';
 import { StripeGateway } from './payments.gateway.js';
 
 const WEBHOOK_SECRET = 'whsec_test_secret';
-const env = { STRIPE_SECRET_KEY: 'sk_test_123', STRIPE_WEBHOOK_SECRET: WEBHOOK_SECRET } as Env;
+const configWith = (stripe: StripeConfig | null) =>
+  ({
+    stripe: async () => stripe,
+    stripeWebhook: async () => stripe,
+  }) as unknown as PaymentConfigService;
+const config = configWith({ secretKey: 'sk_test_123', webhookSecret: WEBHOOK_SECRET });
 const stripe = new Stripe('sk_test_123');
 
 /** A body + header pair signed exactly the way Stripe signs deliveries. */
@@ -28,15 +33,15 @@ const session = (overrides: Record<string, unknown>) => ({
 });
 
 describe('StripeGateway.parseWebhook (real SDK signature verification)', () => {
-  const gateway = new StripeGateway(env);
+  const gateway = new StripeGateway(config);
 
-  it('maps a paid checkout to checkout.paid', () => {
+  it('maps a paid checkout to checkout.paid', async () => {
     const { body, signature } = signed({
       id: 'evt_1',
       type: 'checkout.session.completed',
       data: { object: session({}) },
     });
-    expect(gateway.parseWebhook(body, signature)).toEqual({
+    expect(await gateway.parseWebhook(body, signature)).toEqual({
       id: 'evt_1',
       type: 'checkout.paid',
       orderId: 'order_1',
@@ -47,22 +52,22 @@ describe('StripeGateway.parseWebhook (real SDK signature verification)', () => {
     });
   });
 
-  it('does not fulfil a completed-but-unpaid session (async payment still pending)', () => {
+  it('does not fulfil a completed-but-unpaid session (async payment still pending)', async () => {
     const { body, signature } = signed({
       id: 'evt_2',
       type: 'checkout.session.completed',
       data: { object: session({ payment_status: 'unpaid' }) },
     });
-    expect(gateway.parseWebhook(body, signature).type).toBe('ignored');
+    expect((await gateway.parseWebhook(body, signature)).type).toBe('ignored');
   });
 
-  it('maps expiry to checkout.failed and refunds to charge.refunded', () => {
+  it('maps expiry to checkout.failed and refunds to charge.refunded', async () => {
     const expired = signed({
       id: 'evt_3',
       type: 'checkout.session.expired',
       data: { object: session({ payment_status: 'unpaid' }) },
     });
-    expect(gateway.parseWebhook(expired.body, expired.signature)).toMatchObject({
+    expect(await gateway.parseWebhook(expired.body, expired.signature)).toMatchObject({
       type: 'checkout.failed',
       orderId: 'order_1',
       reason: 'expired',
@@ -73,7 +78,7 @@ describe('StripeGateway.parseWebhook (real SDK signature verification)', () => {
       type: 'checkout.session.async_payment_failed',
       data: { object: session({ payment_status: 'unpaid' }) },
     });
-    expect(gateway.parseWebhook(failed.body, failed.signature)).toMatchObject({
+    expect(await gateway.parseWebhook(failed.body, failed.signature)).toMatchObject({
       type: 'checkout.failed',
       reason: 'failed',
     });
@@ -83,25 +88,25 @@ describe('StripeGateway.parseWebhook (real SDK signature verification)', () => {
       type: 'charge.refunded',
       data: { object: { id: 'ch_1', object: 'charge', payment_intent: 'pi_1', refunded: true } },
     });
-    expect(gateway.parseWebhook(refunded.body, refunded.signature)).toEqual({
+    expect(await gateway.parseWebhook(refunded.body, refunded.signature)).toEqual({
       id: 'evt_4',
       type: 'charge.refunded',
       paymentRef: 'pi_1',
     });
   });
 
-  it('rejects forged or tampered payloads', () => {
+  it('rejects forged or tampered payloads', async () => {
     const { body, signature } = signed({
       id: 'evt_5',
       type: 'checkout.session.completed',
       data: { object: session({}) },
     });
     const tampered = Buffer.from(body.toString().replace('pi_1', 'pi_evil'));
-    expect(() => gateway.parseWebhook(tampered, signature)).toThrow();
-    expect(() => gateway.parseWebhook(body, 't=1,v1=deadbeef')).toThrow();
+    await expect(gateway.parseWebhook(tampered, signature)).rejects.toThrow();
+    await expect(gateway.parseWebhook(body, 't=1,v1=deadbeef')).rejects.toThrow();
   });
 
-  it('is disabled without a secret key', () => {
-    expect(new StripeGateway({} as Env).enabled).toBe(false);
+  it('is disabled without a secret key', async () => {
+    expect(await new StripeGateway(configWith(null)).enabled()).toBe(false);
   });
 });

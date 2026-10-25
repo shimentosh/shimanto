@@ -836,6 +836,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/admin/orders/{id}/payment/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminOrders_confirmPayment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/orders/{id}/payment/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminOrders_rejectPayment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/orders/{id}/payments/{paymentId}/proof": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminOrders_proof"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/admin/orders/{id}/refund": {
         parameters: {
             query?: never;
@@ -1022,6 +1070,22 @@ export interface paths {
         get: operations["Account_order"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/account/orders/{number}/manual-payment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["Account_manualPayment"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1460,6 +1524,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/admin/settings/payments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminSettings_paymentSettings"];
+        put: operations["AdminSettings_updatePayments"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/admin/settings/test-email": {
         parameters: {
             query?: never;
@@ -1508,6 +1588,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/admin/settings/storage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminSettings_storageSettingsView"];
+        put: operations["AdminSettings_saveStorage"];
+        post?: never;
+        delete: operations["AdminSettings_clearStorage"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/settings/storage/test": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminSettings_testStorage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/settings/check/paypal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminSettings_checkPaypal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/admin/settings/check/github": {
         parameters: {
             query?: never;
@@ -1534,6 +1662,86 @@ export interface paths {
         get: operations["AdminEmails_list"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/email-templates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminEmailTemplates_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/email-templates/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminEmailTemplates_preview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/email-templates/{key}/test": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminEmailTemplates_test"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/settings/email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminEmailSettings_view"];
+        put: operations["AdminEmailSettings_save"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/settings/email/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminEmailSettings_check"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2924,6 +3132,7 @@ export interface operations {
                             connectedAt: string | null;
                             available: boolean;
                         };
+                        adminUrl: string | null;
                     };
                 };
             };
@@ -2970,6 +3179,7 @@ export interface operations {
                             connectedAt: string | null;
                             available: boolean;
                         };
+                        adminUrl: string | null;
                     };
                 };
             };
@@ -3007,6 +3217,7 @@ export interface operations {
                             connectedAt: string | null;
                             available: boolean;
                         };
+                        adminUrl: string | null;
                     };
                 };
             };
@@ -3109,6 +3320,7 @@ export interface operations {
                             connectedAt: string | null;
                             available: boolean;
                         };
+                        adminUrl: string | null;
                     };
                 };
             };
@@ -3189,6 +3401,7 @@ export interface operations {
                             connectedAt: string | null;
                             available: boolean;
                         };
+                        adminUrl: string | null;
                     };
                 };
             };
@@ -4304,6 +4517,32 @@ export interface operations {
                         couponError: string | null;
                         paymentRequired: boolean;
                         requiresGithub: boolean;
+                        paymentOptions: {
+                            id: string;
+                            /** @enum {string} */
+                            type: "stripe" | "paypal" | "manual";
+                            name: string;
+                            description: string | null;
+                            manual: {
+                                id: string;
+                                /** @enum {string} */
+                                kind: "MOBILE_WALLET" | "BANK_TRANSFER" | "OTHER";
+                                name: string;
+                                description: string | null;
+                                logoUrl: string | null;
+                                qrUrl: string | null;
+                                fields: {
+                                    label: string;
+                                    value: string;
+                                }[];
+                                instructions: string;
+                                referenceLabel: string;
+                                senderLabel: string | null;
+                                /** @enum {string} */
+                                proof: "OFF" | "OPTIONAL" | "REQUIRED";
+                            } | null;
+                        }[];
+                        paymentWindowHours: number;
                     };
                 };
             };
@@ -4371,6 +4610,11 @@ export interface operations {
                             marketing: boolean;
                         } | null;
                     };
+                    paymentOption?: string;
+                    manualProof?: {
+                        reference: string;
+                        senderAccount?: string;
+                    };
                     website?: string;
                 };
             };
@@ -4388,6 +4632,12 @@ export interface operations {
                         /** Format: uri */
                         url: string;
                         orderNumber: number;
+                    } | {
+                        /** @enum {string} */
+                        kind: "manual";
+                        orderNumber: number;
+                        signedIn: boolean;
+                        portalUrl: string;
                     } | {
                         /** @enum {string} */
                         kind: "complete";
@@ -4471,6 +4721,7 @@ export interface operations {
                 customerId?: string;
                 productId?: string;
                 q?: string;
+                toVerify?: "true" | "false";
                 limit?: number;
                 cursor?: string;
             };
@@ -4500,7 +4751,7 @@ export interface operations {
                             /** @enum {string} */
                             source: "CHECKOUT" | "ADMIN";
                             /** @enum {string} */
-                            provider: "FREE" | "STRIPE" | "MANUAL";
+                            provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
                             currency: string;
                             total: number;
                             customer: {
@@ -4581,7 +4832,7 @@ export interface operations {
                         /** @enum {string} */
                         source: "CHECKOUT" | "ADMIN";
                         /** @enum {string} */
-                        provider: "FREE" | "STRIPE" | "MANUAL";
+                        provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
                         currency: string;
                         total: number;
                         customer: {
@@ -4607,6 +4858,7 @@ export interface operations {
                         note: string | null;
                         locale: string;
                         paidAt: string | null;
+                        paymentDueAt: string | null;
                         completedAt: string | null;
                         cancelledAt: string | null;
                         refundedAt: string | null;
@@ -4642,7 +4894,7 @@ export interface operations {
                         payments: {
                             id: string;
                             /** @enum {string} */
-                            provider: "FREE" | "STRIPE" | "MANUAL";
+                            provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
                             /** @enum {string} */
                             status: "PENDING" | "PAID" | "FAILED" | "REFUNDED" | "NOT_REQUIRED";
                             amount: number;
@@ -4650,6 +4902,37 @@ export interface operations {
                             providerRef: string | null;
                             providerPaymentId: string | null;
                             failureReason: string | null;
+                            manual: {
+                                method: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    kind: "MOBILE_WALLET" | "BANK_TRANSFER" | "OTHER";
+                                    name: string;
+                                    description: string | null;
+                                    logoUrl: string | null;
+                                    qrUrl: string | null;
+                                    fields: {
+                                        label: string;
+                                        value: string;
+                                    }[];
+                                    instructions: string;
+                                    referenceLabel: string;
+                                    senderLabel: string | null;
+                                    /** @enum {string} */
+                                    proof: "OFF" | "OPTIONAL" | "REQUIRED";
+                                };
+                                /** @enum {string} */
+                                state: "AWAITING" | "SUBMITTED" | "REJECTED" | "CONFIRMED" | "CLOSED";
+                                reference: string | null;
+                                senderAccount: string | null;
+                                proof: {
+                                    filename: string;
+                                    mimeType: string;
+                                } | null;
+                                submittedAt: string | null;
+                                rejectedReason: string | null;
+                                duplicateOrders: number[];
+                            } | null;
                             paidAt: string | null;
                             refundedAt: string | null;
                             createdAt: string;
@@ -4717,6 +5000,7 @@ export interface operations {
                 customerId?: string;
                 productId?: string;
                 q?: string;
+                toVerify?: "true" | "false";
             };
             header?: never;
             path?: never;
@@ -4776,7 +5060,7 @@ export interface operations {
                         /** @enum {string} */
                         source: "CHECKOUT" | "ADMIN";
                         /** @enum {string} */
-                        provider: "FREE" | "STRIPE" | "MANUAL";
+                        provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
                         currency: string;
                         total: number;
                         customer: {
@@ -4802,6 +5086,7 @@ export interface operations {
                         note: string | null;
                         locale: string;
                         paidAt: string | null;
+                        paymentDueAt: string | null;
                         completedAt: string | null;
                         cancelledAt: string | null;
                         refundedAt: string | null;
@@ -4837,7 +5122,7 @@ export interface operations {
                         payments: {
                             id: string;
                             /** @enum {string} */
-                            provider: "FREE" | "STRIPE" | "MANUAL";
+                            provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
                             /** @enum {string} */
                             status: "PENDING" | "PAID" | "FAILED" | "REFUNDED" | "NOT_REQUIRED";
                             amount: number;
@@ -4845,6 +5130,37 @@ export interface operations {
                             providerRef: string | null;
                             providerPaymentId: string | null;
                             failureReason: string | null;
+                            manual: {
+                                method: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    kind: "MOBILE_WALLET" | "BANK_TRANSFER" | "OTHER";
+                                    name: string;
+                                    description: string | null;
+                                    logoUrl: string | null;
+                                    qrUrl: string | null;
+                                    fields: {
+                                        label: string;
+                                        value: string;
+                                    }[];
+                                    instructions: string;
+                                    referenceLabel: string;
+                                    senderLabel: string | null;
+                                    /** @enum {string} */
+                                    proof: "OFF" | "OPTIONAL" | "REQUIRED";
+                                };
+                                /** @enum {string} */
+                                state: "AWAITING" | "SUBMITTED" | "REJECTED" | "CONFIRMED" | "CLOSED";
+                                reference: string | null;
+                                senderAccount: string | null;
+                                proof: {
+                                    filename: string;
+                                    mimeType: string;
+                                } | null;
+                                submittedAt: string | null;
+                                rejectedReason: string | null;
+                                duplicateOrders: number[];
+                            } | null;
                             paidAt: string | null;
                             refundedAt: string | null;
                             createdAt: string;
@@ -4938,7 +5254,7 @@ export interface operations {
                         /** @enum {string} */
                         source: "CHECKOUT" | "ADMIN";
                         /** @enum {string} */
-                        provider: "FREE" | "STRIPE" | "MANUAL";
+                        provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
                         currency: string;
                         total: number;
                         customer: {
@@ -4964,6 +5280,7 @@ export interface operations {
                         note: string | null;
                         locale: string;
                         paidAt: string | null;
+                        paymentDueAt: string | null;
                         completedAt: string | null;
                         cancelledAt: string | null;
                         refundedAt: string | null;
@@ -4999,7 +5316,7 @@ export interface operations {
                         payments: {
                             id: string;
                             /** @enum {string} */
-                            provider: "FREE" | "STRIPE" | "MANUAL";
+                            provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
                             /** @enum {string} */
                             status: "PENDING" | "PAID" | "FAILED" | "REFUNDED" | "NOT_REQUIRED";
                             amount: number;
@@ -5007,6 +5324,37 @@ export interface operations {
                             providerRef: string | null;
                             providerPaymentId: string | null;
                             failureReason: string | null;
+                            manual: {
+                                method: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    kind: "MOBILE_WALLET" | "BANK_TRANSFER" | "OTHER";
+                                    name: string;
+                                    description: string | null;
+                                    logoUrl: string | null;
+                                    qrUrl: string | null;
+                                    fields: {
+                                        label: string;
+                                        value: string;
+                                    }[];
+                                    instructions: string;
+                                    referenceLabel: string;
+                                    senderLabel: string | null;
+                                    /** @enum {string} */
+                                    proof: "OFF" | "OPTIONAL" | "REQUIRED";
+                                };
+                                /** @enum {string} */
+                                state: "AWAITING" | "SUBMITTED" | "REJECTED" | "CONFIRMED" | "CLOSED";
+                                reference: string | null;
+                                senderAccount: string | null;
+                                proof: {
+                                    filename: string;
+                                    mimeType: string;
+                                } | null;
+                                submittedAt: string | null;
+                                rejectedReason: string | null;
+                                duplicateOrders: number[];
+                            } | null;
                             paidAt: string | null;
                             refundedAt: string | null;
                             createdAt: string;
@@ -5094,7 +5442,7 @@ export interface operations {
                         /** @enum {string} */
                         source: "CHECKOUT" | "ADMIN";
                         /** @enum {string} */
-                        provider: "FREE" | "STRIPE" | "MANUAL";
+                        provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
                         currency: string;
                         total: number;
                         customer: {
@@ -5120,6 +5468,7 @@ export interface operations {
                         note: string | null;
                         locale: string;
                         paidAt: string | null;
+                        paymentDueAt: string | null;
                         completedAt: string | null;
                         cancelledAt: string | null;
                         refundedAt: string | null;
@@ -5155,7 +5504,7 @@ export interface operations {
                         payments: {
                             id: string;
                             /** @enum {string} */
-                            provider: "FREE" | "STRIPE" | "MANUAL";
+                            provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
                             /** @enum {string} */
                             status: "PENDING" | "PAID" | "FAILED" | "REFUNDED" | "NOT_REQUIRED";
                             amount: number;
@@ -5163,6 +5512,37 @@ export interface operations {
                             providerRef: string | null;
                             providerPaymentId: string | null;
                             failureReason: string | null;
+                            manual: {
+                                method: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    kind: "MOBILE_WALLET" | "BANK_TRANSFER" | "OTHER";
+                                    name: string;
+                                    description: string | null;
+                                    logoUrl: string | null;
+                                    qrUrl: string | null;
+                                    fields: {
+                                        label: string;
+                                        value: string;
+                                    }[];
+                                    instructions: string;
+                                    referenceLabel: string;
+                                    senderLabel: string | null;
+                                    /** @enum {string} */
+                                    proof: "OFF" | "OPTIONAL" | "REQUIRED";
+                                };
+                                /** @enum {string} */
+                                state: "AWAITING" | "SUBMITTED" | "REJECTED" | "CONFIRMED" | "CLOSED";
+                                reference: string | null;
+                                senderAccount: string | null;
+                                proof: {
+                                    filename: string;
+                                    mimeType: string;
+                                } | null;
+                                submittedAt: string | null;
+                                rejectedReason: string | null;
+                                duplicateOrders: number[];
+                            } | null;
                             paidAt: string | null;
                             refundedAt: string | null;
                             createdAt: string;
@@ -5220,7 +5600,7 @@ export interface operations {
             };
         };
     };
-    AdminOrders_refund: {
+    AdminOrders_confirmPayment: {
         parameters: {
             query?: never;
             header?: never;
@@ -5250,7 +5630,7 @@ export interface operations {
                         /** @enum {string} */
                         source: "CHECKOUT" | "ADMIN";
                         /** @enum {string} */
-                        provider: "FREE" | "STRIPE" | "MANUAL";
+                        provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
                         currency: string;
                         total: number;
                         customer: {
@@ -5276,6 +5656,7 @@ export interface operations {
                         note: string | null;
                         locale: string;
                         paidAt: string | null;
+                        paymentDueAt: string | null;
                         completedAt: string | null;
                         cancelledAt: string | null;
                         refundedAt: string | null;
@@ -5311,7 +5692,7 @@ export interface operations {
                         payments: {
                             id: string;
                             /** @enum {string} */
-                            provider: "FREE" | "STRIPE" | "MANUAL";
+                            provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
                             /** @enum {string} */
                             status: "PENDING" | "PAID" | "FAILED" | "REFUNDED" | "NOT_REQUIRED";
                             amount: number;
@@ -5319,6 +5700,458 @@ export interface operations {
                             providerRef: string | null;
                             providerPaymentId: string | null;
                             failureReason: string | null;
+                            manual: {
+                                method: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    kind: "MOBILE_WALLET" | "BANK_TRANSFER" | "OTHER";
+                                    name: string;
+                                    description: string | null;
+                                    logoUrl: string | null;
+                                    qrUrl: string | null;
+                                    fields: {
+                                        label: string;
+                                        value: string;
+                                    }[];
+                                    instructions: string;
+                                    referenceLabel: string;
+                                    senderLabel: string | null;
+                                    /** @enum {string} */
+                                    proof: "OFF" | "OPTIONAL" | "REQUIRED";
+                                };
+                                /** @enum {string} */
+                                state: "AWAITING" | "SUBMITTED" | "REJECTED" | "CONFIRMED" | "CLOSED";
+                                reference: string | null;
+                                senderAccount: string | null;
+                                proof: {
+                                    filename: string;
+                                    mimeType: string;
+                                } | null;
+                                submittedAt: string | null;
+                                rejectedReason: string | null;
+                                duplicateOrders: number[];
+                            } | null;
+                            paidAt: string | null;
+                            refundedAt: string | null;
+                            createdAt: string;
+                        }[];
+                        deliveries: {
+                            id: string;
+                            /** @enum {string} */
+                            type: "R2" | "GITHUB";
+                            /** @enum {string} */
+                            status: "PENDING" | "ACTION_REQUIRED" | "READY" | "INVITATION_SENT" | "ACCEPTED" | "EXPIRED" | "FAILED" | "REVOKED";
+                            productId: string;
+                            productName: string;
+                            githubOwner: string | null;
+                            githubRepo: string | null;
+                            githubLogin: string | null;
+                            githubInvitationId: string | null;
+                            attempts: number;
+                            lastError: string | null;
+                            lastSyncedAt: string | null;
+                            deliveredAt: string | null;
+                            revokedAt: string | null;
+                            createdAt: string;
+                        }[];
+                        emails: {
+                            id: string;
+                            type: string;
+                            recipient: string;
+                            subject: string;
+                            /** @enum {string} */
+                            status: "QUEUED" | "SENT" | "FAILED";
+                            provider: string | null;
+                            providerMessageId: string | null;
+                            failureReason: string | null;
+                            sentAt: string | null;
+                            createdAt: string;
+                            orderId: string | null;
+                            customerId: string | null;
+                        }[];
+                    };
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient role */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminOrders_rejectPayment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    reason: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        number: number;
+                        createdAt: string;
+                        /** @enum {string} */
+                        status: "PENDING" | "PAID" | "PROCESSING" | "COMPLETED" | "CANCELLED" | "REFUNDED";
+                        /** @enum {string} */
+                        paymentStatus: "PENDING" | "PAID" | "FAILED" | "REFUNDED" | "NOT_REQUIRED";
+                        /** @enum {string} */
+                        fulfillmentStatus: "PENDING" | "PROCESSING" | "PARTIALLY_DELIVERED" | "DELIVERED" | "FAILED" | "COMPLETED";
+                        /** @enum {string} */
+                        source: "CHECKOUT" | "ADMIN";
+                        /** @enum {string} */
+                        provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
+                        currency: string;
+                        total: number;
+                        customer: {
+                            id: string;
+                            email: string;
+                            name: string | null;
+                        };
+                        items: {
+                            id: string;
+                            productId: string;
+                            productName: string;
+                            productSlug: string;
+                            /** @enum {string} */
+                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                            unitPrice: number;
+                            quantity: number;
+                            discount: number;
+                            total: number;
+                        }[];
+                        subtotal: number;
+                        discount: number;
+                        couponCode: string | null;
+                        note: string | null;
+                        locale: string;
+                        paidAt: string | null;
+                        paymentDueAt: string | null;
+                        completedAt: string | null;
+                        cancelledAt: string | null;
+                        refundedAt: string | null;
+                        createdBy: {
+                            id: string;
+                            email: string;
+                        } | null;
+                        customerGithubLogin: string | null;
+                        attribution: {
+                            first: {
+                                source?: string | null;
+                                medium?: string | null;
+                                campaign?: string | null;
+                                term?: string | null;
+                                content?: string | null;
+                                referrer?: string | null;
+                                landingPage?: string | null;
+                                /** Format: date-time */
+                                at?: string | null;
+                            } | null;
+                            last: {
+                                source?: string | null;
+                                medium?: string | null;
+                                campaign?: string | null;
+                                term?: string | null;
+                                content?: string | null;
+                                referrer?: string | null;
+                                landingPage?: string | null;
+                                /** Format: date-time */
+                                at?: string | null;
+                            } | null;
+                        };
+                        payments: {
+                            id: string;
+                            /** @enum {string} */
+                            provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
+                            /** @enum {string} */
+                            status: "PENDING" | "PAID" | "FAILED" | "REFUNDED" | "NOT_REQUIRED";
+                            amount: number;
+                            currency: string;
+                            providerRef: string | null;
+                            providerPaymentId: string | null;
+                            failureReason: string | null;
+                            manual: {
+                                method: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    kind: "MOBILE_WALLET" | "BANK_TRANSFER" | "OTHER";
+                                    name: string;
+                                    description: string | null;
+                                    logoUrl: string | null;
+                                    qrUrl: string | null;
+                                    fields: {
+                                        label: string;
+                                        value: string;
+                                    }[];
+                                    instructions: string;
+                                    referenceLabel: string;
+                                    senderLabel: string | null;
+                                    /** @enum {string} */
+                                    proof: "OFF" | "OPTIONAL" | "REQUIRED";
+                                };
+                                /** @enum {string} */
+                                state: "AWAITING" | "SUBMITTED" | "REJECTED" | "CONFIRMED" | "CLOSED";
+                                reference: string | null;
+                                senderAccount: string | null;
+                                proof: {
+                                    filename: string;
+                                    mimeType: string;
+                                } | null;
+                                submittedAt: string | null;
+                                rejectedReason: string | null;
+                                duplicateOrders: number[];
+                            } | null;
+                            paidAt: string | null;
+                            refundedAt: string | null;
+                            createdAt: string;
+                        }[];
+                        deliveries: {
+                            id: string;
+                            /** @enum {string} */
+                            type: "R2" | "GITHUB";
+                            /** @enum {string} */
+                            status: "PENDING" | "ACTION_REQUIRED" | "READY" | "INVITATION_SENT" | "ACCEPTED" | "EXPIRED" | "FAILED" | "REVOKED";
+                            productId: string;
+                            productName: string;
+                            githubOwner: string | null;
+                            githubRepo: string | null;
+                            githubLogin: string | null;
+                            githubInvitationId: string | null;
+                            attempts: number;
+                            lastError: string | null;
+                            lastSyncedAt: string | null;
+                            deliveredAt: string | null;
+                            revokedAt: string | null;
+                            createdAt: string;
+                        }[];
+                        emails: {
+                            id: string;
+                            type: string;
+                            recipient: string;
+                            subject: string;
+                            /** @enum {string} */
+                            status: "QUEUED" | "SENT" | "FAILED";
+                            provider: string | null;
+                            providerMessageId: string | null;
+                            failureReason: string | null;
+                            sentAt: string | null;
+                            createdAt: string;
+                            orderId: string | null;
+                            customerId: string | null;
+                        }[];
+                    };
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient role */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminOrders_proof: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                paymentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        url: string;
+                    };
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient role */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminOrders_refund: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        number: number;
+                        createdAt: string;
+                        /** @enum {string} */
+                        status: "PENDING" | "PAID" | "PROCESSING" | "COMPLETED" | "CANCELLED" | "REFUNDED";
+                        /** @enum {string} */
+                        paymentStatus: "PENDING" | "PAID" | "FAILED" | "REFUNDED" | "NOT_REQUIRED";
+                        /** @enum {string} */
+                        fulfillmentStatus: "PENDING" | "PROCESSING" | "PARTIALLY_DELIVERED" | "DELIVERED" | "FAILED" | "COMPLETED";
+                        /** @enum {string} */
+                        source: "CHECKOUT" | "ADMIN";
+                        /** @enum {string} */
+                        provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
+                        currency: string;
+                        total: number;
+                        customer: {
+                            id: string;
+                            email: string;
+                            name: string | null;
+                        };
+                        items: {
+                            id: string;
+                            productId: string;
+                            productName: string;
+                            productSlug: string;
+                            /** @enum {string} */
+                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                            unitPrice: number;
+                            quantity: number;
+                            discount: number;
+                            total: number;
+                        }[];
+                        subtotal: number;
+                        discount: number;
+                        couponCode: string | null;
+                        note: string | null;
+                        locale: string;
+                        paidAt: string | null;
+                        paymentDueAt: string | null;
+                        completedAt: string | null;
+                        cancelledAt: string | null;
+                        refundedAt: string | null;
+                        createdBy: {
+                            id: string;
+                            email: string;
+                        } | null;
+                        customerGithubLogin: string | null;
+                        attribution: {
+                            first: {
+                                source?: string | null;
+                                medium?: string | null;
+                                campaign?: string | null;
+                                term?: string | null;
+                                content?: string | null;
+                                referrer?: string | null;
+                                landingPage?: string | null;
+                                /** Format: date-time */
+                                at?: string | null;
+                            } | null;
+                            last: {
+                                source?: string | null;
+                                medium?: string | null;
+                                campaign?: string | null;
+                                term?: string | null;
+                                content?: string | null;
+                                referrer?: string | null;
+                                landingPage?: string | null;
+                                /** Format: date-time */
+                                at?: string | null;
+                            } | null;
+                        };
+                        payments: {
+                            id: string;
+                            /** @enum {string} */
+                            provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
+                            /** @enum {string} */
+                            status: "PENDING" | "PAID" | "FAILED" | "REFUNDED" | "NOT_REQUIRED";
+                            amount: number;
+                            currency: string;
+                            providerRef: string | null;
+                            providerPaymentId: string | null;
+                            failureReason: string | null;
+                            manual: {
+                                method: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    kind: "MOBILE_WALLET" | "BANK_TRANSFER" | "OTHER";
+                                    name: string;
+                                    description: string | null;
+                                    logoUrl: string | null;
+                                    qrUrl: string | null;
+                                    fields: {
+                                        label: string;
+                                        value: string;
+                                    }[];
+                                    instructions: string;
+                                    referenceLabel: string;
+                                    senderLabel: string | null;
+                                    /** @enum {string} */
+                                    proof: "OFF" | "OPTIONAL" | "REQUIRED";
+                                };
+                                /** @enum {string} */
+                                state: "AWAITING" | "SUBMITTED" | "REJECTED" | "CONFIRMED" | "CLOSED";
+                                reference: string | null;
+                                senderAccount: string | null;
+                                proof: {
+                                    filename: string;
+                                    mimeType: string;
+                                } | null;
+                                submittedAt: string | null;
+                                rejectedReason: string | null;
+                                duplicateOrders: number[];
+                            } | null;
                             paidAt: string | null;
                             refundedAt: string | null;
                             createdAt: string;
@@ -5406,7 +6239,7 @@ export interface operations {
                         /** @enum {string} */
                         source: "CHECKOUT" | "ADMIN";
                         /** @enum {string} */
-                        provider: "FREE" | "STRIPE" | "MANUAL";
+                        provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
                         currency: string;
                         total: number;
                         customer: {
@@ -5432,6 +6265,7 @@ export interface operations {
                         note: string | null;
                         locale: string;
                         paidAt: string | null;
+                        paymentDueAt: string | null;
                         completedAt: string | null;
                         cancelledAt: string | null;
                         refundedAt: string | null;
@@ -5467,7 +6301,7 @@ export interface operations {
                         payments: {
                             id: string;
                             /** @enum {string} */
-                            provider: "FREE" | "STRIPE" | "MANUAL";
+                            provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
                             /** @enum {string} */
                             status: "PENDING" | "PAID" | "FAILED" | "REFUNDED" | "NOT_REQUIRED";
                             amount: number;
@@ -5475,6 +6309,37 @@ export interface operations {
                             providerRef: string | null;
                             providerPaymentId: string | null;
                             failureReason: string | null;
+                            manual: {
+                                method: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    kind: "MOBILE_WALLET" | "BANK_TRANSFER" | "OTHER";
+                                    name: string;
+                                    description: string | null;
+                                    logoUrl: string | null;
+                                    qrUrl: string | null;
+                                    fields: {
+                                        label: string;
+                                        value: string;
+                                    }[];
+                                    instructions: string;
+                                    referenceLabel: string;
+                                    senderLabel: string | null;
+                                    /** @enum {string} */
+                                    proof: "OFF" | "OPTIONAL" | "REQUIRED";
+                                };
+                                /** @enum {string} */
+                                state: "AWAITING" | "SUBMITTED" | "REJECTED" | "CONFIRMED" | "CLOSED";
+                                reference: string | null;
+                                senderAccount: string | null;
+                                proof: {
+                                    filename: string;
+                                    mimeType: string;
+                                } | null;
+                                submittedAt: string | null;
+                                rejectedReason: string | null;
+                                duplicateOrders: number[];
+                            } | null;
                             paidAt: string | null;
                             refundedAt: string | null;
                             createdAt: string;
@@ -5772,6 +6637,7 @@ export interface operations {
                             connectedAt: string | null;
                             available: boolean;
                         };
+                        adminUrl: string | null;
                     };
                 };
             };
@@ -5824,6 +6690,7 @@ export interface operations {
                             connectedAt: string | null;
                             available: boolean;
                         };
+                        adminUrl: string | null;
                     };
                 };
             };
@@ -5876,6 +6743,7 @@ export interface operations {
                             connectedAt: string | null;
                             available: boolean;
                         };
+                        adminUrl: string | null;
                     };
                 };
             };
@@ -6064,7 +6932,7 @@ export interface operations {
                         discount: number;
                         couponCode: string | null;
                         /** @enum {string} */
-                        provider: "FREE" | "STRIPE" | "MANUAL";
+                        provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
                         /** @enum {string} */
                         source: "CHECKOUT" | "ADMIN";
                         paidAt: string | null;
@@ -6092,6 +6960,166 @@ export interface operations {
                                 canRetry: boolean;
                             } | null;
                         }[];
+                        manualPayment: {
+                            method: {
+                                id: string;
+                                /** @enum {string} */
+                                kind: "MOBILE_WALLET" | "BANK_TRANSFER" | "OTHER";
+                                name: string;
+                                description: string | null;
+                                logoUrl: string | null;
+                                qrUrl: string | null;
+                                fields: {
+                                    label: string;
+                                    value: string;
+                                }[];
+                                instructions: string;
+                                referenceLabel: string;
+                                senderLabel: string | null;
+                                /** @enum {string} */
+                                proof: "OFF" | "OPTIONAL" | "REQUIRED";
+                            };
+                            /** @enum {string} */
+                            state: "AWAITING" | "SUBMITTED" | "REJECTED" | "CONFIRMED" | "CLOSED";
+                            dueAt: string | null;
+                            reference: string | null;
+                            senderAccount: string | null;
+                            proof: {
+                                filename: string;
+                            } | null;
+                            submittedAt: string | null;
+                            rejectedReason: string | null;
+                        } | null;
+                    };
+                };
+            };
+            /** @description Not signed in as a customer */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    Account_manualPayment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                number: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    reference: string;
+                    senderAccount?: string;
+                    /** Format: binary */
+                    proof?: string;
+                };
+                "application/json": {
+                    reference: string;
+                    senderAccount?: string;
+                    /** Format: binary */
+                    proof?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        number: number;
+                        createdAt: string;
+                        /** @enum {string} */
+                        status: "PENDING" | "PAID" | "PROCESSING" | "COMPLETED" | "CANCELLED" | "REFUNDED";
+                        /** @enum {string} */
+                        paymentStatus: "PENDING" | "PAID" | "FAILED" | "REFUNDED" | "NOT_REQUIRED";
+                        /** @enum {string} */
+                        fulfillmentStatus: "PENDING" | "PROCESSING" | "PARTIALLY_DELIVERED" | "DELIVERED" | "FAILED" | "COMPLETED";
+                        currency: string;
+                        total: number;
+                        items: {
+                            id: string;
+                            productId: string;
+                            productName: string;
+                            productSlug: string;
+                            /** @enum {string} */
+                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                            unitPrice: number;
+                            quantity: number;
+                            discount: number;
+                            total: number;
+                        }[];
+                        subtotal: number;
+                        discount: number;
+                        couponCode: string | null;
+                        /** @enum {string} */
+                        provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
+                        /** @enum {string} */
+                        source: "CHECKOUT" | "ADMIN";
+                        paidAt: string | null;
+                        deliveries: {
+                            id: string;
+                            /** @enum {string} */
+                            type: "R2" | "GITHUB";
+                            /** @enum {string} */
+                            status: "PENDING" | "ACTION_REQUIRED" | "READY" | "INVITATION_SENT" | "ACCEPTED" | "EXPIRED" | "FAILED" | "REVOKED";
+                            productId: string;
+                            productName: string;
+                            deliveredAt: string | null;
+                            files: {
+                                id: string;
+                                label: string;
+                                filename: string;
+                                version: string | null;
+                                size: number;
+                                mimeType: string;
+                            }[];
+                            github: {
+                                login: string | null;
+                                repository: string | null;
+                                url: string | null;
+                                canRetry: boolean;
+                            } | null;
+                        }[];
+                        manualPayment: {
+                            method: {
+                                id: string;
+                                /** @enum {string} */
+                                kind: "MOBILE_WALLET" | "BANK_TRANSFER" | "OTHER";
+                                name: string;
+                                description: string | null;
+                                logoUrl: string | null;
+                                qrUrl: string | null;
+                                fields: {
+                                    label: string;
+                                    value: string;
+                                }[];
+                                instructions: string;
+                                referenceLabel: string;
+                                senderLabel: string | null;
+                                /** @enum {string} */
+                                proof: "OFF" | "OPTIONAL" | "REQUIRED";
+                            };
+                            /** @enum {string} */
+                            state: "AWAITING" | "SUBMITTED" | "REJECTED" | "CONFIRMED" | "CLOSED";
+                            dueAt: string | null;
+                            reference: string | null;
+                            senderAccount: string | null;
+                            proof: {
+                                filename: string;
+                            } | null;
+                            submittedAt: string | null;
+                            rejectedReason: string | null;
+                        } | null;
                     };
                 };
             };
@@ -6388,6 +7416,7 @@ export interface operations {
                             connectedAt: string | null;
                             available: boolean;
                         };
+                        adminUrl: string | null;
                     };
                 };
             };
@@ -7578,6 +8607,7 @@ export interface operations {
                         };
                         openTickets: number;
                         deliveriesNeedingAttention: number;
+                        paymentsToVerify: number;
                         recentOrders: {
                             id: string;
                             number: number;
@@ -7591,7 +8621,7 @@ export interface operations {
                             /** @enum {string} */
                             source: "CHECKOUT" | "ADMIN";
                             /** @enum {string} */
-                            provider: "FREE" | "STRIPE" | "MANUAL";
+                            provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
                             currency: string;
                             total: number;
                             customer: {
@@ -7772,7 +8802,7 @@ export interface operations {
                             /** @enum {string} */
                             source: "CHECKOUT" | "ADMIN";
                             /** @enum {string} */
-                            provider: "FREE" | "STRIPE" | "MANUAL";
+                            provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
                             currency: string;
                             total: number;
                             customer: {
@@ -7909,7 +8939,7 @@ export interface operations {
                             /** @enum {string} */
                             source: "CHECKOUT" | "ADMIN";
                             /** @enum {string} */
-                            provider: "FREE" | "STRIPE" | "MANUAL";
+                            provider: "FREE" | "STRIPE" | "PAYPAL" | "MANUAL";
                             currency: string;
                             total: number;
                             customer: {
@@ -8030,14 +9060,6 @@ export interface operations {
                             defaultCurrency: string;
                         };
                         integrations: {
-                            payments: {
-                                stripe: {
-                                    configured: boolean;
-                                    webhookConfigured: boolean;
-                                    /** @enum {string|null} */
-                                    mode: "test" | "live" | null;
-                                };
-                            };
                             email: {
                                 /** @enum {string} */
                                 provider: "resend" | "smtp" | "log";
@@ -8109,14 +9131,6 @@ export interface operations {
                             defaultCurrency: string;
                         };
                         integrations: {
-                            payments: {
-                                stripe: {
-                                    configured: boolean;
-                                    webhookConfigured: boolean;
-                                    /** @enum {string|null} */
-                                    mode: "test" | "live" | null;
-                                };
-                            };
                             email: {
                                 /** @enum {string} */
                                 provider: "resend" | "smtp" | "log";
@@ -8137,6 +9151,217 @@ export interface operations {
                                 token: boolean;
                             };
                         };
+                    };
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient role */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminSettings_paymentSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        stripe: {
+                            enabled: boolean;
+                            active: boolean;
+                            /** @enum {string|null} */
+                            source: "env" | "admin" | null;
+                            /** @enum {string|null} */
+                            mode: "test" | "live" | null;
+                            secretKeyHint: string | null;
+                            webhookSecretSet: boolean;
+                            webhookUrl: string;
+                        };
+                        paypal: {
+                            enabled: boolean;
+                            active: boolean;
+                            /** @enum {string|null} */
+                            source: "env" | "admin" | null;
+                            /** @enum {string} */
+                            mode: "sandbox" | "live";
+                            clientId: string | null;
+                            clientSecretHint: string | null;
+                            webhookId: string | null;
+                            webhookUrl: string;
+                            currencies: string[];
+                        };
+                        manual: {
+                            methods: {
+                                id: string;
+                                /** @enum {string} */
+                                kind: "MOBILE_WALLET" | "BANK_TRANSFER" | "OTHER";
+                                name: string;
+                                enabled: boolean;
+                                description: string | null;
+                                logoId: string | null;
+                                qrId: string | null;
+                                fields: {
+                                    label: string;
+                                    value: string;
+                                }[];
+                                instructions: string;
+                                referenceLabel: string;
+                                senderLabel: string | null;
+                                /** @enum {string} */
+                                proof: "OFF" | "OPTIONAL" | "REQUIRED";
+                                currencies: string[];
+                                logoUrl: string | null;
+                                qrUrl: string | null;
+                            }[];
+                            windowHours: number;
+                        };
+                        encryptionKeySet: boolean;
+                    };
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient role */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminSettings_updatePayments: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    stripe?: {
+                        enabled?: boolean;
+                        secretKey?: string | null;
+                        webhookSecret?: string | null;
+                    };
+                    paypal?: {
+                        enabled?: boolean;
+                        /** @enum {string} */
+                        mode?: "sandbox" | "live";
+                        clientId?: string | null;
+                        clientSecret?: string | null;
+                        webhookId?: string | null;
+                    };
+                    manual?: {
+                        methods: {
+                            id: string;
+                            /** @enum {string} */
+                            kind: "MOBILE_WALLET" | "BANK_TRANSFER" | "OTHER";
+                            name: string;
+                            enabled: boolean;
+                            description: string | null;
+                            logoId: string | null;
+                            qrId: string | null;
+                            fields: {
+                                label: string;
+                                value: string;
+                            }[];
+                            instructions: string;
+                            referenceLabel: string;
+                            senderLabel: string | null;
+                            /** @enum {string} */
+                            proof: "OFF" | "OPTIONAL" | "REQUIRED";
+                            currencies: string[];
+                        }[];
+                        windowHours: number;
+                    };
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        stripe: {
+                            enabled: boolean;
+                            active: boolean;
+                            /** @enum {string|null} */
+                            source: "env" | "admin" | null;
+                            /** @enum {string|null} */
+                            mode: "test" | "live" | null;
+                            secretKeyHint: string | null;
+                            webhookSecretSet: boolean;
+                            webhookUrl: string;
+                        };
+                        paypal: {
+                            enabled: boolean;
+                            active: boolean;
+                            /** @enum {string|null} */
+                            source: "env" | "admin" | null;
+                            /** @enum {string} */
+                            mode: "sandbox" | "live";
+                            clientId: string | null;
+                            clientSecretHint: string | null;
+                            webhookId: string | null;
+                            webhookUrl: string;
+                            currencies: string[];
+                        };
+                        manual: {
+                            methods: {
+                                id: string;
+                                /** @enum {string} */
+                                kind: "MOBILE_WALLET" | "BANK_TRANSFER" | "OTHER";
+                                name: string;
+                                enabled: boolean;
+                                description: string | null;
+                                logoId: string | null;
+                                qrId: string | null;
+                                fields: {
+                                    label: string;
+                                    value: string;
+                                }[];
+                                instructions: string;
+                                referenceLabel: string;
+                                senderLabel: string | null;
+                                /** @enum {string} */
+                                proof: "OFF" | "OPTIONAL" | "REQUIRED";
+                                currencies: string[];
+                                logoUrl: string | null;
+                                qrUrl: string | null;
+                            }[];
+                            windowHours: number;
+                        };
+                        encryptionKeySet: boolean;
                     };
                 };
             };
@@ -8274,6 +9499,277 @@ export interface operations {
             };
         };
     };
+    AdminSettings_storageSettingsView: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        source: "admin" | "env";
+                        /** @enum {string} */
+                        provider: "r2" | "s3" | "local";
+                        bucket: string;
+                        publicUrl: string;
+                        configured: boolean;
+                        maxUploadMb: number;
+                        saved: {
+                            /** @enum {string} */
+                            provider: "r2" | "s3" | "custom";
+                            accountId: string | null;
+                            endpoint: string | null;
+                            region: string | null;
+                            bucket: string;
+                            publicUrl: string;
+                            accessKeyId: string;
+                            secretKeyHint: string;
+                        } | null;
+                        encryptionKeySet: boolean;
+                    };
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient role */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminSettings_saveStorage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    provider: "r2" | "s3" | "custom";
+                    accountId?: string | null;
+                    /** Format: uri */
+                    endpoint?: string | null;
+                    region?: string | null;
+                    bucket: string;
+                    /** Format: uri */
+                    publicUrl: string;
+                    accessKeyId: string;
+                    secretAccessKey?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        source: "admin" | "env";
+                        /** @enum {string} */
+                        provider: "r2" | "s3" | "local";
+                        bucket: string;
+                        publicUrl: string;
+                        configured: boolean;
+                        maxUploadMb: number;
+                        saved: {
+                            /** @enum {string} */
+                            provider: "r2" | "s3" | "custom";
+                            accountId: string | null;
+                            endpoint: string | null;
+                            region: string | null;
+                            bucket: string;
+                            publicUrl: string;
+                            accessKeyId: string;
+                            secretKeyHint: string;
+                        } | null;
+                        encryptionKeySet: boolean;
+                    };
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient role */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminSettings_clearStorage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        source: "admin" | "env";
+                        /** @enum {string} */
+                        provider: "r2" | "s3" | "local";
+                        bucket: string;
+                        publicUrl: string;
+                        configured: boolean;
+                        maxUploadMb: number;
+                        saved: {
+                            /** @enum {string} */
+                            provider: "r2" | "s3" | "custom";
+                            accountId: string | null;
+                            endpoint: string | null;
+                            region: string | null;
+                            bucket: string;
+                            publicUrl: string;
+                            accessKeyId: string;
+                            secretKeyHint: string;
+                        } | null;
+                        encryptionKeySet: boolean;
+                    };
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient role */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminSettings_testStorage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    provider: "r2" | "s3" | "custom";
+                    accountId?: string | null;
+                    /** Format: uri */
+                    endpoint?: string | null;
+                    region?: string | null;
+                    bucket: string;
+                    /** Format: uri */
+                    publicUrl: string;
+                    accessKeyId: string;
+                    secretAccessKey?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        ok: boolean;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient role */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminSettings_checkPaypal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        ok: boolean;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient role */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     AdminSettings_checkGithub: {
         parameters: {
             query?: never;
@@ -8358,6 +9854,278 @@ export interface operations {
                             customerId: string | null;
                         }[];
                         nextCursor: string | null;
+                    };
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient role */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminEmailTemplates_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        key: string;
+                        /** @enum {string} */
+                        group: "account" | "orders" | "delivery" | "support" | "system";
+                        name: string;
+                        trigger: string;
+                        /** @enum {string} */
+                        audience: "customer" | "admin";
+                        subject: string;
+                        sent: number;
+                        failed: number;
+                        /** Format: date-time */
+                        lastSentAt: string | null;
+                    }[];
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient role */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminEmailTemplates_preview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        key: string;
+                        subject: string;
+                        html: string;
+                        text: string;
+                    };
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient role */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminEmailTemplates_test: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: email */
+                    to: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        ok: boolean;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient role */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminEmailSettings_view: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        provider: "resend" | "smtp" | "log";
+                        resend: {
+                            /** @enum {string|null} */
+                            source: "admin" | "env" | null;
+                            hint: string | null;
+                        };
+                        from: string;
+                        /** @enum {string} */
+                        fromSource: "admin" | "env";
+                        envKeySet: boolean;
+                        encryptionKeySet: boolean;
+                    };
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient role */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminEmailSettings_save: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    resendApiKey?: string | null;
+                    from: string | null;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        provider: "resend" | "smtp" | "log";
+                        resend: {
+                            /** @enum {string|null} */
+                            source: "admin" | "env" | null;
+                            hint: string | null;
+                        };
+                        from: string;
+                        /** @enum {string} */
+                        fromSource: "admin" | "env";
+                        envKeySet: boolean;
+                        encryptionKeySet: boolean;
+                    };
+                };
+            };
+            /** @description Not signed in */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient role */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminEmailSettings_check: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        ok: boolean;
+                        message: string;
                     };
                 };
             };

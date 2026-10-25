@@ -13,15 +13,18 @@ import {
 } from './commerce.controllers.js';
 import { AdminCouponsController, CouponsService } from './coupons.js';
 import { FulfillmentService } from './fulfillment.service.js';
+import { ManualPaymentsService } from './manual-payments.service.js';
 import { OrdersService } from './orders.service.js';
+import { PaymentConfigService } from './payment-config.service.js';
 import { PaymentsGateway, StripeGateway } from './payments.gateway.js';
 import { PaymentsService } from './payments.service.js';
+import { HttpPaypalGateway, PaypalGateway } from './paypal.gateway.js';
 import { AdminProductsController, ProductsService, PublicProductsController } from './products.js';
 
 /**
- * Products, checkout, orders, payments and fulfillment (R2 files + GitHub repositories), plus
- * the customer portal that reads them. The payment and GitHub ports are global so admin
- * settings can check them.
+ * Products, checkout, orders, payments (Stripe, PayPal, manual) and fulfillment (R2 files +
+ * GitHub repositories), plus the customer portal that reads them. The payment ports, payment
+ * config and GitHub port are global so admin settings can use them.
  */
 @Global()
 @Module({
@@ -42,11 +45,14 @@ import { AdminProductsController, ProductsService, PublicProductsController } fr
     OrdersService,
     CheckoutService,
     PaymentsService,
+    PaymentConfigService,
+    ManualPaymentsService,
     FulfillmentService,
     AccountService,
     { provide: PaymentsGateway, useClass: StripeGateway },
+    { provide: PaypalGateway, useClass: HttpPaypalGateway },
     { provide: GitHubClient, useClass: HttpGitHubClient },
   ],
-  exports: [PaymentsGateway, GitHubClient, FulfillmentService],
+  exports: [PaymentsGateway, PaypalGateway, PaymentConfigService, GitHubClient, FulfillmentService],
 })
 export class CommerceModule {}

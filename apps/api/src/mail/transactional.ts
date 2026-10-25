@@ -195,6 +195,110 @@ export const templates = {
     },
   })) satisfies Template<never>,
 
+  manualPaymentInstructions: ((
+    d: OrderMailData & {
+      method: string;
+      fields: Array<[string, string]>;
+      steps: string[];
+      referenceLabel: string;
+      due: string | null;
+    },
+  ) => ({
+    subject: `How to pay for order #${d.orderNumber} (${d.method})`,
+    content: {
+      preview: `Pay ${formatMoney(d.total, d.currency)} by ${d.method} to complete order #${d.orderNumber}.`,
+      eyebrow: `Order #${d.orderNumber}`,
+      heading: 'Complete your payment',
+      greeting: hello(d.name),
+      paragraphs: [
+        `Your order is reserved. Pay ${formatMoney(d.total, d.currency)} by ${d.method}${d.due ? ` ${d.due}` : ''}, then send us the ${d.referenceLabel} on your order page. We deliver as soon as we confirm the payment.`,
+        ...d.steps,
+      ],
+      details: [
+        ['Amount to pay', formatMoney(d.total, d.currency)],
+        ...d.fields,
+        ['Reference', `Order #${d.orderNumber}`],
+      ],
+      cta: { label: 'Send payment details', url: d.orderUrl },
+      note: 'Pay the exact amount. Orders that aren’t paid in time are cancelled automatically.',
+    },
+  })) satisfies Template<never>,
+
+  manualPaymentReminder: ((d: {
+    name: string | null;
+    orderNumber: number;
+    amount: string;
+    method: string;
+    due: string;
+    orderUrl: string;
+  }) => ({
+    subject: `Reminder: order #${d.orderNumber} is waiting for payment`,
+    content: {
+      preview: `Pay ${d.amount} ${d.due} to keep order #${d.orderNumber}.`,
+      eyebrow: `Order #${d.orderNumber}`,
+      heading: 'Your order is still waiting',
+      greeting: hello(d.name),
+      paragraphs: [
+        `We haven’t received your ${d.method} payment of ${d.amount} yet. Pay ${d.due} and send us the transaction details, or the order is cancelled.`,
+        'Already paid? Add the transaction details on your order page so we can confirm it.',
+      ],
+      cta: { label: 'Open your order', url: d.orderUrl },
+      tone: 'spark',
+    },
+  })) satisfies Template<never>,
+
+  manualPaymentRejected: ((d: {
+    name: string | null;
+    orderNumber: number;
+    reason: string;
+    due: string | null;
+    orderUrl: string;
+  }) => ({
+    subject: `We couldn’t confirm your payment for order #${d.orderNumber}`,
+    content: {
+      preview: `Please check your payment details for order #${d.orderNumber}.`,
+      eyebrow: `Order #${d.orderNumber}`,
+      heading: 'We couldn’t confirm your payment',
+      greeting: hello(d.name),
+      paragraphs: [
+        `We checked the payment details you sent and couldn’t match them: ${d.reason}`,
+        `Please check them and send them again${d.due ? ` ${d.due}` : ''}. If you think we made a mistake, reply to this email.`,
+      ],
+      cta: { label: 'Send payment details again', url: d.orderUrl },
+      tone: 'create',
+    },
+  })) satisfies Template<never>,
+
+  adminManualPayment: ((d: {
+    orderNumber: number;
+    customer: string;
+    amount: string;
+    method: string;
+    reference: string;
+    senderAccount: string | null;
+    hasProof: boolean;
+    url: string;
+  }) => ({
+    subject: `[Order #${d.orderNumber}] Verify ${d.method} payment: ${d.reference}`,
+    content: {
+      preview: `${d.customer} says they paid ${d.amount} by ${d.method} (ref ${d.reference}).`,
+      eyebrow: `Order #${d.orderNumber}`,
+      heading: 'A payment needs verifying',
+      paragraphs: [
+        `${d.customer} says they paid ${d.amount} by ${d.method}.`,
+        'Check that the money arrived, then confirm the payment to deliver the order, or reject it with a reason.',
+      ],
+      details: [
+        ['Amount', d.amount],
+        ['Method', d.method],
+        ['Reference', d.reference],
+        ...(d.senderAccount ? ([['Sent from', d.senderAccount]] as Array<[string, string]>) : []),
+        ['Screenshot', d.hasProof ? 'Attached in admin' : 'None'],
+      ],
+      cta: { label: 'Verify in admin', url: d.url },
+    },
+  })) satisfies Template<never>,
+
   paymentFailed: ((d: { name: string | null; orderNumber: number; retryUrl: string }) => ({
     subject: `Payment didn’t go through for order #${d.orderNumber}`,
     content: {
@@ -214,6 +318,8 @@ export const templates = {
     name: string | null;
     orderNumber: number;
     refunded: boolean;
+    /** Manual payment that never arrived before the deadline. */
+    unpaid?: boolean;
     supportUrl: string;
   }) => ({
     subject: `Order #${d.orderNumber} ${d.refunded ? 'refunded' : 'cancelled'}`,
@@ -225,7 +331,9 @@ export const templates = {
       paragraphs: [
         d.refunded
           ? 'Your refund is on its way. Depending on your bank it can take 5–10 business days to appear.'
-          : 'Your order was cancelled. If you think this is a mistake, just reply or contact support.',
+          : d.unpaid
+            ? 'We didn’t receive your payment in time, so the order was cancelled. You’re welcome to order again any time. Paid already? Reply to this email with the transaction details.'
+            : 'Your order was cancelled. If you think this is a mistake, just reply or contact support.',
       ],
       cta: { label: 'Contact support', url: d.supportUrl },
       tone: 'create',

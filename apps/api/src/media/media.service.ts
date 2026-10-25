@@ -206,7 +206,7 @@ export class MediaService {
   private present(media: Parameters<typeof toPublicMedia>[0] & object) {
     const isPrivate = media.key.startsWith(PRIVATE_PREFIX);
     return {
-      ...toPublicMedia(media, this.env.MEDIA_PUBLIC_URL)!,
+      ...toPublicMedia(media, this.storage.publicUrl)!,
       key: media.key,
       filename: media.filename,
       size: media.size,

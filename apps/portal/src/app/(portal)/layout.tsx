@@ -41,12 +41,31 @@ function Shell({ children }: { children: React.ReactNode }) {
         )
       }
       footer={
-        <a
-          href={`${SITE_URL}/products`}
-          className="text-ink-soft hover:text-ink flex items-center gap-2 px-3 text-sm font-medium"
-        >
-          Browse the store →
-        </a>
+        <div className="grid gap-2 px-3 text-sm font-medium">
+          {me?.adminUrl && (
+            <>
+              <a
+                href={me.adminUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="text-ink-soft hover:text-ink"
+              >
+                Admin panel ↗
+              </a>
+              <a
+                href={`${me.adminUrl}/settings`}
+                target="_blank"
+                rel="noreferrer"
+                className="text-ink-soft hover:text-ink"
+              >
+                Store settings ↗
+              </a>
+            </>
+          )}
+          <a href={`${SITE_URL}/products`} className="text-ink-soft hover:text-ink">
+            Browse the store →
+          </a>
+        </div>
       }
     >
       {children}

@@ -12,6 +12,7 @@ import type {
   CheckoutQuote,
   CheckoutQuoteInput,
   CheckoutResult,
+  PaymentOption,
 } from '@shimanto/types';
 import { CheckoutInputSchema } from '@shimanto/types';
 import type { z } from 'zod';
@@ -27,9 +28,14 @@ import type { Env } from '../config/env.js';
 import { CustomerAuthService } from '../customers/customer-auth.service.js';
 import type { Customer, Locale } from '../generated/prisma/client.js';
 import { toPublicMedia } from '../media/media.mapper.js';
+import { StorageService } from '../media/storage.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { ManualPaymentsService } from './manual-payments.service.js';
 import { OrdersService } from './orders.service.js';
-import { PaymentsGateway } from './payments.gateway.js';
+import { PAYPAL_CURRENCIES, PaymentConfigService } from './payment-config.service.js';
+import { type CheckoutSessionArgs, PaymentsGateway } from './payments.gateway.js';
+import { PaymentsService } from './payments.service.js';
+import { PaypalGateway } from './paypal.gateway.js';
 import type { CartLine, PricedCart } from './pricing.js';
 import { ENTITLED_ORDER } from './status.js';
 
@@ -42,7 +48,8 @@ export interface CheckoutOutcome {
 }
 
 /**
- * Checkout: quote → customer → order → ($0) confirm + fulfil, or (paid) hosted payment page.
+ * Checkout: quote → customer → order → ($0) confirm + fulfil, (Stripe / PayPal) the provider's
+ * payment page, or (manual) payment instructions, confirmed later by an admin.
  * Prices always come from the database; the browser only sends product slugs and a coupon code.
  */
 @Injectable()
@@ -54,9 +61,14 @@ export class CheckoutService {
     private readonly orders: OrdersService,
     private readonly customers: CustomerAuthService,
     private readonly payments: PaymentsGateway,
+    private readonly paypal: PaypalGateway,
+    private readonly paymentConfig: PaymentConfigService,
+    private readonly paymentEvents: PaymentsService,
+    private readonly manualPayments: ManualPaymentsService,
     private readonly turnstile: TurnstileService,
     private readonly analytics: AnalyticsService,
     private readonly tracking: TrackingSettingsService,
+    private readonly storage: StorageService,
     @Inject(ENV) private readonly env: Env,
   ) {}
 
@@ -78,10 +90,58 @@ export class CheckoutService {
   async quote(input: CheckoutQuoteInput): Promise<CheckoutQuote> {
     const { lines } = await this.cart(input.items);
     const cart = this.orders.price(lines, await this.orders.coupon(input.couponCode));
-    return this.toQuote(cart);
+    return this.toQuote(
+      cart,
+      cart.total > 0 ? await this.paymentOptions(cart.currency) : [],
+      (await this.paymentConfig.manual()).windowHours,
+    );
   }
 
-  private toQuote(cart: PricedCart): CheckoutQuote {
+  /** Ways to pay in this currency, in a fixed order: card, PayPal, then the manual methods. */
+  private async paymentOptions(currency: string): Promise<PaymentOption[]> {
+    const [card, paypal, manual] = await Promise.all([
+      this.payments.enabled(),
+      this.paypal.enabled(),
+      this.paymentConfig.manualMethods(currency),
+    ]);
+    return [
+      ...(card
+        ? [
+            {
+              id: 'stripe',
+              type: 'stripe' as const,
+              name: 'Card',
+              description: 'Visa, Mastercard, Amex and more, on Stripe’s secure page.',
+              manual: null,
+            },
+          ]
+        : []),
+      ...(paypal && PAYPAL_CURRENCIES.includes(currency)
+        ? [
+            {
+              id: 'paypal',
+              type: 'paypal' as const,
+              name: 'PayPal',
+              description: 'Your PayPal balance, bank or card, on PayPal.',
+              manual: null,
+            },
+          ]
+        : []),
+      ...manual.map((method) => ({
+        id: `manual:${method.id}`,
+        type: 'manual' as const,
+        name: method.name,
+        description: method.description,
+        manual: method,
+      })),
+    ];
+  }
+
+  private toQuote(
+    cart: PricedCart,
+    paymentOptions: PaymentOption[],
+    paymentWindowHours: number,
+  ): CheckoutQuote {
     return {
       currency: cart.currency,
       items: cart.items,
@@ -94,6 +154,8 @@ export class CheckoutService {
       couponError: cart.couponError,
       paymentRequired: cart.total > 0,
       requiresGithub: cart.requiresGithub,
+      paymentOptions,
+      paymentWindowHours,
     };
   }
 
@@ -120,8 +182,17 @@ export class CheckoutService {
     const cart = this.orders.price(lines, await this.orders.coupon(input.couponCode));
     if (input.couponCode && cart.couponError) unprocessable(cart.couponError, 'couponCode');
     const paid = cart.total > 0;
-    if (paid && !this.payments.enabled) {
-      unprocessable('Card payments are not set up yet. Please check back soon.');
+    let option: PaymentOption | undefined;
+    if (paid) {
+      const options = await this.paymentOptions(cart.currency);
+      if (!options.length) unprocessable('Payments are not set up yet. Please check back soon.');
+      option = input.paymentOption ? options.find((o) => o.id === input.paymentOption) : options[0];
+      if (!option) {
+        unprocessable(
+          'That way to pay isn’t available. Please choose another one.',
+          'paymentOption',
+        );
+      }
     }
 
     const { customer, created } = await this.resolveCustomer(input, ctx.customerId);
@@ -164,6 +235,8 @@ export class CheckoutService {
       utm: input.utm,
       attribution: orderAttribution(input.attribution, input.utm, customerTouch(customer)),
       tracking,
+      provider:
+        option?.type === 'manual' ? 'MANUAL' : option?.type === 'paypal' ? 'PAYPAL' : 'STRIPE',
     });
     if (created) {
       await this.analytics.trackSignup(customer.id, {
@@ -190,28 +263,57 @@ export class CheckoutService {
       };
     }
 
+    if (option!.type === 'manual') {
+      const { windowHours } = await this.paymentConfig.manual();
+      await this.manualPayments.start(order, option!.manual!, windowHours, input.manualProof);
+      const signedIn = Boolean(ctx.customerId) || Boolean(startSession);
+      // A guest without a password reaches the order (and the payment form) from this link.
+      if (!signedIn) await this.customers.requestLoginLink(customer.email);
+      return {
+        result: {
+          kind: 'manual',
+          orderNumber: order.number,
+          signedIn,
+          portalUrl: `${this.env.PORTAL_URL}/orders/${order.number}`,
+        },
+        startSession,
+      };
+    }
+
     const prefix = input.locale === 'bn' ? '/bn' : '';
+    const provider = option!.type === 'paypal' ? 'PAYPAL' : 'STRIPE';
+    const args: CheckoutSessionArgs = {
+      orderId: order.id,
+      orderNumber: order.number,
+      currency: cart.currency,
+      customerEmail: customer.email,
+      lines: cart.items.map((item) => {
+        const product = products.get(item.slug)!;
+        return {
+          name: item.quantity > 1 ? `${item.name} × ${item.quantity}` : item.name,
+          description: product.summary,
+          imageUrl: toPublicMedia(product.cover, this.storage.publicUrl)?.url,
+          amount: item.total,
+        };
+      }),
+      // Stripe fills in {CHECKOUT_SESSION_ID}; the success page uses it to ask whether the
+      // payment was confirmed (by the webhook) before any browser purchase event fires.
+      // PayPal comes back to the API, which captures the payment and then redirects.
+      successUrl:
+        provider === 'PAYPAL'
+          ? `${this.env.API_PUBLIC_URL}/v1/checkout/paypal/return`
+          : `${this.env.SITE_URL}${prefix}/checkout/success?order=${order.number}&session={CHECKOUT_SESSION_ID}`,
+      cancelUrl:
+        provider === 'PAYPAL'
+          ? `${this.env.API_PUBLIC_URL}/v1/checkout/paypal/cancel`
+          : this.retryUrl(order.locale, cart.items),
+    };
     let session: { id: string; url: string };
     try {
-      session = await this.payments.createCheckout({
-        orderId: order.id,
-        orderNumber: order.number,
-        currency: cart.currency,
-        customerEmail: customer.email,
-        lines: cart.items.map((item) => {
-          const product = products.get(item.slug)!;
-          return {
-            name: item.quantity > 1 ? `${item.name} × ${item.quantity}` : item.name,
-            description: product.summary,
-            imageUrl: toPublicMedia(product.cover, this.env.MEDIA_PUBLIC_URL)?.url,
-            amount: item.total,
-          };
-        }),
-        // Stripe fills in {CHECKOUT_SESSION_ID}; the success page uses it to ask whether the
-        // payment was confirmed (by the webhook) before any browser purchase event fires.
-        successUrl: `${this.env.SITE_URL}${prefix}/checkout/success?order=${order.number}&session={CHECKOUT_SESSION_ID}`,
-        cancelUrl: `${this.env.SITE_URL}${prefix}/checkout?items=${cart.items.map((i) => i.slug).join(',')}&cancelled=1`,
-      });
+      session =
+        provider === 'PAYPAL'
+          ? await this.paypal.createCheckout(args)
+          : await this.payments.createCheckout(args);
     } catch (error) {
       this.logger.error(
         `Could not start payment for order ${order.number}: ${(error as Error).message}`,
@@ -225,7 +327,7 @@ export class CheckoutService {
     await this.prisma.payment.create({
       data: {
         orderId: order.id,
-        provider: 'STRIPE',
+        provider,
         status: 'PENDING',
         amount: cart.total,
         currency: cart.currency,
@@ -236,6 +338,60 @@ export class CheckoutService {
       result: { kind: 'redirect', url: session.url, orderNumber: order.number },
       startSession,
     };
+  }
+
+  private retryUrl(locale: Locale, items: Array<{ slug: string }>) {
+    const prefix = locale === 'bn' ? '/bn' : '';
+    return `${this.env.SITE_URL}${prefix}/checkout?items=${items.map((i) => i.slug).join(',')}&cancelled=1`;
+  }
+
+  /**
+   * The buyer approved on PayPal and came back: capture the money, then send them to the success
+   * page (which waits for the confirmation like after Stripe). Returns where to redirect.
+   */
+  async paypalReturn(paypalOrderId: string): Promise<string> {
+    const payment = await this.prisma.payment.findUnique({
+      where: { providerRef: paypalOrderId },
+      include: { order: { include: { items: true } } },
+    });
+    if (!payment) return `${this.env.SITE_URL}/products`;
+    const { order } = payment;
+    const prefix = order.locale === 'bn' ? '/bn' : '';
+    try {
+      await this.paymentEvents.capturePaypal(paypalOrderId);
+    } catch (error) {
+      // E.g. the card behind PayPal was declined: back to checkout to try again.
+      this.logger.warn(`PayPal capture for order ${order.number}: ${(error as Error).message}`);
+      return this.retryUrl(
+        order.locale,
+        order.items.map((i) => ({ slug: i.productSlug })),
+      );
+    }
+    return `${this.env.SITE_URL}${prefix}/checkout/success?order=${order.number}&session=${encodeURIComponent(paypalOrderId)}`;
+  }
+
+  /** The buyer cancelled on PayPal: the order is cancelled quietly, back to checkout. */
+  async paypalCancel(paypalOrderId: string): Promise<string> {
+    const payment = await this.prisma.payment.findUnique({
+      where: { providerRef: paypalOrderId },
+      include: { order: { include: { items: true } } },
+    });
+    if (!payment) return `${this.env.SITE_URL}/products`;
+    const { order } = payment;
+    const { count } = await this.prisma.order.updateMany({
+      where: { id: order.id, status: 'PENDING', paymentStatus: 'PENDING' },
+      data: { status: 'CANCELLED', paymentStatus: 'FAILED', cancelledAt: new Date() },
+    });
+    if (count) {
+      await this.prisma.payment.updateMany({
+        where: { id: payment.id, status: 'PENDING' },
+        data: { status: 'FAILED', failureReason: 'Checkout cancelled' },
+      });
+    }
+    return this.retryUrl(
+      order.locale,
+      order.items.map((i) => ({ slug: i.productSlug })),
+    );
   }
 
   /**

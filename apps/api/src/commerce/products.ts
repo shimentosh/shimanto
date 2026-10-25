@@ -32,6 +32,7 @@ import type { Env } from '../config/env.js';
 import { Prisma, type ProductStatus } from '../generated/prisma/client.js';
 import { JobsService } from '../jobs/jobs.types.js';
 import { toPublicMedia } from '../media/media.mapper.js';
+import { StorageService } from '../media/storage.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { ENTITLED_ORDER } from './status.js';
 
@@ -58,6 +59,7 @@ export class ProductsService {
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
     private readonly jobs: JobsService,
+    private readonly storage: StorageService,
     @Inject(ENV) private readonly env: Env,
   ) {}
 
@@ -92,7 +94,7 @@ export class ProductsService {
       compareAtPrice: p.compareAtPrice,
       currency: p.currency,
       free: p.price === 0,
-      cover: toPublicMedia(p.cover, this.env.MEDIA_PUBLIC_URL),
+      cover: toPublicMedia(p.cover, this.storage.publicUrl),
       version: p.version,
       features: p.features,
       requirements: p.requirements,
@@ -119,7 +121,7 @@ export class ProductsService {
       price: p.price,
       compareAtPrice: p.compareAtPrice,
       currency: p.currency,
-      cover: toPublicMedia(p.cover, this.env.MEDIA_PUBLIC_URL),
+      cover: toPublicMedia(p.cover, this.storage.publicUrl),
       features: p.features,
       requirements: p.requirements,
       version: p.version,

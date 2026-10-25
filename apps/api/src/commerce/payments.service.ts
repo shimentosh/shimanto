@@ -2,18 +2,21 @@ import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common'
 import { type Actor, AuditService } from '../audit/audit.service.js';
 import { ENV } from '../config/config.module.js';
 import type { Env } from '../config/env.js';
-import { Prisma } from '../generated/prisma/client.js';
+import { Prisma, type PaymentProvider } from '../generated/prisma/client.js';
 import { EmailService } from '../mail/email.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { OrdersService } from './orders.service.js';
 import { type PaymentEvent, PaymentsGateway } from './payments.gateway.js';
+import { type PaypalHeaders, PaypalGateway } from './paypal.gateway.js';
 
 const PROVIDER: Actor = { type: 'system' };
 
+type Provider = Extract<PaymentProvider, 'STRIPE' | 'PAYPAL'>;
+
 /**
- * Payment webhooks. The signature is verified against the raw body, each event id is processed
- * once, and the charged amount must match the order before anything is fulfilled. The browser's
- * word ("payment succeeded") is never trusted.
+ * Payment webhooks (Stripe, PayPal) and PayPal captures. Every event is verified with the
+ * provider, each event id is processed once, and the charged amount must match the order before
+ * anything is fulfilled. The browser's word ("payment succeeded") is never trusted.
  */
 @Injectable()
 export class PaymentsService {
@@ -22,6 +25,7 @@ export class PaymentsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly gateway: PaymentsGateway,
+    private readonly paypal: PaypalGateway,
     private readonly orders: OrdersService,
     private readonly email: EmailService,
     private readonly audit: AuditService,
@@ -32,17 +36,78 @@ export class PaymentsService {
     if (!rawBody || !signature) throw new BadRequestException('Missing webhook signature');
     let event: PaymentEvent;
     try {
-      event = this.gateway.parseWebhook(rawBody, signature);
+      event = await this.gateway.parseWebhook(rawBody, signature);
     } catch (error) {
-      this.logger.warn(`Rejected webhook: ${(error as Error).message}`);
+      this.logger.warn(`Rejected Stripe webhook: ${(error as Error).message}`);
       throw new BadRequestException('Invalid webhook signature');
     }
+    await this.process('STRIPE', event);
+  }
+
+  async handlePaypalWebhook(headers: PaypalHeaders, rawBody: Buffer | undefined): Promise<void> {
+    if (!rawBody || !headers['paypal-transmission-sig']) {
+      throw new BadRequestException('Missing webhook signature');
+    }
+    let event: PaymentEvent;
+    try {
+      event = await this.paypal.parseWebhook(headers, rawBody);
+    } catch (error) {
+      this.logger.warn(`Rejected PayPal webhook: ${(error as Error).message}`);
+      throw new BadRequestException('Invalid webhook signature');
+    }
+    await this.process('PAYPAL', event);
+  }
+
+  /**
+   * PayPal: the buyer approved (they came back to the return URL, or the webhook said so).
+   * Captures the money and settles the order. Returns our order number, when known.
+   */
+  async capturePaypal(
+    paypalOrderId: string,
+  ): Promise<{ orderNumber: number | null; paid: boolean }> {
+    const capture = await this.paypal.capture(paypalOrderId);
+    const payment = await this.prisma.payment.findUnique({
+      where: { providerRef: paypalOrderId },
+      include: { order: { select: { id: true, number: true } } },
+    });
+    const orderId = payment?.order.id ?? capture.orderId;
+    if (!orderId) return { orderNumber: null, paid: false };
+    if (capture.status === 'COMPLETED' && capture.captureId) {
+      await this.process('PAYPAL', {
+        id: `paypal-capture:${capture.captureId}`,
+        type: 'checkout.paid',
+        orderId,
+        sessionId: paypalOrderId,
+        paymentRef: capture.captureId,
+        amount: capture.amount,
+        currency: capture.currency,
+      });
+    } else if (capture.status === 'DECLINED' || capture.status === 'FAILED') {
+      await this.process('PAYPAL', {
+        id: `paypal-capture-failed:${paypalOrderId}`,
+        type: 'checkout.failed',
+        orderId,
+        sessionId: paypalOrderId,
+        reason: 'failed',
+      });
+    }
+    return {
+      orderNumber: payment?.order.number ?? null,
+      paid: capture.status === 'COMPLETED',
+    };
+  }
+
+  private async process(provider: Provider, event: PaymentEvent): Promise<void> {
     if (event.type === 'ignored') return;
+    if (event.type === 'checkout.approved') {
+      await this.capturePaypal(event.sessionId);
+      return;
+    }
 
     // Providers retry deliveries; record each event id once so side effects run once.
     try {
       await this.prisma.processedWebhookEvent.create({
-        data: { id: event.id, type: event.type, provider: 'stripe' },
+        data: { id: event.id, type: event.type, provider: provider.toLowerCase() },
       });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') return;
@@ -52,13 +117,13 @@ export class PaymentsService {
     try {
       switch (event.type) {
         case 'checkout.paid':
-          await this.paid(event);
+          await this.paid(provider, event);
           break;
         case 'checkout.failed':
           await this.failed(event);
           break;
         case 'charge.refunded':
-          await this.refunded(event.paymentRef);
+          await this.refunded(provider, event.paymentRef);
           break;
       }
     } catch (error) {
@@ -70,7 +135,7 @@ export class PaymentsService {
     }
   }
 
-  private async paid(event: Extract<PaymentEvent, { type: 'checkout.paid' }>) {
+  private async paid(provider: Provider, event: Extract<PaymentEvent, { type: 'checkout.paid' }>) {
     const order = await this.prisma.order.findUnique({
       where: { id: event.orderId },
       include: { payments: true },
@@ -84,12 +149,14 @@ export class PaymentsService {
       (await this.prisma.payment.create({
         data: {
           orderId: order.id,
-          provider: 'STRIPE',
+          provider,
           amount: event.amount,
           currency: event.currency,
           providerRef: event.sessionId,
         },
       }));
+    // PayPal reports one capture twice (our capture call, then its webhook).
+    if (payment.status === 'PAID') return;
 
     if (event.amount !== order.total || event.currency !== order.currency) {
       const reason = `Charged ${event.amount} ${event.currency}, expected ${order.total} ${order.currency}`;
@@ -146,11 +213,11 @@ export class PaymentsService {
     }
   }
 
-  private async refunded(paymentRef: string) {
+  private async refunded(provider: Provider, paymentRef: string) {
     const payment = await this.prisma.payment.findFirst({
-      where: { providerPaymentId: paymentRef },
+      where: { provider, providerPaymentId: paymentRef },
     });
     if (!payment) return;
-    await this.orders.markRefunded(payment.orderId, PROVIDER, 'stripe');
+    await this.orders.markRefunded(payment.orderId, PROVIDER, provider.toLowerCase());
   }
 }

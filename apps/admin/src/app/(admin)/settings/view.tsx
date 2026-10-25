@@ -1,15 +1,12 @@
 'use client';
 
-import type { AdminEmailEvent, AdminSettings, IntegrationCheck } from '@shimanto/types';
+import type { AdminSettings, IntegrationCheck } from '@shimanto/types';
 import {
   ActionButton,
-  DataTable,
   DescriptionList,
   ErrorState,
   Field,
-  FilterChips,
   Input,
-  LoadMore,
   LoadingState,
   Notice,
   PageHeader,
@@ -17,17 +14,20 @@ import {
   Select,
   StatusBadge,
   Tabs,
-  formatDateTime,
 } from '@shimanto/ui';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { type FormEvent, type ReactNode, useMemo, useState } from 'react';
+import { type FormEvent, useState } from 'react';
+import { PaymentsSettings } from '@/components/payments/payments-settings';
+import { CheckButton, Env } from '@/components/settings-controls';
+import { EmailDeliverySettings } from '@/components/email-settings';
+import { StorageSettings } from '@/components/storage-settings';
 import { TrackingSettingsPanel } from '@/components/tracking-settings';
 import { api } from '@/lib/api';
 import { API_URL } from '@/lib/config';
 import { useAdmin } from '@/lib/session';
 import { useAction } from '@/lib/use-action';
 import { useApi } from '@/lib/use-api';
-import { usePaged } from '@/lib/use-paged';
 
 type Tab = 'general' | 'payments' | 'emails' | 'storage' | 'github' | 'tracking';
 
@@ -41,49 +41,6 @@ function Configured({
   no?: string;
 }) {
   return <StatusBadge status={ok ? 'ACTIVE' : 'PENDING'} label={ok ? yes : no} />;
-}
-
-function Env({ children }: { children: ReactNode }) {
-  return (
-    <code className="bg-ink/[0.06] rounded px-1.5 py-0.5 font-mono text-[13px]">{children}</code>
-  );
-}
-
-function CheckButton({
-  label,
-  run,
-}: {
-  label: string;
-  run: () => Promise<IntegrationCheck | undefined>;
-}) {
-  const [result, setResult] = useState<IntegrationCheck | null>(null);
-  const [busy, setBusy] = useState(false);
-  return (
-    <div className="flex flex-wrap items-center gap-3">
-      <ActionButton
-        size="sm"
-        variant="secondary"
-        icon="shield"
-        loading={busy}
-        onClick={async () => {
-          setBusy(true);
-          setResult((await run()) ?? null);
-          setBusy(false);
-        }}
-      >
-        {label}
-      </ActionButton>
-      {result && (
-        <span
-          className={result.ok ? 'text-sm font-medium' : 'text-create text-sm font-medium'}
-          role="status"
-        >
-          {result.ok ? '✓ ' : '✕ '}
-          {result.message}
-        </span>
-      )}
-    </div>
-  );
 }
 
 function General({
@@ -177,54 +134,37 @@ function General({
   );
 }
 
-function Emails({ settings }: { settings: AdminSettings }) {
-  const [to, setTo] = useState('');
-  const [status, setStatus] = useState<'' | 'QUEUED' | 'SENT' | 'FAILED'>('');
-  const filter = useMemo(() => ({ status }), [status]);
-  const log = usePaged<AdminEmailEvent>('/v1/admin/emails', filter);
+function Emails() {
+  const { user } = useAdmin();
+  const [to, setTo] = useState(user?.email ?? '');
   const action = useAction();
   const [testResult, setTestResult] = useState<string | null>(null);
-  const e = settings.integrations.email;
 
   return (
     <>
+      <EmailDeliverySettings />
       <Section
-        title="Email provider"
-        description="Transactional email (receipts, delivery, account and support) is sent through one provider."
+        title="Test email"
+        description={
+          <>
+            Sends a short test through the provider in use. Every template and every sent email is
+            on the{' '}
+            <Link href="/emails" className="text-ink font-medium underline underline-offset-4">
+              Emails page
+            </Link>
+            .
+          </>
+        }
       >
-        <DescriptionList
-          items={[
-            {
-              label: 'Provider',
-              value:
-                e.provider === 'resend'
-                  ? 'Resend (HTTP API)'
-                  : e.provider === 'smtp'
-                    ? 'SMTP'
-                    : 'Log only (not delivered)',
-            },
-            { label: 'Status', value: <Configured ok={e.configured} /> },
-            { label: 'From address', value: e.from },
-          ]}
-        />
-        {e.provider !== 'resend' && (
-          <p className="text-ink-soft mt-4 text-sm">
-            For production, set <Env>RESEND_API_KEY</Env> and a <Env>MAIL_FROM</Env> on a domain
-            verified in Resend.
-          </p>
-        )}
         <form
-          className="mt-6 flex max-w-lg flex-wrap items-end gap-3"
+          className="flex max-w-lg flex-wrap items-end gap-3"
           onSubmit={async (event) => {
             event.preventDefault();
             setTestResult(null);
             const res = await action.run(() =>
               api.post<IntegrationCheck>('/v1/admin/settings/test-email', { to }),
             );
-            if (res) {
-              setTestResult(res.message);
-              log.reload();
-            }
+            if (res) setTestResult(res.message);
           }}
           noValidate
         >
@@ -250,77 +190,6 @@ function Emails({ settings }: { settings: AdminSettings }) {
           </Notice>
         )}
       </Section>
-      <Section
-        title="Email log"
-        description="Every email the store sent, with delivery status. Duplicate events never send twice."
-        actions={
-          <FilterChips
-            label="Email status"
-            value={status}
-            onChange={setStatus}
-            options={[
-              { value: '', label: 'All' },
-              { value: 'SENT', label: 'Sent' },
-              { value: 'QUEUED', label: 'Queued' },
-              { value: 'FAILED', label: 'Failed' },
-            ]}
-          />
-        }
-      >
-        {log.loading ? (
-          <LoadingState rows={5} />
-        ) : (
-          <>
-            <DataTable
-              caption="Email log"
-              rows={log.items}
-              rowKey={(m) => m.id}
-              empty={<p className="text-ink-soft text-[15px]">No emails yet.</p>}
-              columns={[
-                {
-                  key: 'subject',
-                  header: 'Email',
-                  cell: (m) => (
-                    <div className="min-w-0">
-                      <p className="break-words">{m.subject}</p>
-                      <p className="text-ink-soft text-sm">{m.type}</p>
-                    </div>
-                  ),
-                },
-                {
-                  key: 'to',
-                  header: 'To',
-                  hideOnMobile: true,
-                  cell: (m) => <span className="break-all">{m.recipient}</span>,
-                },
-                {
-                  key: 'status',
-                  header: 'Status',
-                  cell: (m) => (
-                    <div>
-                      <StatusBadge status={m.status} />
-                      {m.failureReason && (
-                        <p className="text-ink-soft mt-1 max-w-56 text-xs">{m.failureReason}</p>
-                      )}
-                    </div>
-                  ),
-                },
-                {
-                  key: 'date',
-                  header: 'When',
-                  hideOnMobile: true,
-                  cell: (m) => formatDateTime(m.sentAt ?? m.createdAt),
-                },
-              ]}
-            />
-            <LoadMore
-              hasMore={log.hasMore}
-              loading={log.loadingMore}
-              onClick={() => void log.loadMore()}
-            />
-          </>
-        )}
-      </Section>
     </>
   );
 }
@@ -343,7 +212,7 @@ export function SettingsView() {
     <>
       <PageHeader
         title="Settings"
-        description="Store details, and the status of each integration. Secrets live in the server environment and are never shown here."
+        description="Store details and integrations. Payment keys entered here are encrypted and never shown again; other secrets live in the server environment."
       />
       <Tabs
         items={tabs.map((t) => ({
@@ -359,91 +228,11 @@ export function SettingsView() {
       ) : tab === 'general' ? (
         <General settings={data} onSaved={setData} />
       ) : tab === 'payments' ? (
-        <Section
-          title="Stripe"
-          description="Only configured providers are offered at checkout. $0 orders never need a provider."
-        >
-          <DescriptionList
-            items={[
-              {
-                label: 'API key',
-                value: <Configured ok={data.integrations.payments.stripe.configured} />,
-              },
-              {
-                label: 'Mode',
-                value:
-                  data.integrations.payments.stripe.mode === 'live'
-                    ? 'Live'
-                    : data.integrations.payments.stripe.mode === 'test'
-                      ? 'Test'
-                      : '—',
-              },
-              {
-                label: 'Webhook secret',
-                value: <Configured ok={data.integrations.payments.stripe.webhookConfigured} />,
-              },
-              { label: 'Webhook URL', value: <Env>{`${API_URL}/v1/webhooks/stripe`}</Env> },
-            ]}
-          />
-          <p className="text-ink-soft mt-4 text-sm">
-            Set <Env>STRIPE_SECRET_KEY</Env> and <Env>STRIPE_WEBHOOK_SECRET</Env>. Subscribe the
-            webhook to <Env>checkout.session.completed</Env>,{' '}
-            <Env>checkout.session.async_payment_succeeded</Env>,{' '}
-            <Env>checkout.session.async_payment_failed</Env>, <Env>checkout.session.expired</Env>{' '}
-            and <Env>charge.refunded</Env>.
-          </p>
-          <div className="mt-5">
-            <CheckButton
-              label="Test Stripe connection"
-              run={() =>
-                api
-                  .post<IntegrationCheck>('/v1/admin/settings/check/payments')
-                  .catch(() => undefined)
-              }
-            />
-          </div>
-        </Section>
+        <PaymentsSettings />
       ) : tab === 'emails' ? (
-        <Emails settings={data} />
+        <Emails />
       ) : tab === 'storage' ? (
-        <Section
-          title="Private file storage"
-          description="Product files live in a private bucket (Cloudflare R2 in production). Uploads stream through the API; downloads use 5-minute signed links."
-        >
-          <DescriptionList
-            items={[
-              {
-                label: 'Provider',
-                value:
-                  data.integrations.storage.provider === 'r2'
-                    ? 'Cloudflare R2'
-                    : data.integrations.storage.provider === 's3'
-                      ? 'Amazon S3'
-                      : 'Local S3-compatible (dev)',
-              },
-              {
-                label: 'Credentials',
-                value: <Configured ok={data.integrations.storage.configured} />,
-              },
-              { label: 'Bucket', value: data.integrations.storage.bucket },
-              { label: 'Max upload', value: `${data.integrations.storage.maxUploadMb} MB` },
-            ]}
-          />
-          <p className="text-ink-soft mt-4 text-sm">
-            Configure <Env>S3_ENDPOINT</Env>, <Env>S3_BUCKET</Env>, <Env>S3_ACCESS_KEY</Env>,{' '}
-            <Env>S3_SECRET_KEY</Env> (and <Env>FILE_UPLOAD_MAX_MB</Env>).
-          </p>
-          <div className="mt-5">
-            <CheckButton
-              label="Test storage connection"
-              run={() =>
-                api
-                  .post<IntegrationCheck>('/v1/admin/settings/check/storage')
-                  .catch(() => undefined)
-              }
-            />
-          </div>
-        </Section>
+        <StorageSettings />
       ) : tab === 'tracking' ? (
         <TrackingSettingsPanel />
       ) : (

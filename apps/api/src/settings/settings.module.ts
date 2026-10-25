@@ -1,11 +1,12 @@
 import { Global, Module } from '@nestjs/common';
+import { EmailConfigService } from '../mail/email-config.service.js';
 import { EmailService } from '../mail/email.service.js';
 import { SettingsService } from './settings.service.js';
 
 /** Store settings and transactional email: used by almost every feature module. */
 @Global()
 @Module({
-  providers: [SettingsService, EmailService],
-  exports: [SettingsService, EmailService],
+  providers: [SettingsService, EmailService, EmailConfigService],
+  exports: [SettingsService, EmailService, EmailConfigService],
 })
 export class SettingsModule {}

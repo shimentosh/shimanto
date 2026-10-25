@@ -47,6 +47,21 @@ export function DashboardView() {
         <ErrorState message={error ?? undefined} onRetry={reload} />
       ) : (
         <>
+          {data.paymentsToVerify > 0 && (
+            <Notice
+              tone="warning"
+              className="mb-6"
+              title={`${data.paymentsToVerify} ${data.paymentsToVerify === 1 ? 'payment' : 'payments'} to verify`}
+              action={
+                <ActionButton size="sm" href="/orders?toVerify=true">
+                  Verify payments
+                </ActionButton>
+              }
+            >
+              Customers sent manual payment details (bKash, bank transfer…). Check the money
+              arrived, then confirm or reject each one.
+            </Notice>
+          )}
           {data.deliveriesNeedingAttention > 0 && (
             <Notice
               tone="warning"

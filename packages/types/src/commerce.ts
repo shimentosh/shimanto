@@ -214,6 +214,58 @@ export const QuoteLineSchema = z.object({
   deliveryMethods: z.array(DeliveryTypeSchema),
 });
 
+// ───────────── Payment options ─────────────
+
+export const ManualMethodKindSchema = z.enum(['MOBILE_WALLET', 'BANK_TRANSFER', 'OTHER']);
+export type ManualMethodKind = z.infer<typeof ManualMethodKindSchema>;
+
+/** One "label: value" line of a manual method, e.g. "bKash number: 01700000000". */
+export const ManualMethodFieldSchema = z.object({
+  label: z.string().trim().min(1).max(60),
+  value: z.string().trim().min(1).max(200),
+});
+export type ManualMethodField = z.infer<typeof ManualMethodFieldSchema>;
+
+export const ProofRequirementSchema = z.enum(['OFF', 'OPTIONAL', 'REQUIRED']);
+export type ProofRequirement = z.infer<typeof ProofRequirementSchema>;
+
+/** A manual payment method as buyers see it (checkout, order page, email). */
+export const ManualMethodViewSchema = z.object({
+  id: z.string(),
+  kind: ManualMethodKindSchema,
+  name: z.string(),
+  /** One line under the name at checkout, e.g. "Send Money from any bKash account". */
+  description: z.string().nullable(),
+  logoUrl: z.string().nullable(),
+  qrUrl: z.string().nullable(),
+  fields: z.array(ManualMethodFieldSchema),
+  /** Step-by-step instructions, one step per line. */
+  instructions: z.string(),
+  /** What the buyer types as proof, e.g. "Transaction ID (TrxID)". */
+  referenceLabel: z.string(),
+  /** Asked when set, e.g. "bKash number you sent from"; null = not asked. */
+  senderLabel: z.string().nullable(),
+  /** Screenshot / receipt upload. */
+  proof: ProofRequirementSchema,
+});
+export type ManualMethodView = z.infer<typeof ManualMethodViewSchema>;
+
+export const PaymentOptionTypeSchema = z.enum(['stripe', 'paypal', 'manual']);
+export type PaymentOptionType = z.infer<typeof PaymentOptionTypeSchema>;
+
+/**
+ * One way to pay a cart, in the store's order. `id` is what checkout sends back:
+ * "stripe", "paypal" or "manual:<method id>". Only options for the cart's currency are listed.
+ */
+export const PaymentOptionSchema = z.object({
+  id: z.string(),
+  type: PaymentOptionTypeSchema,
+  name: z.string(),
+  description: z.string().nullable(),
+  manual: ManualMethodViewSchema.nullable(),
+});
+export type PaymentOption = z.infer<typeof PaymentOptionSchema>;
+
 export const CheckoutQuoteSchema = z.object({
   currency: z.string(),
   items: z.array(QuoteLineSchema),
@@ -227,6 +279,10 @@ export const CheckoutQuoteSchema = z.object({
   couponError: z.string().nullable(),
   paymentRequired: z.boolean(),
   requiresGithub: z.boolean(),
+  /** Ways to pay this cart (empty when nothing is set up for its currency). */
+  paymentOptions: z.array(PaymentOptionSchema),
+  /** Manual payments: hours the buyer has to pay before the order is cancelled. */
+  paymentWindowHours: z.number().int(),
 });
 export type CheckoutQuote = z.infer<typeof CheckoutQuoteSchema>;
 
@@ -247,13 +303,31 @@ export const CheckoutInputSchema = z.object({
   utm: z.record(z.string().max(40), z.string().max(200)).optional(),
   /** First/last touch, anonymous ids and consent from the browser (optional). */
   attribution: AttributionInputSchema.optional(),
+  /** Paid carts only: a `PaymentOption.id`. Defaults to the first option offered. */
+  paymentOption: z.string().max(80).optional(),
+  /** Manual payments: proof sent right away when the buyer has already paid (optional). */
+  manualProof: z
+    .object({
+      reference: z.string().trim().min(3).max(120),
+      senderAccount: z.string().trim().max(120).optional(),
+    })
+    .optional(),
   website: honeypot,
 });
 export type CheckoutInput = z.input<typeof CheckoutInputSchema>;
 
-/** Paid: send the buyer to the payment page. $0: done, the order is being fulfilled. */
+/**
+ * Card / PayPal: send the buyer to the provider's payment page. Manual: the order waits for the
+ * buyer to pay and an admin to confirm it. $0: done, the order is being fulfilled.
+ */
 export const CheckoutResultSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('redirect'), url: z.url(), orderNumber: z.number().int() }),
+  z.object({
+    kind: z.literal('manual'),
+    orderNumber: z.number().int(),
+    signedIn: z.boolean(),
+    portalUrl: z.string(),
+  }),
   z.object({
     kind: z.literal('complete'),
     orderNumber: z.number().int(),
@@ -312,6 +386,19 @@ export const OrderItemViewSchema = z.object({
   total: z.number().int(),
 });
 
+/**
+ * Where a manual payment stands: AWAITING (not paid yet), SUBMITTED (proof sent, being checked),
+ * REJECTED (proof didn't match; send it again), CONFIRMED (paid), CLOSED (cancelled / refunded).
+ */
+export const ManualPaymentStateSchema = z.enum([
+  'AWAITING',
+  'SUBMITTED',
+  'REJECTED',
+  'CONFIRMED',
+  'CLOSED',
+]);
+export type ManualPaymentState = z.infer<typeof ManualPaymentStateSchema>;
+
 export const OrderSummarySchema = z.object({
   id: z.string(),
   number: z.number().int(),
@@ -334,8 +421,32 @@ export const OrderDetailSchema = OrderSummarySchema.extend({
   paidAt: z.string().nullable(),
   items: z.array(OrderItemViewSchema),
   deliveries: z.array(DeliveryViewSchema),
+  /** Manual-payment checkout orders: how to pay, and where the payment stands. */
+  manualPayment: z
+    .object({
+      method: ManualMethodViewSchema,
+      state: ManualPaymentStateSchema,
+      /** Pay before this or the order is cancelled. */
+      dueAt: z.string().nullable(),
+      reference: z.string().nullable(),
+      senderAccount: z.string().nullable(),
+      proof: z.object({ filename: z.string() }).nullable(),
+      submittedAt: z.string().nullable(),
+      rejectedReason: z.string().nullable(),
+    })
+    .nullable(),
 });
 export type OrderDetail = z.infer<typeof OrderDetailSchema>;
+
+/**
+ * The customer's proof of a manual payment: the bank / wallet transaction id, the account it was
+ * sent from, and (multipart field `proof`) a screenshot or receipt.
+ */
+export const ManualPaymentSubmitSchema = z.object({
+  reference: z.string().trim().min(3).max(120),
+  senderAccount: z.string().trim().max(120).optional(),
+});
+export type ManualPaymentSubmit = z.infer<typeof ManualPaymentSubmitSchema>;
 
 // ───────────── Coupons ─────────────
 

@@ -13,6 +13,11 @@ import {
   PaymentsGateway,
 } from '../src/commerce/payments.gateway.js';
 import {
+  type PaypalCapture,
+  PaypalGateway,
+  type PaypalHeaders,
+} from '../src/commerce/paypal.gateway.js';
+import {
   ANALYTICS_PROVIDERS,
   type AnalyticsProvider,
   buildGa4Payload,
@@ -43,6 +48,25 @@ export class FakeTurnstile {
 /** In-memory object storage. */
 export class FakeStorage {
   readonly objects = new Map<string, { body: Buffer; contentType: string }>();
+  publicUrl = 'http://localhost:9000/shimanto-media';
+  /** Buckets `checkConnection` accepts (anything else "can't be reached"). */
+  readonly reachable = new Set<string>(['r2-bucket']);
+  source: 'admin' | 'env' = 'env';
+  summary() {
+    return {
+      source: this.source,
+      provider: (this.source === 'admin' ? 'r2' : 'local') as 'r2' | 'local',
+      bucket: 'shimanto-media',
+      publicUrl: this.publicUrl,
+      configured: true,
+    };
+  }
+  async checkConnection(connection: { bucket: string }) {
+    return this.reachable.has(connection.bucket)
+      ? { ok: true, message: `Connected to bucket "${connection.bucket}"` }
+      : { ok: false, message: `Could not reach bucket "${connection.bucket}"` };
+  }
+  async reload() {}
   async put(key: string, body: Buffer, contentType: string) {
     this.objects.set(key, { body, contentType });
   }
@@ -62,14 +86,17 @@ export class FakeStorage {
 
 /** Stripe stand-in: records sessions and refunds. Webhooks are JSON PaymentEvents signed "valid". */
 export class FakePayments extends PaymentsGateway {
-  enabled = true;
+  on = true;
+  async enabled() {
+    return this.on;
+  }
   readonly sessions: CheckoutSessionArgs[] = [];
   readonly refunds: string[] = [];
   async createCheckout(args: CheckoutSessionArgs) {
     this.sessions.push(args);
     return { id: `cs_test_${args.orderId}`, url: `https://checkout.stripe.test/${args.orderId}` };
   }
-  parseWebhook(rawBody: Buffer, signature: string): PaymentEvent {
+  async parseWebhook(rawBody: Buffer, signature: string): Promise<PaymentEvent> {
     if (signature !== 'valid') throw new Error('bad signature');
     return JSON.parse(rawBody.toString()) as PaymentEvent;
   }
@@ -82,6 +109,50 @@ export class FakePayments extends PaymentsGateway {
   }
   async check() {
     return { ok: true, message: 'fake payments' };
+  }
+}
+
+/**
+ * PayPal stand-in. Orders are "PAYPAL-<our order id>"; `captures` decides what capturing returns
+ * (default: completed for the order's amount). Webhooks are JSON PaymentEvents signed "valid".
+ */
+export class FakePaypal extends PaypalGateway {
+  /** Off until a test turns it on (like a store without PayPal keys). */
+  on = false;
+  readonly orders = new Map<string, CheckoutSessionArgs>();
+  readonly refunds: string[] = [];
+  /** Next capture result per PayPal order id (else: completed, full amount). */
+  readonly captures = new Map<string, Partial<PaypalCapture>>();
+  async enabled() {
+    return this.on;
+  }
+  async createCheckout(args: CheckoutSessionArgs) {
+    const id = `PAYPAL-${args.orderId}`;
+    this.orders.set(id, args);
+    return { id, url: `https://www.sandbox.paypal.test/checkoutnow?token=${id}` };
+  }
+  async capture(paypalOrderId: string): Promise<PaypalCapture> {
+    const args = this.orders.get(paypalOrderId);
+    const total = args?.lines.reduce((sum, l) => sum + l.amount, 0) ?? 0;
+    return {
+      paypalOrderId,
+      orderId: args?.orderId ?? null,
+      status: 'COMPLETED',
+      captureId: `CAPTURE-${paypalOrderId}`,
+      amount: total,
+      currency: args?.currency ?? 'USD',
+      ...this.captures.get(paypalOrderId),
+    };
+  }
+  async parseWebhook(headers: PaypalHeaders, rawBody: Buffer): Promise<PaymentEvent> {
+    if (headers['paypal-transmission-sig'] !== 'valid') throw new Error('bad signature');
+    return JSON.parse(rawBody.toString()) as PaymentEvent;
+  }
+  async refund(captureId: string) {
+    this.refunds.push(captureId);
+  }
+  async check() {
+    return { ok: true, message: 'fake paypal' };
   }
 }
 
@@ -188,6 +259,7 @@ export interface Harness {
   jobs: InlineJobsService;
   storage: FakeStorage;
   payments: FakePayments;
+  paypal: FakePaypal;
   github: FakeGitHub;
   analytics: FakeAnalytics;
   env: Env;
@@ -235,6 +307,7 @@ export async function createHarness(
   const env = testEnv(envOverrides);
   const storage = new FakeStorage();
   const payments = new FakePayments();
+  const paypal = new FakePaypal();
   const github = new FakeGitHub();
   const analytics = new FakeAnalytics();
   const moduleRef = await Test.createTestingModule({ imports: [AppModule.forRoot(env)] })
@@ -244,6 +317,8 @@ export async function createHarness(
     .useValue(storage)
     .overrideProvider(PaymentsGateway)
     .useValue(payments)
+    .overrideProvider(PaypalGateway)
+    .useValue(paypal)
     .overrideProvider(GitHubClient)
     .useValue(github)
     .overrideProvider(ANALYTICS_PROVIDERS)
@@ -266,6 +341,7 @@ export async function createHarness(
     jobs: app.get(JobsService) as InlineJobsService,
     storage,
     payments,
+    paypal,
     github,
     analytics,
     env,

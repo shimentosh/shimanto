@@ -78,6 +78,20 @@ export function DashboardView() {
         {welcome === 'reset' && (
           <Notice tone="success">Your new password is saved. Other devices were signed out.</Notice>
         )}
+        {me?.adminUrl && (
+          <Notice
+            title="You're seeing the portal as a customer"
+            action={
+              <ActionButton size="sm" variant="secondary" href={me.adminUrl} external>
+                Open admin panel
+              </ActionButton>
+            }
+          >
+            {me.email} is also an admin account. Your admin role grants nothing here: this is
+            exactly what your customers see. Products, orders and settings are managed in the admin
+            panel.
+          </Notice>
+        )}
         {me && !me.emailVerified && <VerifyEmailNotice />}
         {data && data.actionRequired > 0 && (
           <Notice

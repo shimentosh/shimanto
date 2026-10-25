@@ -23,6 +23,15 @@ import { api } from '@/lib/api';
 import { useDebounced, usePaged } from '@/lib/use-paged';
 
 const STATUSES = ['PENDING', 'PAID', 'PROCESSING', 'COMPLETED', 'CANCELLED', 'REFUNDED'] as const;
+/** Not an order status: manual payments with proof sent, waiting for the team. */
+const TO_VERIFY = 'TO_VERIFY';
+
+const PROVIDERS: Record<AdminOrderSummary['provider'], string> = {
+  FREE: 'Free',
+  STRIPE: 'Card',
+  PAYPAL: 'PayPal',
+  MANUAL: 'Manual',
+};
 const FULFILLMENT = [
   'PENDING',
   'PROCESSING',
@@ -40,21 +49,32 @@ export function OrdersView() {
   const fulfillmentStatus = params.get('fulfillmentStatus') ?? '';
   const source = params.get('source') ?? '';
   const customerId = params.get('customerId') ?? '';
+  const toVerify = params.get('toVerify') === 'true';
   const [q, setQ] = useState(params.get('q') ?? '');
   const query = useDebounced(q);
 
   const filter = useMemo(
-    () => ({ status, fulfillmentStatus, source, customerId, q: query }),
-    [status, fulfillmentStatus, source, customerId, query],
+    () => ({
+      status,
+      fulfillmentStatus,
+      source,
+      customerId,
+      q: query,
+      toVerify: toVerify ? 'true' : '',
+    }),
+    [status, fulfillmentStatus, source, customerId, query, toVerify],
   );
   const list = usePaged<AdminOrderSummary>('/v1/admin/orders', filter);
 
-  const setParam = (name: string, value: string) => {
+  const setParams = (values: Record<string, string>) => {
     const next = new URLSearchParams(params);
-    if (value) next.set(name, value);
-    else next.delete(name);
+    for (const [name, value] of Object.entries(values)) {
+      if (value) next.set(name, value);
+      else next.delete(name);
+    }
     router.replace(`${pathname}?${next}`);
   };
+  const setParam = (name: string, value: string) => setParams({ [name]: value });
 
   const [exporting, setExporting] = useState(false);
   /** Fetched through the API client (so an expired session refreshes), then saved as a file. */
@@ -133,10 +153,15 @@ export function OrdersView() {
         </div>
         <FilterChips
           label="Order status"
-          value={status as (typeof STATUSES)[number] | ''}
-          onChange={(v) => setParam('status', v)}
+          value={toVerify ? TO_VERIFY : (status as (typeof STATUSES)[number] | '')}
+          onChange={(v) =>
+            v === TO_VERIFY
+              ? setParams({ toVerify: 'true', status: '' })
+              : setParams({ status: v, toVerify: '' })
+          }
           options={[
             { value: '', label: 'All' },
+            { value: TO_VERIFY, label: 'Payments to verify' },
             ...STATUSES.map((s) => ({ value: s, label: humanize(s) })),
           ]}
         />
@@ -156,8 +181,12 @@ export function OrdersView() {
             empty={
               <EmptyState
                 spot="magnifier"
-                title="No orders found"
-                description="Try a different filter or search."
+                title={toVerify ? 'Nothing to verify' : 'No orders found'}
+                description={
+                  toVerify
+                    ? 'Manual payments show up here once a customer sends their transaction details.'
+                    : 'Try a different filter or search.'
+                }
               />
             }
             columns={[
@@ -184,7 +213,12 @@ export function OrdersView() {
                 key: 'payment',
                 header: 'Payment',
                 hideOnMobile: true,
-                cell: (o) => <StatusBadge status={o.paymentStatus} />,
+                cell: (o) => (
+                  <div className="flex flex-col items-start gap-0.5">
+                    <StatusBadge status={o.paymentStatus} />
+                    <span className="text-ink-soft text-xs">{PROVIDERS[o.provider]}</span>
+                  </div>
+                ),
               },
               {
                 key: 'delivery',

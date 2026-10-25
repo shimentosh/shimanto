@@ -19,7 +19,7 @@ function Shell({ children }: { children: React.ReactNode }) {
           label: 'Orders',
           href: '/orders',
           icon: 'receipt',
-          badge: data?.deliveriesNeedingAttention || null,
+          badge: (data?.deliveriesNeedingAttention ?? 0) + (data?.paymentsToVerify ?? 0) || null,
         },
         { label: 'Products', href: '/products', icon: 'box' },
         { label: 'Customers', href: '/customers', icon: 'users' },
@@ -32,6 +32,7 @@ function Shell({ children }: { children: React.ReactNode }) {
       items: [
         { label: 'Files', href: '/files', icon: 'file' },
         { label: 'Coupons', href: '/coupons', icon: 'tag' },
+        { label: 'Emails', href: '/emails', icon: 'mail' },
         { label: 'Settings', href: '/settings', icon: 'gear' },
         { label: 'Audit log', href: '/audit', icon: 'shield' },
       ],
@@ -52,9 +53,9 @@ function Shell({ children }: { children: React.ReactNode }) {
             target="_blank"
             rel="noreferrer"
             className="text-ink-soft hover:text-ink"
-            title="Sign in there with your admin email and password"
+            title="Opens the portal as the customer account with your admin email"
           >
-            Customer portal ↗
+            View portal as customer ↗
           </a>
           <a
             href={SITE_URL}

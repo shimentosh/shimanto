@@ -8,6 +8,7 @@ import { type Actor, AuditService } from '../audit/audit.service.js';
 import { ENV } from '../config/config.module.js';
 import type { Env } from '../config/env.js';
 import type { Prisma } from '../generated/prisma/client.js';
+import { EmailConfigService } from '../mail/email-config.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 const GENERAL_KEY = 'general';
@@ -20,8 +21,9 @@ export const DEFAULT_GENERAL: GeneralSettings = {
 };
 
 /**
- * Store settings. Only non-secret values are stored and returned; integrations (payments, email,
- * storage, GitHub) are configured with environment variables and reported as configured / not.
+ * Store settings. Only non-secret values are stored and returned; integrations are reported as
+ * configured / not. Payments, storage and email delivery have their own settings services
+ * (PaymentConfigService, StorageSettingsService, EmailConfigService).
  */
 @Injectable()
 export class SettingsService {
@@ -30,6 +32,7 @@ export class SettingsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
+    private readonly emailConfig: EmailConfigService,
     @Inject(ENV) private readonly env: Env,
   ) {}
 
@@ -68,22 +71,12 @@ export class SettingsService {
   integrations(): IntegrationStatus {
     const env = this.env;
     const endpoint = env.S3_ENDPOINT ?? '';
+    const mail = this.emailConfig.current();
     return {
-      payments: {
-        stripe: {
-          configured: Boolean(env.STRIPE_SECRET_KEY),
-          webhookConfigured: Boolean(env.STRIPE_WEBHOOK_SECRET),
-          mode: env.STRIPE_SECRET_KEY
-            ? env.STRIPE_SECRET_KEY.startsWith('sk_live_')
-              ? 'live'
-              : 'test'
-            : null,
-        },
-      },
       email: {
-        provider: env.RESEND_API_KEY ? 'resend' : env.SMTP_URL === 'json' ? 'log' : 'smtp',
-        configured: Boolean(env.RESEND_API_KEY) || env.SMTP_URL !== 'json',
-        from: env.MAIL_FROM,
+        provider: mail.provider,
+        configured: mail.provider !== 'log',
+        from: mail.from,
       },
       storage: {
         configured: Boolean(env.S3_ACCESS_KEY && env.S3_SECRET_KEY),

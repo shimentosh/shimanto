@@ -37,6 +37,11 @@ export const EnvSchema = z
     REFRESH_TOKEN_TTL_DAYS: z.coerce.number().int().positive().default(30),
     /** e.g. `.shimanto.xyz` so admin/portal subdomains share the session. Unset = host-only. */
     COOKIE_DOMAIN: z.string().optional(),
+    /**
+     * Encrypts secrets stored in the database (payment keys entered in Admin → Settings).
+     * Unset = derived from JWT_ACCESS_SECRET (then rotating that secret also drops those keys).
+     */
+    SETTINGS_ENCRYPTION_KEY: z.string().min(32).optional(),
 
     /**
      * Resend API key (re_…). When set, all email goes through Resend's HTTP API. Unset = SMTP_URL
@@ -67,10 +72,19 @@ export const EnvSchema = z
     /** Largest private file an admin can upload (software builds, ZIPs). */
     FILE_UPLOAD_MAX_MB: z.coerce.number().int().positive().max(2048).default(250),
 
-    /** Stripe secret key (sk_test_… / sk_live_…). Unset = paid checkout disabled; free products still work. */
+    /**
+     * Stripe secret key (sk_test_… / sk_live_…). Can also be entered in Admin → Settings →
+     * Payments; this one wins when both are set.
+     */
     STRIPE_SECRET_KEY: z.string().startsWith('sk_').optional(),
     /** Signing secret of the Stripe webhook endpoint (whsec_…). */
     STRIPE_WEBHOOK_SECRET: z.string().startsWith('whsec_').optional(),
+    /** PayPal REST app credentials (or set them in Admin → Settings → Payments). */
+    PAYPAL_CLIENT_ID: z.string().optional(),
+    PAYPAL_CLIENT_SECRET: z.string().optional(),
+    PAYPAL_MODE: z.enum(['sandbox', 'live']).default('sandbox'),
+    /** Id of the PayPal webhook pointing at /v1/webhooks/paypal (verifies its events). */
+    PAYPAL_WEBHOOK_ID: z.string().optional(),
 
     /**
      * Analytics & tracking. Public IDs can also be set (and override these) in Admin → Settings →
@@ -153,6 +167,13 @@ export const EnvSchema = z
         code: 'custom',
         path: ['STRIPE_WEBHOOK_SECRET'],
         message: 'required when Stripe is enabled',
+      });
+    }
+    if (env.PAYPAL_CLIENT_ID && !env.PAYPAL_CLIENT_SECRET) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['PAYPAL_CLIENT_SECRET'],
+        message: 'required when PAYPAL_CLIENT_ID is set',
       });
     }
     if (env.GITHUB_APP_ID && !env.GITHUB_APP_PRIVATE_KEY) {

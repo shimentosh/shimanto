@@ -1,6 +1,15 @@
 import { z } from 'zod';
 import { OrderAttributionSchema } from './analytics.js';
-import { CouponCodeSchema, CurrencySchema, OrderItemViewSchema } from './commerce.js';
+import {
+  CouponCodeSchema,
+  CurrencySchema,
+  ManualMethodFieldSchema,
+  ManualMethodKindSchema,
+  ManualMethodViewSchema,
+  ManualPaymentStateSchema,
+  OrderItemViewSchema,
+  ProofRequirementSchema,
+} from './commerce.js';
 import {
   CustomerStatusSchema,
   DeliveryStatusSchema,
@@ -73,6 +82,20 @@ export const AdminPaymentSchema = z.object({
   providerRef: z.string().nullable(),
   providerPaymentId: z.string().nullable(),
   failureReason: z.string().nullable(),
+  /** Manual payments: the method as it was at order time, and the customer's proof. */
+  manual: z
+    .object({
+      method: ManualMethodViewSchema,
+      state: ManualPaymentStateSchema,
+      reference: z.string().nullable(),
+      senderAccount: z.string().nullable(),
+      proof: z.object({ filename: z.string(), mimeType: z.string() }).nullable(),
+      submittedAt: z.string().nullable(),
+      rejectedReason: z.string().nullable(),
+      /** Other orders whose payment used the same reference (possible reuse). */
+      duplicateOrders: z.array(z.number().int()),
+    })
+    .nullable(),
   paidAt: z.string().nullable(),
   refundedAt: z.string().nullable(),
   createdAt: z.string(),
@@ -123,6 +146,8 @@ export const AdminOrderDetailSchema = AdminOrderSummarySchema.extend({
   note: z.string().nullable(),
   locale: z.string(),
   paidAt: z.string().nullable(),
+  /** Manual payments: unpaid orders are cancelled after this. */
+  paymentDueAt: z.string().nullable(),
   completedAt: z.string().nullable(),
   cancelledAt: z.string().nullable(),
   refundedAt: z.string().nullable(),
@@ -213,6 +238,8 @@ export const AdminDashboardSchema = z.object({
   products: z.object({ published: z.number().int(), total: z.number().int() }),
   openTickets: z.number().int(),
   deliveriesNeedingAttention: z.number().int(),
+  /** Manual payments with proof sent, waiting for an admin to confirm or reject. */
+  paymentsToVerify: z.number().int(),
   recentOrders: z.array(AdminOrderSummarySchema),
   recentCustomers: z.array(AdminCustomerSummarySchema),
   tickets: z.array(
@@ -239,13 +266,6 @@ export type GeneralSettings = z.infer<typeof GeneralSettingsSchema>;
 
 /** Integration status only: which pieces are configured. Never returns secret values. */
 export const IntegrationStatusSchema = z.object({
-  payments: z.object({
-    stripe: z.object({
-      configured: z.boolean(),
-      webhookConfigured: z.boolean(),
-      mode: z.enum(['test', 'live']).nullable(),
-    }),
-  }),
   email: z.object({
     provider: z.enum(['resend', 'smtp', 'log']),
     configured: z.boolean(),
@@ -271,6 +291,181 @@ export const AdminSettingsSchema = z.object({
   integrations: IntegrationStatusSchema,
 });
 export type AdminSettings = z.infer<typeof AdminSettingsSchema>;
+
+// ───────────── Payment settings ─────────────
+
+const MethodIdSchema = z
+  .string()
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Lowercase letters, numbers and dashes')
+  .max(40);
+
+/** A manual payment method (bKash, bank transfer…) as the admin configures it. */
+export const ManualMethodSchema = z.object({
+  id: MethodIdSchema,
+  kind: ManualMethodKindSchema,
+  name: z.string().trim().min(1).max(60),
+  enabled: z.boolean(),
+  description: z.string().trim().max(160).nullable(),
+  /** Public media ids (uploaded in the media library). */
+  logoId: z.string().nullable(),
+  qrId: z.string().nullable(),
+  fields: z.array(ManualMethodFieldSchema).max(10),
+  instructions: z.string().trim().min(1).max(2000),
+  referenceLabel: z.string().trim().min(1).max(60),
+  senderLabel: z.string().trim().max(60).nullable(),
+  proof: ProofRequirementSchema,
+  /** Offered only for these currencies; empty = every currency. */
+  currencies: z.array(CurrencySchema).max(20),
+});
+export type ManualMethod = z.infer<typeof ManualMethodSchema>;
+
+export const ManualPaymentSettingsSchema = z.object({
+  methods: z
+    .array(ManualMethodSchema)
+    .max(12)
+    .refine((m) => new Set(m.map((x) => x.id)).size === m.length, 'Method ids must be unique'),
+  /** Hours a buyer has to pay; unpaid orders are cancelled after it (reminder halfway). */
+  windowHours: z.number().int().min(1).max(720),
+});
+export type ManualPaymentSettings = z.infer<typeof ManualPaymentSettingsSchema>;
+
+/** Where a provider's keys come from: the server environment wins over admin-entered keys. */
+export const SecretSourceSchema = z.enum(['env', 'admin']).nullable();
+
+/** Payment settings for the admin. Secret keys are write-only: only a hint is returned. */
+export const PaymentSettingsViewSchema = z.object({
+  stripe: z.object({
+    enabled: z.boolean(),
+    /** A secret key is set (env or admin) and enabled: offered at checkout. */
+    active: z.boolean(),
+    source: SecretSourceSchema,
+    mode: z.enum(['test', 'live']).nullable(),
+    secretKeyHint: z.string().nullable(),
+    webhookSecretSet: z.boolean(),
+    webhookUrl: z.string(),
+  }),
+  paypal: z.object({
+    enabled: z.boolean(),
+    active: z.boolean(),
+    source: SecretSourceSchema,
+    mode: z.enum(['sandbox', 'live']),
+    clientId: z.string().nullable(),
+    clientSecretHint: z.string().nullable(),
+    webhookId: z.string().nullable(),
+    webhookUrl: z.string(),
+    /** Currencies PayPal accepts; carts in other currencies don't offer PayPal. */
+    currencies: z.array(z.string()),
+  }),
+  manual: ManualPaymentSettingsSchema.extend({
+    methods: z.array(
+      ManualMethodSchema.extend({ logoUrl: z.string().nullable(), qrUrl: z.string().nullable() }),
+    ),
+  }),
+  /** Secrets are encrypted with SETTINGS_ENCRYPTION_KEY (else a key derived from the JWT secret). */
+  encryptionKeySet: z.boolean(),
+});
+export type PaymentSettingsView = z.infer<typeof PaymentSettingsViewSchema>;
+
+/**
+ * Partial update. Secrets: a string sets it, null clears it, omitted keeps it. Keys set in the
+ * server environment can't be changed here.
+ */
+export const PaymentSettingsUpdateSchema = z.object({
+  stripe: z
+    .object({
+      enabled: z.boolean().optional(),
+      secretKey: z
+        .string()
+        .trim()
+        .regex(/^(sk|rk)_(test|live)_\w+$/, 'A Stripe secret key (sk_…)')
+        .nullish(),
+      webhookSecret: z
+        .string()
+        .trim()
+        .regex(/^whsec_\w+$/, 'A webhook signing secret (whsec_…)')
+        .nullish(),
+    })
+    .optional(),
+  paypal: z
+    .object({
+      enabled: z.boolean().optional(),
+      mode: z.enum(['sandbox', 'live']).optional(),
+      clientId: z.string().trim().min(10).max(200).nullish(),
+      clientSecret: z.string().trim().min(10).max(200).nullish(),
+      webhookId: z.string().trim().min(5).max(80).nullish(),
+    })
+    .optional(),
+  manual: ManualPaymentSettingsSchema.optional(),
+});
+export type PaymentSettingsUpdate = z.infer<typeof PaymentSettingsUpdateSchema>;
+
+// ───────────── Storage settings ─────────────
+
+export const StorageProviderSchema = z.enum(['r2', 's3', 'custom']);
+export type StorageProvider = z.infer<typeof StorageProviderSchema>;
+
+/** Storage connection as entered in the admin (Cloudflare R2, AWS S3 or any S3-compatible). */
+export const StorageConfigInputSchema = z
+  .object({
+    provider: StorageProviderSchema,
+    /** R2: the Cloudflare account id (endpoint https://<id>.r2.cloudflarestorage.com). */
+    accountId: z
+      .string()
+      .trim()
+      .regex(/^[a-f0-9]{32}$/, 'The 32-character account id from the R2 dashboard')
+      .nullish(),
+    /** S3 / custom: the endpoint URL (S3 may leave it empty to use AWS). */
+    endpoint: z.url().nullish(),
+    region: z.string().trim().min(1).max(40).nullish(),
+    bucket: z
+      .string()
+      .trim()
+      .regex(/^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/, 'A bucket name (lowercase, 3–63 chars)'),
+    /** Where public cover images are served from: an r2.dev URL or a custom domain. */
+    publicUrl: z.url(),
+    accessKeyId: z.string().trim().min(8).max(200),
+    /** Write-only. Omit to keep the saved one. */
+    secretAccessKey: z.string().trim().min(8).max(200).optional(),
+  })
+  .superRefine((v, ctx) => {
+    if (v.provider === 'r2' && !v.accountId) {
+      ctx.addIssue({ code: 'custom', path: ['accountId'], message: 'Enter the R2 account id' });
+    }
+    if (v.provider === 'custom' && !v.endpoint) {
+      ctx.addIssue({ code: 'custom', path: ['endpoint'], message: 'Enter the S3 endpoint URL' });
+    }
+  });
+export type StorageConfigInput = z.infer<typeof StorageConfigInputSchema>;
+
+/** Which storage is live, and the admin-entered connection (secret as a hint only). */
+export const StorageSettingsViewSchema = z.object({
+  /** `admin`: the connection saved here; `env`: S3_* environment variables. */
+  source: z.enum(['admin', 'env']),
+  provider: z.enum(['r2', 's3', 'local']),
+  bucket: z.string(),
+  publicUrl: z.string(),
+  configured: z.boolean(),
+  maxUploadMb: z.number().int(),
+  saved: z
+    .object({
+      provider: StorageProviderSchema,
+      accountId: z.string().nullable(),
+      endpoint: z.string().nullable(),
+      region: z.string().nullable(),
+      bucket: z.string(),
+      publicUrl: z.string(),
+      accessKeyId: z.string(),
+      secretKeyHint: z.string(),
+    })
+    .nullable(),
+  encryptionKeySet: z.boolean(),
+});
+export type StorageSettingsView = z.infer<typeof StorageSettingsViewSchema>;
+
+export const ManualPaymentRejectSchema = z.object({
+  reason: z.string().trim().min(3).max(300),
+});
+export type ManualPaymentReject = z.infer<typeof ManualPaymentRejectSchema>;
 
 export const TestEmailInputSchema = z.object({ to: z.email().max(254) });
 

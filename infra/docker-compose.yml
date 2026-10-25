@@ -43,8 +43,8 @@ services:
       RUSTFS_SECRET_KEY: shimanto-dev-secret
       RUSTFS_CONSOLE_ENABLE: 'true'
     ports:
-      - '9000:9000' # S3 API
-      - '9001:9001' # web console
+      - '${STORAGE_HOST_PORT:-9000}:9000' # S3 API
+      - '${STORAGE_CONSOLE_HOST_PORT:-9001}:9001' # web console
     volumes: ['storage-data:/data']
 
   # Local SMTP catcher: every email the API sends in dev lands in the inbox at http://localhost:8025.

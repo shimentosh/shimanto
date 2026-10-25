@@ -1,18 +1,66 @@
-import type {
-  AdminCustomerSummary,
-  AdminDelivery,
-  AdminEmailEvent,
-  AdminOrderDetail,
-  AdminOrderSummary,
-  DeliveryView,
-  OrderDetail,
-  OrderSummary,
+import {
+  type AdminCustomerSummary,
+  type AdminDelivery,
+  type AdminEmailEvent,
+  type AdminOrderDetail,
+  type AdminOrderSummary,
+  type DeliveryView,
+  type ManualMethodView,
+  ManualMethodViewSchema,
+  type ManualPaymentState,
+  type OrderDetail,
+  type OrderSummary,
 } from '@shimanto/types';
-import type { Prisma } from '../generated/prisma/client.js';
+import type { Order, Payment, Prisma } from '../generated/prisma/client.js';
 import { toOrderAttribution } from '../analytics/attribution.js';
 import { ENTITLED_ORDER } from './status.js';
 
 const iso = (d: Date | null | undefined) => d?.toISOString() ?? null;
+
+// ───────────── Manual payments ─────────────
+
+type ManualPaymentRow = Pick<
+  Payment,
+  | 'status'
+  | 'method'
+  | 'methodDetails'
+  | 'reference'
+  | 'senderAccount'
+  | 'submittedAt'
+  | 'rejectedReason'
+> & { proof?: { filename: string; mimeType: string } | null };
+
+/** The method as it was when the order was placed (a fallback keeps old rows readable). */
+export function methodSnapshot(
+  payment: Pick<Payment, 'method' | 'methodDetails'>,
+): ManualMethodView {
+  const parsed = ManualMethodViewSchema.safeParse(payment.methodDetails);
+  if (parsed.success) return parsed.data;
+  return {
+    id: payment.method ?? 'manual',
+    kind: 'OTHER',
+    name: 'Manual payment',
+    description: null,
+    logoUrl: null,
+    qrUrl: null,
+    fields: [],
+    instructions: '',
+    referenceLabel: 'Transaction ID',
+    senderLabel: null,
+    proof: 'OFF',
+  };
+}
+
+export function manualState(
+  order: Pick<Order, 'status' | 'paymentStatus'>,
+  payment: ManualPaymentRow,
+): ManualPaymentState {
+  if (payment.status === 'PAID' || order.paymentStatus === 'PAID') return 'CONFIRMED';
+  if (order.status === 'CANCELLED' || order.status === 'REFUNDED') return 'CLOSED';
+  if (payment.submittedAt) return 'SUBMITTED';
+  if (payment.rejectedReason) return 'REJECTED';
+  return 'AWAITING';
+}
 
 // ───────────── Customer-facing ─────────────
 
@@ -98,6 +146,12 @@ export function toOrderSummary(o: OrderSummaryRow): OrderSummary {
 export const orderDetailInclude = {
   items: { orderBy: { createdAt: 'asc' } },
   deliveries: { include: deliveryInclude, orderBy: { createdAt: 'asc' } },
+  payments: {
+    where: { provider: 'MANUAL' },
+    include: { proof: { select: { filename: true, mimeType: true } } },
+    orderBy: { createdAt: 'desc' },
+    take: 1,
+  },
 } satisfies Prisma.OrderInclude;
 
 type OrderDetailRow = Prisma.OrderGetPayload<{ include: typeof orderDetailInclude }>;
@@ -131,6 +185,20 @@ export function toOrderDetail(o: OrderDetailRow, githubConnected: boolean): Orde
       total: i.total,
     })),
     deliveries: o.deliveries.map((d) => toDeliveryView(d, { orderActive, githubConnected })),
+    manualPayment: (() => {
+      const payment = o.payments[0];
+      if (o.provider !== 'MANUAL' || o.source !== 'CHECKOUT' || !payment) return null;
+      return {
+        method: methodSnapshot(payment),
+        state: manualState(o, payment),
+        dueAt: iso(o.paymentDueAt),
+        reference: payment.reference,
+        senderAccount: payment.senderAccount,
+        proof: payment.proof ? { filename: payment.proof.filename } : null,
+        submittedAt: iso(payment.submittedAt),
+        rejectedReason: payment.rejectedReason,
+      };
+    })(),
   };
 }
 
@@ -202,7 +270,10 @@ export function toAdminOrderSummary(o: AdminOrderSummaryRow): AdminOrderSummary 
 export const adminOrderDetailInclude = {
   customer: { select: { id: true, email: true, name: true, githubLogin: true } },
   items: { orderBy: { createdAt: 'asc' } },
-  payments: { orderBy: { createdAt: 'asc' } },
+  payments: {
+    include: { proof: { select: { filename: true, mimeType: true } } },
+    orderBy: { createdAt: 'asc' },
+  },
   deliveries: { include: { product: { select: { name: true } } }, orderBy: { createdAt: 'asc' } },
   emails: { orderBy: { createdAt: 'desc' } },
   createdBy: { select: { id: true, email: true } },
@@ -210,7 +281,11 @@ export const adminOrderDetailInclude = {
 
 type AdminOrderDetailRow = Prisma.OrderGetPayload<{ include: typeof adminOrderDetailInclude }>;
 
-export function toAdminOrderDetail(o: AdminOrderDetailRow): AdminOrderDetail {
+/** `duplicates`: payment reference → other orders that used it. */
+export function toAdminOrderDetail(
+  o: AdminOrderDetailRow,
+  duplicates: Map<string, number[]> = new Map(),
+): AdminOrderDetail {
   return {
     id: o.id,
     number: o.number,
@@ -228,6 +303,7 @@ export function toAdminOrderDetail(o: AdminOrderDetailRow): AdminOrderDetail {
     note: o.note,
     locale: o.locale,
     paidAt: iso(o.paidAt),
+    paymentDueAt: iso(o.paymentDueAt),
     completedAt: iso(o.completedAt),
     cancelledAt: iso(o.cancelledAt),
     refundedAt: iso(o.refundedAt),
@@ -255,6 +331,19 @@ export function toAdminOrderDetail(o: AdminOrderDetailRow): AdminOrderDetail {
       providerRef: p.providerRef,
       providerPaymentId: p.providerPaymentId,
       failureReason: p.failureReason,
+      manual:
+        p.provider === 'MANUAL' && p.method
+          ? {
+              method: methodSnapshot(p),
+              state: manualState(o, p),
+              reference: p.reference,
+              senderAccount: p.senderAccount,
+              proof: p.proof,
+              submittedAt: iso(p.submittedAt),
+              rejectedReason: p.rejectedReason,
+              duplicateOrders: (p.reference && duplicates.get(p.reference)) || [],
+            }
+          : null,
       paidAt: iso(p.paidAt),
       refundedAt: iso(p.refundedAt),
       createdAt: p.createdAt.toISOString(),

@@ -390,7 +390,11 @@ export class CustomerAuthService {
     return this.toMe(c);
   }
 
-  toMe(c: Customer): CustomerMe {
+  async toMe(c: Customer): Promise<CustomerMe> {
+    const admin = await this.prisma.user.findUnique({
+      where: { email: c.email },
+      select: { disabledAt: true },
+    });
     return {
       id: c.id,
       email: c.email,
@@ -406,6 +410,7 @@ export class CustomerAuthService {
         connectedAt: c.githubConnectedAt?.toISOString() ?? null,
         available: Boolean(this.env.GITHUB_CLIENT_ID && this.env.GITHUB_CLIENT_SECRET),
       },
+      adminUrl: admin && !admin.disabledAt ? this.env.ADMIN_URL : null,
     };
   }
 }

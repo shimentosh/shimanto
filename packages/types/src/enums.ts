@@ -83,7 +83,7 @@ export const FulfillmentStatusSchema = z.enum([
 ]);
 export type FulfillmentStatus = z.infer<typeof FulfillmentStatusSchema>;
 
-export const PaymentProviderSchema = z.enum(['FREE', 'STRIPE', 'MANUAL']);
+export const PaymentProviderSchema = z.enum(['FREE', 'STRIPE', 'PAYPAL', 'MANUAL']);
 export type PaymentProvider = z.infer<typeof PaymentProviderSchema>;
 
 export const OrderSourceSchema = z.enum(['CHECKOUT', 'ADMIN']);

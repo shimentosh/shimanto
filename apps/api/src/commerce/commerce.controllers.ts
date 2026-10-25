@@ -27,8 +27,10 @@ import {
   FulfillmentStatusSchema,
   OkSchema,
   OrderSourceSchema,
+  ManualPaymentRejectSchema,
   OrderStatusSchema,
   PaymentStatusSchema,
+  SignedUrlSchema,
   pageSchema,
 } from '@shimanto/types';
 import type { Request, Response } from 'express';
@@ -40,9 +42,13 @@ import { ApiZodResponse, ZodBody, ZodQuery } from '../common/zod.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CheckoutService } from './checkout.service.js';
 import { FulfillmentService } from './fulfillment.service.js';
+import { ManualPaymentsService } from './manual-payments.service.js';
 import { OrdersService } from './orders.service.js';
 import { PaymentsService } from './payments.service.js';
 import { toAdminDelivery } from './views.js';
+
+/** PayPal appends `?token=<PayPal order id>&PayerID=…` to the return / cancel URLs. */
+const PaypalReturnQuery = z.object({ token: z.string().min(5).max(64) }).passthrough();
 
 @ApiTags('checkout')
 @Controller()
@@ -110,6 +116,41 @@ export class CheckoutController {
     await this.payments.handleWebhook(req.rawBody, signature);
     return { received: true };
   }
+
+  /** PayPal → us. Verified with PayPal (verify-webhook-signature); idempotent per event id. */
+  @Post('webhooks/paypal')
+  @HttpCode(200)
+  @SkipThrottle()
+  @ApiExcludeEndpoint()
+  async paypalWebhook(
+    @Req() req: RawBodyRequest<Request>,
+    @Headers() headers: Record<string, string | undefined>,
+  ) {
+    await this.payments.handlePaypalWebhook(headers, req.rawBody);
+    return { received: true };
+  }
+
+  /** PayPal's return URL (`?token=<PayPal order id>`): captures, then on to the success page. */
+  @Get('checkout/paypal/return')
+  @Throttle({ default: { limit: 30, ttl: 60_000 } })
+  @ApiExcludeEndpoint()
+  async paypalReturn(
+    @ZodQuery(PaypalReturnQuery) q: z.output<typeof PaypalReturnQuery>,
+    @Res() res: Response,
+  ) {
+    res.redirect(303, await this.checkoutService.paypalReturn(q.token));
+  }
+
+  /** PayPal's cancel URL: the order is cancelled quietly and the buyer goes back to checkout. */
+  @Get('checkout/paypal/cancel')
+  @Throttle({ default: { limit: 30, ttl: 60_000 } })
+  @ApiExcludeEndpoint()
+  async paypalCancel(
+    @ZodQuery(PaypalReturnQuery) q: z.output<typeof PaypalReturnQuery>,
+    @Res() res: Response,
+  ) {
+    res.redirect(303, await this.checkoutService.paypalCancel(q.token));
+  }
 }
 
 const OrderFilter = z.object({
@@ -121,6 +162,11 @@ const OrderFilter = z.object({
   productId: z.string().max(40).optional(),
   /** Customer email or name, or an order number. */
   q: z.string().max(120).optional(),
+  /** `true`: manual payments with proof sent, waiting to be verified. */
+  toVerify: z
+    .enum(['true', 'false'])
+    .transform((v) => v === 'true')
+    .optional(),
 });
 const OrderListQuery = OrderFilter.extend({
   limit: z.coerce.number().int().min(1).max(200).default(50),
@@ -133,7 +179,10 @@ const actor = (user: AuthUser) => ({ type: 'user' as const, id: user.id });
 @AdminAuth()
 @Controller('admin/orders')
 export class AdminOrdersController {
-  constructor(private readonly orders: OrdersService) {}
+  constructor(
+    private readonly orders: OrdersService,
+    private readonly manual: ManualPaymentsService,
+  ) {}
 
   @Get()
   @ApiZodResponse(pageSchema(AdminOrderSummarySchema))
@@ -180,6 +229,36 @@ export class AdminOrdersController {
   @ApiZodResponse(AdminOrderDetailSchema)
   cancel(@Param('id') id: string, @CurrentUser() user: AuthUser) {
     return this.orders.cancel(id, actor(user));
+  }
+
+  /** A manual payment (bKash, bank transfer…) arrived: confirms the order and delivers it. */
+  @Post(':id/payment/confirm')
+  @HttpCode(200)
+  @ApiZodResponse(AdminOrderDetailSchema)
+  async confirmPayment(@Param('id') id: string, @CurrentUser() user: AuthUser) {
+    await this.manual.confirm(id, actor(user));
+    return this.orders.detail(id);
+  }
+
+  /** The proof didn't match: the buyer is emailed the reason and can send it again. */
+  @Post(':id/payment/reject')
+  @HttpCode(200)
+  @ApiZodResponse(AdminOrderDetailSchema)
+  async rejectPayment(
+    @Param('id') id: string,
+    @ZodBody(ManualPaymentRejectSchema) body: z.output<typeof ManualPaymentRejectSchema>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    await this.manual.reject(id, body.reason, actor(user));
+    return this.orders.detail(id);
+  }
+
+  /** A 5-minute link to the buyer's payment screenshot / receipt. */
+  @Post(':id/payments/:paymentId/proof')
+  @HttpCode(200)
+  @ApiZodResponse(SignedUrlSchema)
+  proof(@Param('id') id: string, @Param('paymentId') paymentId: string) {
+    return this.manual.proofUrl(id, paymentId);
   }
 
   @Post(':id/refund')
