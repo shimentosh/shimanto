@@ -40,7 +40,7 @@ export const home = {
     body: 'I focus on building products, exploring ideas, and shaping the direction of our ventures. My brother leads operations, bringing structure, coordination, and execution to the businesses we build together.',
     profiles: [
       {
-        name: 'Shimanto Neer',
+        name: 'Shimanto',
         role: 'Founder & Builder',
         world: 'build',
         icon: 'bulb',
