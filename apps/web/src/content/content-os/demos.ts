@@ -1,3 +1,4 @@
+import bnData from './demos-bn.json';
 import data from './demos.json';
 
 /**
@@ -99,6 +100,18 @@ export const carouselDemos: CarouselDemo[] = (data.carousels as CarouselDemo[]).
 }));
 
 export const graphicDemos: GraphicDemo[] = (data.graphics as GraphicDemo[]).map((g) => ({
+  ...g,
+  image: url(g.image),
+  full: url(g.full),
+}));
+
+/** Shimanto's Bangla carousels and posts, for the Bangla page (`media/content-os/bn/`). */
+export const bnCarouselDemos: CarouselDemo[] = (bnData.carousels as CarouselDemo[]).map((c) => ({
+  ...c,
+  slides: c.slides.map((s) => ({ src: url(s.src), full: url(s.full) })),
+}));
+
+export const bnGraphicDemos: GraphicDemo[] = (bnData.graphics as GraphicDemo[]).map((g) => ({
   ...g,
   image: url(g.image),
   full: url(g.full),

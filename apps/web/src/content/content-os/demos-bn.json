@@ -1,0 +1,442 @@
+{
+  "carousels": [
+    {
+      "id": "2026-09-24-5-tasks-not-to-give-ai",
+      "hook": "এই ৫টা কাজ AI-কে দিলে client হারাবেন",
+      "caption": "এই ৫টা কাজ AI-কে দিলে client হারাবেন\n\nAI দিয়ে কাজ দ্রুত হয় এটা ঠিক, কিন্তু কিছু কাজে AI ভুল করলে client আর ফিরে আসে না:\n\n১. রেগে থাকা client-কে উত্তর দেওয়া\n২. দাম ঠিক করা আর দরদাম\n৩. Deadline-এর কথা দেওয়া\n৪. কাজ পাঠানোর আগে শেষবার দেখা\n৫. Client-এর সাথে সম্পর্ক রাখা\n\nনিয়ম একটাই: AI draft লিখুক, শেষ সিদ্ধান্ত নিন আপনি\n\nআপনি কোন কাজটা কখনো AI-কে দেন না? Comment-এ লিখুন, আর post-টা save করে রাখুন",
+      "hashtags": [
+        "#aiautomation",
+        "#agencyowner",
+        "#smallbusiness",
+        "#businesssystems",
+        "#founder"
+      ],
+      "slides": [
+        {
+          "src": "bn/carousels/2026-09-24-5-tasks-not-to-give-ai/01.jpg",
+          "full": "full/bn/carousels/2026-09-24-5-tasks-not-to-give-ai/01.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-24-5-tasks-not-to-give-ai/02.jpg",
+          "full": "full/bn/carousels/2026-09-24-5-tasks-not-to-give-ai/02.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-24-5-tasks-not-to-give-ai/03.jpg",
+          "full": "full/bn/carousels/2026-09-24-5-tasks-not-to-give-ai/03.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-24-5-tasks-not-to-give-ai/04.jpg",
+          "full": "full/bn/carousels/2026-09-24-5-tasks-not-to-give-ai/04.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-24-5-tasks-not-to-give-ai/05.jpg",
+          "full": "full/bn/carousels/2026-09-24-5-tasks-not-to-give-ai/05.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-24-5-tasks-not-to-give-ai/06.jpg",
+          "full": "full/bn/carousels/2026-09-24-5-tasks-not-to-give-ai/06.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-24-5-tasks-not-to-give-ai/07.jpg",
+          "full": "full/bn/carousels/2026-09-24-5-tasks-not-to-give-ai/07.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-24-5-tasks-not-to-give-ai/08.jpg",
+          "full": "full/bn/carousels/2026-09-24-5-tasks-not-to-give-ai/08.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-24-5-tasks-not-to-give-ai/09.jpg",
+          "full": "full/bn/carousels/2026-09-24-5-tasks-not-to-give-ai/09.jpg"
+        }
+      ]
+    },
+    {
+      "id": "2026-09-24-content-os-build-log",
+      "hook": "আমি “আজ কী পোস্ট করব?” ভাবা বন্ধ করেছি",
+      "caption": "আমি “আজ কী পোস্ট করব?” ভাবা বন্ধ করেছি\n\nসমস্যাটা ছিল সহজ: generic AI tool আমার brand চেনে না, আগে কী পোস্ট করেছি মনে রাখে না\n\nতাই নিজের জন্য একটা Content OS বানালাম: structured context, history দেখে strategy, fixed design engine আর automatic QA\n\nএখন প্রশ্নটা system-এর, আমার কাজ build করা আর সেটা share করা\n\nপরের build log-এর জন্য save করে রাখুন",
+      "hashtags": ["#buildinpublic", "#founder", "#aiautomation", "#contentsystem"],
+      "slides": [
+        {
+          "src": "bn/carousels/2026-09-24-content-os-build-log/01.jpg",
+          "full": "full/bn/carousels/2026-09-24-content-os-build-log/01.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-24-content-os-build-log/02.jpg",
+          "full": "full/bn/carousels/2026-09-24-content-os-build-log/02.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-24-content-os-build-log/03.jpg",
+          "full": "full/bn/carousels/2026-09-24-content-os-build-log/03.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-24-content-os-build-log/04.jpg",
+          "full": "full/bn/carousels/2026-09-24-content-os-build-log/04.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-24-content-os-build-log/05.jpg",
+          "full": "full/bn/carousels/2026-09-24-content-os-build-log/05.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-24-content-os-build-log/06.jpg",
+          "full": "full/bn/carousels/2026-09-24-content-os-build-log/06.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-24-content-os-build-log/07.jpg",
+          "full": "full/bn/carousels/2026-09-24-content-os-build-log/07.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-24-content-os-build-log/08.jpg",
+          "full": "full/bn/carousels/2026-09-24-content-os-build-log/08.jpg"
+        }
+      ]
+    },
+    {
+      "id": "2026-09-27-first-30-days-after-a-saas-launch",
+      "hook": "নতুন SaaS launch করলে প্রথম ৩০ দিন যা করতাম",
+      "caption": "নতুন SaaS launch করলে প্রথম ৩০ দিন যা করতাম\n\nLaunch-এর দিন কাজ শেষ হয় না, আসল কাজ তখন শুরু হয়, আর সেটা বেশিরভাগই মানুষের সাথে কথা বলা\n\nদিন ১-৭: প্রথম ১০ জন user নিজে খুঁজে আনতাম\nদিন ৮-১৪: user কোথায় আটকায় সেটা ঠিক করতাম\nদিন ১৫-২১: প্রথম টাকাটা নিতাম\nদিন ২২-৩০: যা কাজ করেছে সেটা গল্প বানাতাম\n\nপ্রতি সপ্তাহে AI কাজটা দ্রুত করে দেয়: call-এর note, বারবার আসা প্রশ্ন, না বলার কারণ, একটা গল্প থেকে কয়েকটা post\n\nআপনি এখন কোন সপ্তাহে আছেন? Comment-এ লিখুন, আর plan-টা save করে রাখুন 🚀",
+      "hashtags": ["#saas", "#startup", "#founder", "#buildinpublic", "#ai", "#bangladesh"],
+      "slides": [
+        {
+          "src": "bn/carousels/2026-09-27-first-30-days-after-a-saas-launch/01.jpg",
+          "full": "full/bn/carousels/2026-09-27-first-30-days-after-a-saas-launch/01.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-first-30-days-after-a-saas-launch/02.jpg",
+          "full": "full/bn/carousels/2026-09-27-first-30-days-after-a-saas-launch/02.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-first-30-days-after-a-saas-launch/03.jpg",
+          "full": "full/bn/carousels/2026-09-27-first-30-days-after-a-saas-launch/03.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-first-30-days-after-a-saas-launch/04.jpg",
+          "full": "full/bn/carousels/2026-09-27-first-30-days-after-a-saas-launch/04.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-first-30-days-after-a-saas-launch/05.jpg",
+          "full": "full/bn/carousels/2026-09-27-first-30-days-after-a-saas-launch/05.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-first-30-days-after-a-saas-launch/06.jpg",
+          "full": "full/bn/carousels/2026-09-27-first-30-days-after-a-saas-launch/06.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-first-30-days-after-a-saas-launch/07.jpg",
+          "full": "full/bn/carousels/2026-09-27-first-30-days-after-a-saas-launch/07.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-first-30-days-after-a-saas-launch/08.jpg",
+          "full": "full/bn/carousels/2026-09-27-first-30-days-after-a-saas-launch/08.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-first-30-days-after-a-saas-launch/09.jpg",
+          "full": "full/bn/carousels/2026-09-27-first-30-days-after-a-saas-launch/09.jpg"
+        }
+      ]
+    },
+    {
+      "id": "2026-09-27-small-team-big-output-with-ai",
+      "hook": "লোক না বাড়িয়ে বেশি কাজ বের করবেন কীভাবে?",
+      "caption": "লোক না বাড়িয়ে বেশি কাজ বের করবেন কীভাবে?\n\nছোট team-এর আসল সমস্যা লোক কম থাকা না, সমস্যা হলো একই কাজ প্রতি সপ্তাহে হাতে করা\n\n১. বারবার হওয়া কাজটা খুঁজুন\n২. ধাপগুলো এক পাতায় লিখে ফেলুন\n৩. লেখা আর খোঁজার ধাপ AI-কে দিন\n৪. শেষ দেখা নিজের হাতে রাখুন\n\nআর AI-কে একবার আপনার business চেনান: দাম, নিয়ম আর লেখার ধরন এক file-এ রাখুন, তাহলে team-এর সবাই একই মানের কাজ পাবে\n\nআপনার team-এর কোন কাজটা বারবার ফিরে আসে? Comment-এ লিখুন, আর post-টা save করে team-কে পাঠান 📌",
+      "hashtags": ["#ai", "#automation", "#smallbusiness", "#startup", "#founder", "#bangladesh"],
+      "slides": [
+        {
+          "src": "bn/carousels/2026-09-27-small-team-big-output-with-ai/01.jpg",
+          "full": "full/bn/carousels/2026-09-27-small-team-big-output-with-ai/01.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-small-team-big-output-with-ai/02.jpg",
+          "full": "full/bn/carousels/2026-09-27-small-team-big-output-with-ai/02.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-small-team-big-output-with-ai/03.jpg",
+          "full": "full/bn/carousels/2026-09-27-small-team-big-output-with-ai/03.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-small-team-big-output-with-ai/04.jpg",
+          "full": "full/bn/carousels/2026-09-27-small-team-big-output-with-ai/04.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-small-team-big-output-with-ai/05.jpg",
+          "full": "full/bn/carousels/2026-09-27-small-team-big-output-with-ai/05.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-small-team-big-output-with-ai/06.jpg",
+          "full": "full/bn/carousels/2026-09-27-small-team-big-output-with-ai/06.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-small-team-big-output-with-ai/07.jpg",
+          "full": "full/bn/carousels/2026-09-27-small-team-big-output-with-ai/07.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-small-team-big-output-with-ai/08.jpg",
+          "full": "full/bn/carousels/2026-09-27-small-team-big-output-with-ai/08.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-small-team-big-output-with-ai/09.jpg",
+          "full": "full/bn/carousels/2026-09-27-small-team-big-output-with-ai/09.jpg"
+        }
+      ]
+    },
+    {
+      "id": "2026-09-27-why-your-idea-will-fail",
+      "hook": "আপনার আইডিয়া ব্যর্থ হবে কেন জানেন?",
+      "caption": "আপনার আইডিয়া ব্যর্থ হবে কেন জানেন?\n\nবেশিরভাগ সময় সমস্যা আইডিয়ায় থাকে না, থাকে শুরু করার ভুল ক্রমে\n\n১. কেউ টাকা দেবে কিনা না জেনে বানানো\n২. সবার জন্য একসাথে বানানো\n৩. শুধু বন্ধুদের মতামত নেওয়া\n৪. প্রথম দিনেই সব feature বানানো\n\nনিয়মটা সহজ: আগে একজন মানুষ টাকা দিক, তারপর বড় করে বানান\n\nআপনার আইডিয়া কোন ভুলে আটকে আছে? Comment-এ নম্বরটা লিখুন, আর পরের বারের জন্য save করে রাখুন 💡",
+      "hashtags": ["#business", "#startup", "#founder", "#entrepreneur", "#idea", "#bangladesh"],
+      "slides": [
+        {
+          "src": "bn/carousels/2026-09-27-why-your-idea-will-fail/01.jpg",
+          "full": "full/bn/carousels/2026-09-27-why-your-idea-will-fail/01.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-why-your-idea-will-fail/02.jpg",
+          "full": "full/bn/carousels/2026-09-27-why-your-idea-will-fail/02.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-why-your-idea-will-fail/03.jpg",
+          "full": "full/bn/carousels/2026-09-27-why-your-idea-will-fail/03.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-why-your-idea-will-fail/04.jpg",
+          "full": "full/bn/carousels/2026-09-27-why-your-idea-will-fail/04.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-why-your-idea-will-fail/05.jpg",
+          "full": "full/bn/carousels/2026-09-27-why-your-idea-will-fail/05.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-why-your-idea-will-fail/06.jpg",
+          "full": "full/bn/carousels/2026-09-27-why-your-idea-will-fail/06.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-why-your-idea-will-fail/07.jpg",
+          "full": "full/bn/carousels/2026-09-27-why-your-idea-will-fail/07.jpg"
+        },
+        {
+          "src": "bn/carousels/2026-09-27-why-your-idea-will-fail/08.jpg",
+          "full": "full/bn/carousels/2026-09-27-why-your-idea-will-fail/08.jpg"
+        }
+      ]
+    }
+  ],
+  "graphics": [
+    {
+      "id": "2026-09-27-ai-prompt-customer-interview-questions",
+      "channel": "instagram",
+      "series": {
+        "id": "ai-prompt",
+        "name": "AI prompt (prompt in the comments)",
+        "part": 3,
+        "track": "business",
+        "topic": "customer-interview-questions"
+      },
+      "hook": "এই prompt দিলে ChatGPT আপনার customer interviewer হয়ে যাবে",
+      "caption": "এই prompt দিলে ChatGPT আপনার customer interviewer হয়ে যাবে\nআপনার আইডিয়া শুনে কাকে কী জিজ্ঞেস করবেন, সেই প্রশ্নগুলো বানিয়ে দেবে\nযে প্রশ্নে মানুষ ভদ্রতা করে 'ভালো আইডিয়া' বলে দেয়, সেগুলো সে রাখবে না\nPrompt নিচে",
+      "hashtags": ["#startup", "#startuptips", "#ideavalidation", "#chatgptprompts"],
+      "image": "bn/graphics/2026-09-27-ai-prompt-customer-interview-questions.jpg",
+      "full": "full/bn/graphics/2026-09-27-ai-prompt-customer-interview-questions.jpg"
+    },
+    {
+      "id": "2026-09-27-ai-prompt-customer-messages-to-hooks",
+      "channel": "instagram",
+      "series": {
+        "id": "ai-prompt",
+        "name": "AI prompt (prompt in the comments)",
+        "part": 1,
+        "track": "marketing",
+        "topic": "customer-messages-content-ideas-and-hook"
+      },
+      "hook": "ChatGPT কে আপনার নিজের sales analyst বানিয়ে ফেলুন",
+      "caption": "ChatGPT কে আপনার নিজের sales analyst বানিয়ে ফেলুন\nআপনার inbox-এর message পড়ে বের করবে, কোন প্রশ্নের পর customer আর reply দেয় না\nতারপর বলে দেবে কোন উত্তরগুলো post-এ আগে থেকেই দিয়ে রাখা দরকার\nPrompt কমেন্টে",
+      "hashtags": ["#smallbusiness", "#salestips", "#customerinsights", "#chatgptprompts"],
+      "image": "bn/graphics/2026-09-27-ai-prompt-customer-messages-to-hooks.jpg",
+      "full": "full/bn/graphics/2026-09-27-ai-prompt-customer-messages-to-hooks.jpg"
+    },
+    {
+      "id": "2026-09-27-ai-prompt-reel-first-line-script",
+      "channel": "instagram",
+      "series": {
+        "id": "ai-prompt",
+        "name": "AI prompt (prompt in the comments)",
+        "part": 2,
+        "track": "creator",
+        "topic": "reel-first-line-30-second-script"
+      },
+      "hook": "ChatGPT কে আপনার নিজের reel scriptwriter বানিয়ে ফেলুন",
+      "caption": "ChatGPT কে আপনার নিজের reel scriptwriter বানিয়ে ফেলুন\nProduct আর customer-এর একটা প্রশ্ন দিলে ৩০ সেকেন্ডের script লিখে দেবে\nশুরুর লাইনেই আসল কথা, কোনো 'হ্যালো সবাই' নেই\nPromptটা কমেন্টে দিলাম",
+      "hashtags": ["#contentcreator", "#reelstips", "#videoscript", "#chatgptprompts"],
+      "image": "bn/graphics/2026-09-27-ai-prompt-reel-first-line-script.jpg",
+      "full": "full/bn/graphics/2026-09-27-ai-prompt-reel-first-line-script.jpg"
+    },
+    {
+      "id": "2026-10-02-ai-prompt-facebook-ad-copy",
+      "channel": "instagram",
+      "series": {
+        "id": "ai-prompt",
+        "name": "AI prompt (prompt in the comments)",
+        "part": 5,
+        "track": "marketing",
+        "topic": "facebook-ad-copy"
+      },
+      "hook": "ChatGPT কে আপনার নিজের Facebook ad copywriter বানিয়ে ফেলুন",
+      "caption": "ChatGPT কে আপনার নিজের Facebook ad copywriter বানিয়ে ফেলুন\nProduct আর customer এর কমন প্রশ্নগুলো দিলেই শুরু করবে\n‘See more’ চাপার আগেই দাম আর delivery এর উত্তর দেবে, test করার জন্য তিনটা version লিখবে\nPromptটা কমেন্টে দিলাম",
+      "hashtags": ["#digitalmarketing", "#facebookads", "#adcopywriting", "#chatgptprompts"],
+      "image": "bn/graphics/2026-10-02-ai-prompt-facebook-ad-copy.jpg",
+      "full": "full/bn/graphics/2026-10-02-ai-prompt-facebook-ad-copy.jpg"
+    },
+    {
+      "id": "2026-10-02-ai-prompt-feature-request-prioritization",
+      "channel": "instagram",
+      "series": {
+        "id": "ai-prompt",
+        "name": "AI prompt (prompt in the comments)",
+        "part": 4,
+        "track": "saas",
+        "topic": "customer-feature-requests-what-to-build"
+      },
+      "hook": "ChatGPT এখন আপনার product manager, শুধু request গুলো দিন",
+      "caption": "ChatGPT এখন আপনার product manager, শুধু request গুলো দিন\nকে কোন feature চেয়েছে আর কত টাকা দেয়, সেই লিস্ট থেকে শুরু করবে\nকতজন চেয়েছে আর কত revenue আসবে দেখে সাজাবে, কোনটা বানাবেন না সেটাও বলবে\nপুরো prompt কমেন্টে",
+      "hashtags": ["#saas", "#saasfounder", "#productmanagement", "#chatgptprompts"],
+      "image": "bn/graphics/2026-10-02-ai-prompt-feature-request-prioritization.jpg",
+      "full": "full/bn/graphics/2026-10-02-ai-prompt-feature-request-prioritization.jpg"
+    },
+    {
+      "id": "2026-10-03-agency-playbook-ask-team-before-deadline",
+      "channel": "facebook",
+      "series": {
+        "id": "agency-playbook",
+        "name": "Agency Playbook",
+        "part": 1,
+        "track": "operations",
+        "topic": "deadline-client-team"
+      },
+      "hook": "Client কে ৩ দিনে দেব বলে দিলেন, তারপর team কে জানালেন?",
+      "caption": "Client কে ৩ দিনে দেব বলে দিলেন, তারপর team কে জানালেন?\nDeadline বলার আগে যে কাজটা করবে, তাকে জিজ্ঞেস করুন\nClient কে বলুন বিকেলের মধ্যে date জানাবেন, তারপর team এর সময়ের সাথে একদিন যোগ করুন\nTeam রাত জাগে না, client ও নতুন date শোনে না\nSave করে রাখুন",
+      "hashtags": ["#agency", "#clientmanagement", "#projectmanagement", "#teamculture"],
+      "image": "bn/graphics/2026-10-03-agency-playbook-ask-team-before-deadline.jpg",
+      "full": "full/bn/graphics/2026-10-03-agency-playbook-ask-team-before-deadline.jpg"
+    },
+    {
+      "id": "2026-10-03-agency-playbook-delegation-before-the-ta",
+      "channel": "facebook",
+      "series": {
+        "id": "agency-playbook",
+        "name": "Agency Playbook",
+        "part": 2,
+        "track": "team",
+        "topic": "task-delegation"
+      },
+      "hook": "অনেক agency তে একই কাজ দুই তিনবার ফেরত আসে",
+      "caption": "অনেক agency তে একই কাজ দুই তিনবার ফেরত আসে\nসবাই ভাবে team এর ভুল, কিন্তু প্রায়ই সমস্যাটা task দেওয়ার মুহূর্তেই তৈরি হয়\nএকটা ৫ অংশের task message এর বেশিরভাগটাই আটকাতে পারে\nপুরো Agency Playbook প্রথম কমেন্টে ↓",
+      "hashtags": ["#agencylife", "#delegation", "#teammanagement", "#projectmanagement"],
+      "image": "bn/graphics/2026-10-03-agency-playbook-delegation-before-the-ta.jpg",
+      "full": "full/bn/graphics/2026-10-03-agency-playbook-delegation-before-the-ta.jpg"
+    },
+    {
+      "id": "2026-10-03-agency-playbook-feedback-one-place",
+      "channel": "facebook",
+      "series": {
+        "id": "agency-playbook",
+        "name": "Agency Playbook",
+        "part": 3,
+        "track": "client",
+        "topic": "feedback"
+      },
+      "hook": "Client এর feedback আসে WhatsApp এ, email এ, call এ, কখনো voice note এ",
+      "caption": "Client এর feedback আসে WhatsApp এ, email এ, call এ, কখনো voice note এ\nতারপর একটা change মিস হয়, আর শুনতে হয় \"আমি তো বলেছিলাম\"\nসমস্যাটা প্রায়ই client বা team এর না, feedback এর কোনো ঠিকানা না থাকার\nপুরো Agency Playbook প্রথম কমেন্টে ↓",
+      "hashtags": ["#agency", "#clientcommunication", "#clientmanagement", "#workflow"],
+      "image": "bn/graphics/2026-10-03-agency-playbook-feedback-one-place.jpg",
+      "full": "full/bn/graphics/2026-10-03-agency-playbook-feedback-one-place.jpg"
+    },
+    {
+      "id": "2026-10-03-agency-playbook-late-client-payment",
+      "channel": "facebook",
+      "series": {
+        "id": "agency-playbook",
+        "name": "Agency Playbook",
+        "part": 4,
+        "track": "fix-issues",
+        "topic": "client-payment"
+      },
+      "hook": "Client কাজ পেয়ে লিখল 'perfect ভাই', তারপর invoice এ চুপ",
+      "caption": "Client কাজ পেয়ে লিখল \"perfect ভাই\"\nতারপর invoice পাঠালেন, আর কোনো উত্তর নেই\n\nআসলে যেদিন final file পাঠিয়েছেন, সেদিনই টাকা পাওয়ার জোরটাও হাতছাড়া হয়ে গেছে\n\nএটা কীভাবে আটকাবেন, পুরোটা প্রথম কমেন্টে ↓",
+      "hashtags": ["#smallbusiness", "#cashflow", "#invoicing", "#clientmanagement"],
+      "image": "bn/graphics/2026-10-03-agency-playbook-late-client-payment.jpg",
+      "full": "full/bn/graphics/2026-10-03-agency-playbook-late-client-payment.jpg"
+    },
+    {
+      "id": "2026-10-03-saas-101-aeo-engine-51-customer",
+      "channel": "facebook",
+      "series": {
+        "id": "saas-101",
+        "name": "SaaS 101",
+        "part": 2,
+        "track": "high-ticket",
+        "topic": "aeo-engine-customer-130-017"
+      },
+      "hook": "মাত্র ৫১ জন customer, মাসে প্রায় $130K MRR (প্রায় ১.৬ কোটি টাকা)",
+      "caption": "মাত্র ৫১ জন customer, মাসে প্রায় $130K MRR (প্রায় ১.৬ কোটি টাকা)\n\nAEO Engine একটা নির্দিষ্ট সমস্যার সমাধান বিক্রি করছে\nমানুষ ChatGPT বা Google এর AI কে কিছু জিজ্ঞেস করলে, উত্তরে যেন client এর business এর নাম আসে\nপ্রতি মাসের package, দাম $1,597 থেকে $10,000\n\nএখানে আসল ব্যাপার customer এর সংখ্যা না\nআসল ব্যাপার হলো, কাজটা সরাসরি নতুন customer আনে, তাই বেশি দাম দিতেও মানুষ রাজি\n\nনিজের service বা SaaS এ বেশি দাম নিতে চাইলে এই ৩টা জিনিস দেখুন:\n• কাজটা কি সরাসরি টাকা বা customer আনে\n• Result টা কি মাপা যায়\n• কাজটা কি প্রতি মাসে লাগে\n\nছোট একটা framework:\nRevenue Impact → Measurable Result → Monthly Package → High Price\n\nএই framework দিয়ে নিজের দাম ঠিক করতে চাইলে কমেন্টের হিসাবটা দেখুন",
+      "hashtags": ["#startup", "#highticket", "#aiseo", "#agencygrowth"],
+      "image": "bn/graphics/2026-10-03-saas-101-aeo-engine-51-customer.jpg",
+      "full": "full/bn/graphics/2026-10-03-saas-101-aeo-engine-51-customer.jpg"
+    },
+    {
+      "id": "2026-10-03-saas-101-trendstory-95-lakh",
+      "channel": "facebook",
+      "series": {
+        "id": "saas-101",
+        "name": "SaaS 101",
+        "part": 1,
+        "track": "fast-growth",
+        "topic": "trendstory-78-533"
+      },
+      "hook": "৬ মাস বয়সী একটা SaaS, মাসে প্রায় $78K MRR (প্রায় ৯৫ লাখ টাকা)",
+      "caption": "৬ মাস বয়সী একটা SaaS, মাসে প্রায় $78K MRR (প্রায় ৯৫ লাখ টাকা)\n\nTrendStory একটা নির্দিষ্ট সমস্যার সমাধান বিক্রি করছে\nIdea দিন, AI সেটা দিয়ে TikTok, Reels আর Shorts এর video বানিয়ে দেয়\nEditing না জানলেও চলে, কয়েক click এই video তৈরি\n\nএখানে আসল ব্যাপার AI না\nআসল ব্যাপার হলো, একটা নির্দিষ্ট আর বারবার আসা ঝামেলার জন্য মানুষ প্রতি মাসে টাকা দিচ্ছে\n\nনিজে SaaS বানাতে চাইলে এই ৩টা জিনিস খুঁজুন:\n• মানুষ যে কাজটা বারবার করে\n• কাজটা করতে বিরক্তিকর রকম সময় লাগে\n• কাজটা দ্রুত বা সস্তায় হলে মানুষ টাকা দিতে রাজি\n\nছোট একটা framework:\nPain → Frequency → Willingness to Pay → Simple MVP\n\nএই framework দিয়ে SaaS idea খুঁজতে চাইলে কমেন্টের হিসাবটা দেখুন",
+      "hashtags": ["#saas", "#bootstrapped", "#microsaas", "#aitools"],
+      "image": "bn/graphics/2026-10-03-saas-101-trendstory-95-lakh.jpg",
+      "full": "full/bn/graphics/2026-10-03-saas-101-trendstory-95-lakh.jpg"
+    },
+    {
+      "id": "2026-10-03-weak-first-line-nobody-reads",
+      "channel": "facebook",
+      "series": null,
+      "hook": "আপনার post কেউ পড়ে না, কারণ প্রথম লাইনটা দুর্বল",
+      "caption": "আপনার post কেউ পড়ে না, কারণ প্রথম লাইনটা দুর্বল\nFacebook এ See more চাপার আগে মানুষ শুধু প্রথম কয়েকটা লাইন দেখে\nসেখানেই ঠিক হয়, সে পড়বে নাকি scroll করে চলে যাবে\n\nপ্রথম লাইন লেখার আগে তিনটা জিনিস দেখুন:\n• Reader নিজের সমস্যাটা চিনতে পারছে কিনা\n• লাইনে একটা নির্দিষ্ট ঘটনা বা সংখ্যা আছে কিনা\n• Greeting আর ভূমিকা বাদ গেছে কিনা\n\nদুর্বল: আজকে একটা গুরুত্বপূর্ণ বিষয় নিয়ে কথা বলব\nশক্ত: Client দাম শুনে চলে যায়? সমস্যাটা দামে না, প্রথম মেসেজে\n\nআপনার শেষ post এর প্রথম লাইনটা কমেন্টে দিন",
+      "hashtags": ["#contentcreator", "#copywriting", "#facebookmarketing", "#contentwriting"],
+      "image": "bn/graphics/2026-10-03-weak-first-line-nobody-reads.jpg",
+      "full": "full/bn/graphics/2026-10-03-weak-first-line-nobody-reads.jpg"
+    },
+    {
+      "id": "2026-10-04-agency-playbook-revenue-up-profit-down",
+      "channel": "facebook",
+      "series": {
+        "id": "agency-playbook",
+        "name": "Agency Playbook",
+        "part": 5,
+        "track": "operations",
+        "topic": "revenue-profit"
+      },
+      "hook": "মাস শেষে invoice এর total দেখে ভালো লাগল, তারপর হাতে থাকল আগের চেয়েও কম",
+      "caption": "মাস শেষে invoice এর total দেখে ভালো লাগল, আগের মাসের চেয়ে বেশি\nতারপর বেতন আর bill মিটিয়ে দেখলেন, হাতে যা থাকল তা আগের চেয়েও কম\n\nগোলমালটা প্রায়ই লুকিয়ে থাকে সেই client এর ভেতরে, যাকে সবাই সবচেয়ে ভালো client ভাবে\n\nকোন client টা, কীভাবে বের করবেন, প্রথম কমেন্টে ↓",
+      "hashtags": ["#agencylife", "#profitability", "#pricingstrategy", "#businessfinance"],
+      "image": "bn/graphics/2026-10-04-agency-playbook-revenue-up-profit-down.jpg",
+      "full": "full/bn/graphics/2026-10-04-agency-playbook-revenue-up-profit-down.jpg"
+    },
+    {
+      "id": "2026-10-04-ai-prompt-which-tasks-need-ai",
+      "channel": "instagram",
+      "series": {
+        "id": "ai-prompt",
+        "name": "AI prompt (prompt in the comments)",
+        "part": 6,
+        "track": "workflow",
+        "topic": "which-tasks-need-ai-script-agentic-or-au"
+      },
+      "hook": "ChatGPT কে আপনার নিজের automation consultant বানিয়ে ফেলুন",
+      "caption": "ChatGPT কে আপনার নিজের automation consultant বানিয়ে ফেলুন\nBusiness এর রোজকার কাজগুলোর একটা list দিলেই শুরু করবে\nকোন কাজে AI লাগবেই না, একটা script দিয়েই হবে, সেটাও আলাদা করে বলে দেবে\nPrompt কমেন্টে",
+      "hashtags": ["#entrepreneur", "#aiautomation", "#businessautomation", "#chatgptprompts"],
+      "image": "bn/graphics/2026-10-04-ai-prompt-which-tasks-need-ai.jpg",
+      "full": "full/bn/graphics/2026-10-04-ai-prompt-which-tasks-need-ai.jpg"
+    }
+  ]
+}

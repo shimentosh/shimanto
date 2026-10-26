@@ -1,7 +1,7 @@
 import { Container, Icon, type IconName, cn } from '@shimanto/ui';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import type { ContentOsCopy } from '@/content/content-os';
+import { CONTENT_OS_MARKETS, type ContentOsCopy, type ContentOsLocale } from '@/content/content-os';
 import type { StoreProduct } from '@/lib/store';
 import { Dock } from './dock';
 import { BuyButton, Wordmark, offer } from './parts';
@@ -22,7 +22,7 @@ export function ContentOsShell({
 }: {
   copy: ContentOsCopy;
   product: StoreProduct | undefined;
-  lang: string;
+  lang: ContentOsLocale;
   /** This page's path, to mark it in the nav. */
   path: string;
   /** This page's sections, as `#id` links, for the dock. */
@@ -30,16 +30,17 @@ export function ContentOsShell({
   children: ReactNode;
 }) {
   const c = copy;
-  const { price, buy } = offer(product);
+  const market = CONTENT_OS_MARKETS[lang];
+  const { price, buy } = offer(product, market);
   const buyLabel = c.nav.buy.replaceAll('{price}', price);
   // Not on sale yet: the buttons lead to the pricing section on the landing.
-  const href = buy ?? '/content-os#pricing';
+  const href = buy ?? `${market.base}#pricing`;
 
   return (
     <main id="main" lang={lang} data-standalone="" className="cos-dark min-h-dvh pb-28 md:pb-24">
       <header>
         <Container className="flex h-16 items-center md:h-20">
-          <Link href="/content-os" className="shrink-0">
+          <Link href={market.base} className="shrink-0">
             <Wordmark className="h-6 md:h-7" />
           </Link>
           <nav aria-label={c.nav.label} className="ml-auto hidden lg:block">

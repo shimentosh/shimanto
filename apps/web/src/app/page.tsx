@@ -10,6 +10,7 @@ import {
   WorkSection,
   WritingSection,
 } from '@/components/home/sections';
+import { ContentOsSpotlight } from '@/components/home/content-os-spotlight';
 
 /**
  * Homepage, brief §4 ①–⑨ (⑩ "As seen in" stays hidden until there is real press; ⑪ is the
@@ -20,6 +21,7 @@ export default function HomePage() {
   return (
     <main id="main">
       <HeroSection />
+      <ContentOsSpotlight />
       <ManifestoSection />
       <PeopleSection />
       <WorkSection />

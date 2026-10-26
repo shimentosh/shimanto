@@ -6,14 +6,18 @@ import { JsonLd } from '@/components/page/json-ld';
 import { PlatformMark, SocialIcon } from '@/components/page/social-icon';
 import { Section } from '@/components/page/section';
 import { FaqSection } from '@/components/page/toolbox';
-import { CONTENT_OS_SLUG, type ContentOsCopy } from '@/content/content-os';
+import { CONTENT_OS_MARKETS, type ContentOsCopy, type ContentOsLocale } from '@/content/content-os';
 import type { OutputMedia } from '@/content/content-os/types';
 import {
   beyondDemos,
-  carouselDemos,
+  bnCarouselDemos,
+  bnGraphicDemos,
+  type CarouselDemo,
+  carouselDemos as englishCarousels,
   demoGroups,
   formatDemos,
-  graphicDemos,
+  type GraphicDemo,
+  graphicDemos as englishGraphics,
   hostDemo,
   realDemos,
   storyDemo,
@@ -43,28 +47,33 @@ import {
 import { pressDark } from './press';
 import { ContentOsShell } from './shell';
 
-/** The real work each brand in the memory section points at. */
-const pickCarousel = carouselDemos.find((d) => d.id.includes('small-team')) ?? carouselDemos[0]!;
-const pickPost = graphicDemos.find((d) => d.id.includes('weak-first-line')) ?? graphicDemos[0]!;
 const reel = (demo: { video: string; poster: string }): OutputAsset => ({
   kind: 'video',
   video: demo.video,
   poster: demo.poster,
   aspect: '9:16',
 });
-const outputMedia: Record<OutputMedia, OutputAsset> = {
-  carousel: {
-    kind: 'stack',
-    images: pickCarousel.slides
-      .slice(0, 3)
-      .map((s) => s.src)
-      .reverse(),
-  },
-  post: { kind: 'image', src: pickPost.image },
-  story: { kind: 'video', video: storyDemo.video, poster: storyDemo.poster, aspect: '16:9' },
-  'real-1': reel(realDemos[0]!),
-  'real-2': reel(realDemos[1] ?? realDemos[0]!),
-  host: reel(hostDemo ?? realDemos[0]!),
+/** The real work each brand in the memory section points at, from this page's carousels and posts. */
+const outputMediaOf = (
+  carousels: CarouselDemo[],
+  graphics: GraphicDemo[],
+): Record<OutputMedia, OutputAsset> => {
+  const pickCarousel = carousels.find((d) => d.id.includes('small-team')) ?? carousels[0]!;
+  const pickPost = graphics.find((d) => d.id.includes('weak-first-line')) ?? graphics[0]!;
+  return {
+    carousel: {
+      kind: 'stack',
+      images: pickCarousel.slides
+        .slice(0, 3)
+        .map((s) => s.src)
+        .reverse(),
+    },
+    post: { kind: 'image', src: pickPost.image },
+    story: { kind: 'video', video: storyDemo.video, poster: storyDemo.poster, aspect: '16:9' },
+    'real-1': reel(realDemos[0]!),
+    'real-2': reel(realDemos[1] ?? realDemos[0]!),
+    host: reel(hostDemo ?? realDemos[0]!),
+  };
 };
 
 /**
@@ -79,10 +88,14 @@ export function ContentOsLanding({
 }: {
   copy: ContentOsCopy;
   product: StoreProduct | undefined;
-  lang: string;
+  lang: ContentOsLocale;
   path: string;
 }) {
-  const { amount, currency, price, purchasable, buy } = offer(product);
+  const market = CONTENT_OS_MARKETS[lang];
+  const { amount, currency, price, fullPrice, purchasable, buy } = offer(product, market);
+  // The Bangla page shows Shimanto's Bangla carousels and posts.
+  const carouselDemos = lang === 'bn' ? bnCarouselDemos : englishCarousels;
+  const graphicDemos = lang === 'bn' ? bnGraphicDemos : englishGraphics;
   const fill = (text: string) =>
     text
       .replaceAll('{price}', price)
@@ -107,7 +120,7 @@ export function ContentOsLanding({
       {purchasable && (
         <TrackViewItem
           item={{
-            item_id: CONTENT_OS_SLUG,
+            item_id: market.slug,
             item_name: 'Content OS',
             price: amount,
             quantity: 1,
@@ -187,6 +200,16 @@ export function ContentOsLanding({
                 {c.hero.watch}
               </a>
             </div>
+            {c.hero.offer && fullPrice && (
+              <p className="mt-4 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[15px]">
+                <span className="bg-spark rounded-pill px-2.5 py-0.5 text-sm font-semibold text-[#0E0F0C]">
+                  {market.discount}%
+                </span>
+                <s className="text-ink-soft">{fullPrice}</s>
+                <span className="font-medium">{price}</span>
+                <span className="text-ink-soft">· {c.hero.offer}</span>
+              </p>
+            )}
             <ul className="text-ink-soft mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[15px]">
               {c.hero.points.map((point) => (
                 <PointItem key={point.text} point={point} tone="signal" />
@@ -232,7 +255,7 @@ export function ContentOsLanding({
           intro={c.memory.intro}
         />
         <div className="mt-10">
-          <BrandMemory memory={c.memory} media={outputMedia} />
+          <BrandMemory memory={c.memory} media={outputMediaOf(carouselDemos, graphicDemos)} />
         </div>
       </Section>
 
@@ -707,6 +730,14 @@ export function ContentOsLanding({
                 <p className="mt-3 text-[clamp(64px,8vw,104px)] leading-none font-medium tracking-[-0.06em]">
                   {price}
                 </p>
+                {c.pricing.offer && fullPrice && (
+                  <p className="mt-2 flex flex-wrap items-center gap-2 text-sm">
+                    <s className="text-ink-soft text-lg">{fullPrice}</s>
+                    <span className="bg-spark rounded-pill px-2.5 py-0.5 font-semibold text-[#0E0F0C]">
+                      {c.pricing.offer}
+                    </span>
+                  </p>
+                )}
                 <p className="text-ink-soft mt-2">{c.pricing.priceNote}</p>
               </div>
               <BotMark className="size-14 rounded-[16px] text-lg" />

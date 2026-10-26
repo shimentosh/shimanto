@@ -2,7 +2,7 @@
 import { Icon, type IconName, accentBg, cn } from '@shimanto/ui';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { CONTENT_OS_FALLBACK, CONTENT_OS_SLUG } from '@/content/content-os';
+import type { ContentOsMarket } from '@/content/content-os';
 import { type GraphicDemo, formatDemos } from '@/content/content-os/demos';
 import { type StoreProduct, formatPrice } from '@/lib/store';
 import { pressBlue } from './press';
@@ -17,17 +17,22 @@ import { pressBlue } from './press';
 export const rail =
   'cos-rail -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-3 overflow-x-auto px-5 pb-1 [&>*]:shrink-0 [&>*]:snap-start md:mx-0 md:grid md:overflow-visible md:px-0 md:pb-0';
 
-/** Price and whether it can be bought yet; until it's published in the admin, nothing is sold. */
-export function offer(product: StoreProduct | undefined) {
-  const amount = product?.amount ?? CONTENT_OS_FALLBACK.amount;
-  const currency = product?.amount !== undefined ? product.currency : CONTENT_OS_FALLBACK.currency;
+/**
+ * Price and whether it can be bought yet in this market; until the product is published in the
+ * admin, nothing is sold. With a discount, `fullPrice` is the price before it (shown struck through).
+ */
+export function offer(product: StoreProduct | undefined, market: ContentOsMarket) {
+  const amount = product?.amount ?? market.fallback.amount;
+  const currency = product?.amount !== undefined ? product.currency : market.fallback.currency;
   const purchasable = product?.status === 'available';
+  const full = market.discount ? Math.round(amount / (1 - market.discount / 100)) : undefined;
   return {
     amount,
     currency,
     price: formatPrice(amount, currency),
+    fullPrice: full === undefined ? undefined : formatPrice(full, currency),
     purchasable,
-    buy: purchasable ? `/checkout?items=${CONTENT_OS_SLUG}` : null,
+    buy: purchasable ? `/checkout?items=${market.slug}` : null,
   };
 }
 

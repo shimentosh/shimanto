@@ -1,6 +1,6 @@
 import { Container, Icon, cn } from '@shimanto/ui';
 import Link from 'next/link';
-import type { ContentOsCopy } from '@/content/content-os';
+import { CONTENT_OS_MARKETS, type ContentOsCopy, type ContentOsLocale } from '@/content/content-os';
 import type { GuideBlock, GuidesCopy } from '@/content/content-os/guides';
 import type { StoreProduct } from '@/lib/store';
 import { BotMark } from './bot-chat';
@@ -90,12 +90,13 @@ export function ContentOsGuides({
   copy: ContentOsCopy;
   guides: GuidesCopy;
   product: StoreProduct | undefined;
-  lang: string;
+  lang: ContentOsLocale;
   path: string;
 }) {
   const c = copy;
   const g = guides;
-  const { buy, price } = offer(product);
+  const market = CONTENT_OS_MARKETS[lang];
+  const { buy, price } = offer(product, market);
 
   return (
     <ContentOsShell copy={c} product={product} lang={lang} path={path} sections={g.sections}>
@@ -183,14 +184,14 @@ export function ContentOsGuides({
               <p className="text-ink-soft mt-1">{g.help.body}</p>
             </div>
             <BuyButton
-              href={buy ?? '/content-os#pricing'}
+              href={buy ?? `${market.base}#pricing`}
               label={c.final.buy.replaceAll('{price}', price)}
               comingSoon={c.pricing.comingSoon}
               size="sm"
               className="h-11 rounded-[14px] px-5"
             />
             <Link
-              href="/content-os/features"
+              href={`${market.base}/features`}
               className={cn(
                 pressDark,
                 'inline-flex h-11 items-center gap-2 rounded-[14px] px-4 text-sm font-medium',

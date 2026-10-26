@@ -2,7 +2,7 @@ import { Container, Icon, cn } from '@shimanto/ui';
 import Link from 'next/link';
 import { Section } from '@/components/page/section';
 import { SocialIcon } from '@/components/page/social-icon';
-import type { ContentOsCopy } from '@/content/content-os';
+import { CONTENT_OS_MARKETS, type ContentOsCopy, type ContentOsLocale } from '@/content/content-os';
 import {
   beyondDemos,
   carouselDemos,
@@ -31,12 +31,13 @@ export function ContentOsFeatures({
   copy: ContentOsCopy;
   features: FeaturesCopy;
   product: StoreProduct | undefined;
-  lang: string;
+  lang: ContentOsLocale;
   path: string;
 }) {
   const c = copy;
   const f = features;
-  const { buy, price } = offer(product);
+  const market = CONTENT_OS_MARKETS[lang];
+  const { buy, price } = offer(product, market);
   const styles = c.beyond.styles.flatMap((style) => {
     const clip = beyondDemos.find((b) => b.id === style.id);
     return clip ? [{ ...clip, title: style.title, body: style.body }] : [];
@@ -207,12 +208,12 @@ export function ContentOsFeatures({
             </h2>
             <div className="mt-10 grid gap-3 sm:flex sm:flex-wrap sm:justify-center">
               <BuyButton
-                href={buy ?? '/content-os#pricing'}
+                href={buy ?? `${market.base}#pricing`}
                 label={fill(c.final.buy)}
                 comingSoon={c.pricing.comingSoon}
               />
               <Link
-                href="/content-os/guides"
+                href={`${market.base}/guides`}
                 className={cn(
                   pressDark,
                   'rounded-pill inline-flex items-center gap-2 px-6 py-4 text-[17px] font-medium',

@@ -25,6 +25,8 @@ export interface ContentOsCopy {
 
   hero: {
     badge: string;
+    /** A short offer line under the buttons (the Bangladesh page: 50% off). */
+    offer?: string;
     title: { line1: string; line2: string };
     intro: string;
     buy: string;
@@ -250,6 +252,8 @@ export interface ContentOsCopy {
     rest: string;
     plan: string;
     priceNote: string;
+    /** An offer beside the price, with the full price struck through (the Bangladesh page). */
+    offer?: string;
     included: Point[];
     buy: string;
     comingSoon: string;
