@@ -115,7 +115,7 @@ export function HeroSection() {
             <span aria-hidden="true" className="bg-build size-2 rounded-full" />
             {hero.eyebrow}
           </p>
-          <h1 className="font-display mt-6 text-[clamp(40px,5vw,80px)] leading-[0.95] font-semibold tracking-[-0.045em]">
+          <h1 className="font-display mt-6 text-[clamp(36px,4.4vw,68px)] leading-[0.98] font-semibold tracking-[-0.04em]">
             <KineticWord i={0}>I</KineticWord> <KineticWord i={1}>build</KineticWord>
             <br />
             <KineticWord i={2} accent="build" turn={0} tile="briefcase">

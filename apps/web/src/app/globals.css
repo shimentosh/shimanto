@@ -176,6 +176,8 @@ button,
 }
 .kw-in {
   display: inline-block;
+  /* Keeps an icon tile on the same line as its word. */
+  white-space: nowrap;
 }
 .kw-cycle {
   position: relative;
