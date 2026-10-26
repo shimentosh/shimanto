@@ -4,7 +4,7 @@ export const guidesBn: GuidesCopy = {
   meta: {
     title: 'Content OS গাইড: install থেকে প্রথম পোস্ট পর্যন্ত',
     description:
-      'Content OS install করুন, প্রথম page সেট আপ করুন, carousel, পোস্ট আর ভিডিও বানান, টিমে কাজ করুন — ছোট ছোট, ধাপে ধাপে গাইড',
+      'Content OS install করুন, প্রথম page সেট আপ করুন, carousel, পোস্ট আর ভিডিও বানান, টিমে কাজ করুন, ছোট ছোট, ধাপে ধাপে গাইড',
   },
   hero: {
     badge: 'গাইড',
@@ -45,7 +45,7 @@ export const guidesBn: GuidesCopy = {
         {
           kind: 'prompt',
           label: 'সেটআপ prompt',
-          text: 'এই কম্পিউটারে Content OS সেট আপ করে দাও — Project হলো এই folder টা\n\n১. Node.js 22+, pnpm, Git আর FFmpeg আছে কিনা চেক করো — কোনোটা না থাকলে আমাকে command টা বলো, আমি হ্যাঁ বললে তারপর install করো\n২. pnpm install চালাও, তারপর pnpm exec playwright install chromium\n৩. .env.example কপি করে .env.local বানাও — Key গুলো খালি রাখো, আমি নিজেরগুলো বসাব\n৪. pnpm cos doctor চালাও, যত ✗ দেখায় সব ঠিক করো\n৫. pnpm dev দিয়ে Studio চালু করো, আর link টা দাও\n\nপ্রতিটা ধাপ এক লাইনে বলো — আমার password লাগে বা টাকা খরচ হয়, এমন কিছুর আগে থামো আর আমাকে জিজ্ঞেস করো',
+          text: 'এই কম্পিউটারে Content OS সেট আপ করে দাও, Project হলো এই folder টা\n\n১. Node.js 22+, pnpm, Git আর FFmpeg আছে কিনা চেক করো, কোনোটা না থাকলে আমাকে command টা বলো, আমি হ্যাঁ বললে তারপর install করো\n২. pnpm install চালাও, তারপর pnpm exec playwright install chromium\n৩. .env.example কপি করে .env.local বানাও, Key গুলো খালি রাখো, আমি নিজেরগুলো বসাব\n৪. pnpm cos doctor চালাও, যত ✗ দেখায় সব ঠিক করো\n৫. pnpm dev দিয়ে Studio চালু করো, আর link টা দাও\n\nপ্রতিটা ধাপ এক লাইনে বলো, আমার password লাগে বা টাকা খরচ হয়, এমন কিছুর আগে থামো আর আমাকে জিজ্ঞেস করো',
         },
         {
           kind: 'tip',
@@ -150,7 +150,7 @@ export const guidesBn: GuidesCopy = {
         { kind: 'code', code: 'pnpm dev' },
         {
           kind: 'p',
-          text: 'Studio: localhost:3000/studio — Claude Code: VS Code-এ folder টা খুলুন — নিয়মগুলো ও নিজেই পড়ে নেয়',
+          text: 'Studio: localhost:3000/studio, Claude Code: VS Code-এ folder টা খুলুন, নিয়মগুলো ও নিজেই পড়ে নেয়',
         },
       ],
     },
@@ -174,7 +174,7 @@ export const guidesBn: GuidesCopy = {
         {
           kind: 'prompt',
           label: 'প্রথম page-এর prompt',
-          text: 'আমার brand-এর জন্য নতুন একটা Content OS page বানাও\n\nনাম: <আপনার brand>\nভাষা: <বাংলা বা English>\nমূল platform: Instagram\nLogo আর ছবি: <আপনার ফাইলের folder>\n\nআমার audience, আমার voice, আমি কী বিক্রি করি আর আমার নিয়ম নিয়ে একবারে একটা করে প্রশ্ন করো — তারপর brand kit সেট আপ করো, আর Studio-তে page টা দেখাও',
+          text: 'আমার brand-এর জন্য নতুন একটা Content OS page বানাও\n\nনাম: <আপনার brand>\nভাষা: <বাংলা বা English>\nমূল platform: Instagram\nLogo আর ছবি: <আপনার ফাইলের folder>\n\nআমার audience, আমার voice, আমি কী বিক্রি করি আর আমার নিয়ম নিয়ে একবারে একটা করে প্রশ্ন করো, তারপর brand kit সেট আপ করো, আর Studio-তে page টা দেখাও',
         },
       ],
     },
@@ -196,12 +196,12 @@ export const guidesBn: GuidesCopy = {
         },
         {
           kind: 'tip',
-          text: 'আসল কাজের কথা /experience দিয়ে লিখে রাখুন — কোনো নিয়ম একবার শিখিয়ে দিন /teach দিয়ে',
+          text: 'আসল কাজের কথা /experience দিয়ে লিখে রাখুন, কোনো নিয়ম একবার শিখিয়ে দিন /teach দিয়ে',
         },
         {
           kind: 'prompt',
           label: 'রোজকার prompt',
-          text: 'আজ <my-brand> কী পোস্ট করবে? কারণসহ তিনটা আইডিয়া দাও — তারপর আমি যেটা বাছব সেটা থেকে একটা carousel বানাও, QA চালাও, আর export করো',
+          text: 'আজ <my-brand> কী পোস্ট করবে? কারণসহ তিনটা আইডিয়া দাও, তারপর আমি যেটা বাছব সেটা থেকে একটা carousel বানাও, QA চালাও, আর export করো',
         },
       ],
     },
@@ -272,7 +272,7 @@ export const guidesBn: GuidesCopy = {
         },
         {
           kind: 'tip',
-          text: 'শুধু ফাইল sync হয় — Key যার যার কম্পিউটারেই থাকে — Conflict হলে দুটোই রাখা হয়, কখনো overwrite হয় না',
+          text: 'শুধু ফাইল sync হয়, Key যার যার কম্পিউটারেই থাকে, Conflict হলে দুটোই রাখা হয়, কখনো overwrite হয় না',
         },
       ],
     },
@@ -307,6 +307,6 @@ export const guidesBn: GuidesCopy = {
   ],
   help: {
     title: 'আটকে গেছেন?',
-    body: 'আগে pnpm cos doctor চালান — তাও আটকে আছেন? Claude Code-কে জিজ্ঞেস করুন: পুরো project ও চেনে',
+    body: 'আগে pnpm cos doctor চালান, তাও আটকে আছেন? Claude Code-কে জিজ্ঞেস করুন: পুরো project ও চেনে',
   },
 };

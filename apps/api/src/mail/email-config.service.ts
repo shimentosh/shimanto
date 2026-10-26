@@ -37,6 +37,8 @@ export interface MailConfig {
 export class EmailConfigService implements OnModuleInit {
   private readonly box;
   private cached?: { value: MailConfig; saved: Stored | null; at: number };
+  /** Bumped on every save, so a read that started before it never caches the old value. */
+  private generation = 0;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -99,6 +101,7 @@ export class EmailConfigService implements OnModuleInit {
       update: { value: value as Prisma.InputJsonValue, updatedById },
     });
     this.cached = undefined;
+    this.generation += 1;
     await this.audit.record(actor, 'settings.email', 'Setting', SETTINGS_KEY, {
       resendKey:
         input.resendApiKey === undefined ? 'kept' : input.resendApiKey ? 'replaced' : 'removed',
@@ -121,11 +124,13 @@ export class EmailConfigService implements OnModuleInit {
 
   private async load() {
     if (this.cached && Date.now() - this.cached.at < CACHE_MS) return this.cached;
+    const generation = this.generation;
     const row = await this.prisma.setting.findUnique({ where: { key: SETTINGS_KEY } });
     const parsed = StoredSchema.safeParse(row?.value);
     const saved = parsed.success ? parsed.data : null;
-    this.cached = { value: this.resolve(saved), saved, at: Date.now() };
-    return this.cached;
+    const loaded = { value: this.resolve(saved), saved, at: Date.now() };
+    if (generation === this.generation) this.cached = loaded;
+    return loaded;
   }
 
   private resolve(saved: Stored | null): MailConfig {

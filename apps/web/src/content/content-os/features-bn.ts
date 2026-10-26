@@ -27,7 +27,7 @@ export const featuresBn: FeaturesCopy = {
     title: 'আপনার content ডেস্ক',
     rest: 'প্রতিটা স্ক্রিন, খুলে বলা',
     intro:
-      'কাজটা করে Claude Code — Studio-তে আপনি দেখবেন, চেক করবেন, export করবেন — নিচের সবগুলোই আসল স্ক্রিন',
+      'কাজটা করে Claude Code, Studio-তে আপনি দেখবেন, চেক করবেন, export করবেন, নিচের সবগুলোই আসল স্ক্রিন',
     screens: [
       {
         id: 'dashboard',
@@ -224,7 +224,7 @@ export const featuresBn: FeaturesCopy = {
             x: 86,
             y: 56,
             title: 'রেডি queue',
-            body: 'পোস্টগুলো নিজের পালার অপেক্ষায় — বাকি হেডলাইন বা hashtag Claude-কে দিয়ে ভরিয়ে নিন',
+            body: 'পোস্টগুলো নিজের পালার অপেক্ষায়, বাকি হেডলাইন বা hashtag Claude-কে দিয়ে ভরিয়ে নিন',
           },
         ],
       },
