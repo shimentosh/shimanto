@@ -19,18 +19,25 @@ export const rail =
 
 /**
  * Price and whether it can be bought yet in this market; until the product is published in the
- * admin, nothing is sold. With a discount, `fullPrice` is the price before it (shown struck through).
+ * admin, nothing is sold. With a lower local price, `fullPrice` is shown struck through and
+ * `saving` is the percent off.
  */
 export function offer(product: StoreProduct | undefined, market: ContentOsMarket) {
   const amount = product?.amount ?? market.fallback.amount;
   const currency = product?.amount !== undefined ? product.currency : market.fallback.currency;
   const purchasable = product?.status === 'available';
-  const full = market.discount ? Math.round(amount / (1 - market.discount / 100)) : undefined;
+  // A struck-through full price only while the local price is really lower (same currency).
+  const full =
+    market.fullPrice && currency === market.fallback.currency && market.fullPrice > amount
+      ? market.fullPrice
+      : undefined;
   return {
     amount,
     currency,
     price: formatPrice(amount, currency),
     fullPrice: full === undefined ? undefined : formatPrice(full, currency),
+    /** Whole percent saved against the full price, e.g. 66. */
+    saving: full === undefined ? undefined : Math.round((1 - amount / full) * 100),
     purchasable,
     buy: purchasable ? `/checkout?items=${market.slug}` : null,
   };
@@ -97,7 +104,7 @@ export function Headline({
       </p>
       <h2
         id={id}
-        className="mt-5 text-[clamp(38px,5.2vw,76px)] leading-[0.95] font-medium tracking-[-0.055em] text-balance"
+        className="cos-display mt-5 text-[clamp(38px,5.2vw,76px)] leading-[0.95] font-medium tracking-[-0.055em] text-balance"
       >
         <span className="block">{title}</span>
         {rest && (

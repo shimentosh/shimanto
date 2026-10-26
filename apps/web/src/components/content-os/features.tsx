@@ -60,7 +60,7 @@ export function ContentOsFeatures({
             <BotMark className="size-6 rounded-full text-[9px]" />
             {f.hero.badge}
           </p>
-          <h1 className="mt-7 text-[clamp(46px,7.2vw,104px)] leading-[0.92] font-medium tracking-[-0.06em] text-balance">
+          <h1 className="cos-display mt-7 text-[clamp(46px,7.2vw,104px)] leading-[0.92] font-medium tracking-[-0.06em] text-balance">
             <span className="block">{f.hero.title}</span>
             <span className="from-signal via-idea to-build block bg-gradient-to-r bg-clip-text pb-[0.06em] text-transparent">
               {f.hero.rest}
@@ -200,7 +200,7 @@ export function ContentOsFeatures({
           <div className="relative isolate overflow-hidden rounded-[32px] px-7 py-16 text-center ring-1 ring-white/10 md:py-20">
             <PosterWall />
             <BotMark className="mx-auto size-14 rounded-[16px] text-lg" />
-            <h2 className="mx-auto mt-8 max-w-[16ch] text-[clamp(40px,6vw,80px)] leading-[0.95] font-medium tracking-[-0.055em] text-balance">
+            <h2 className="cos-display mx-auto mt-8 max-w-[16ch] text-[clamp(40px,6vw,80px)] leading-[0.95] font-medium tracking-[-0.055em] text-balance">
               {f.final.title}{' '}
               <span className="from-signal via-idea to-build bg-gradient-to-r bg-clip-text text-transparent">
                 {f.final.rest}

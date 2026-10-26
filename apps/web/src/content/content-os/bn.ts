@@ -4,7 +4,7 @@ export const bn: ContentOsCopy = {
   meta: {
     title: 'Content OS: আপনার brand চেনে এমন content bot',
     description:
-      'Content OS-কে বলুন কী পোস্ট করবেন। আপনার brand-এ carousel, post, graphic, reel আর YouTube video বানায়, চেক করে, পোস্ট করার মতো ফাইল দেয়। {price}, একবারই পেমেন্ট, আজীবন আপডেট।',
+      'Content OS-কে বলুন কী পোস্ট করবেন — আপনার brand-এ carousel, post, graphic, reel আর YouTube video বানায়, চেক করে, পোস্ট করার মতো ফাইল দেয় — {price}, একবারই পেমেন্ট, আজীবন আপডেট',
   },
 
   nav: {
@@ -27,10 +27,10 @@ export const bn: ContentOsCopy = {
 
   hero: {
     badge: 'Content OS · আপনার content bot',
-    offer: 'বাংলাদেশের জন্য ৫০% ছাড় · bKash বা Nagad-এ পেমেন্ট',
-    title: { line1: 'বলুন কী পোস্ট করবেন।', line2: 'ও বানিয়ে দেবে।' },
+    offer: 'বাংলাদেশের জন্য বিশেষ দাম · bKash বা Nagad-এ পেমেন্ট',
+    title: { line1: 'যা পোস্ট করবেন, শুধু বলুন', line2: 'বাকিটা Content OS-এর' },
     intro:
-      'আপনার brand চেনে এমন একটা content bot। Carousel, post, reel বা YouTube video চান। পোস্ট করার মতো ফাইল পান।',
+      'আপনার brand চেনে এমন একটা content bot — Carousel, post, reel বা YouTube video চান — পোস্ট করার মতো ফাইল পান',
     buy: 'Content OS নিন · {price}',
     watch: 'কাজ করতে দেখুন',
     points: [
@@ -46,7 +46,7 @@ export const bn: ContentOsCopy = {
       { value: '২৮', label: 'কোয়ালিটি চেক', icon: 'shield' },
     ],
     videoLabel: 'Content OS-এর গল্পটা চালান (১ মিনিট ৪৪ সেকেন্ড, সাউন্ড নেই)',
-    videoCaption: 'একটা আইডিয়া থেকে approved post, ১০০ সেকেন্ডে।',
+    videoCaption: 'একটা আইডিয়া থেকে approved post, ১০০ সেকেন্ডে',
   },
 
   bot: {
@@ -55,7 +55,7 @@ export const bn: ContentOsCopy = {
     placeholder: 'Carousel, post, reel চান…',
     you: 'আপনি',
     label:
-      'একটা উদাহরণ চ্যাট: আপনি Content OS-এর কাছে carousel, reel, text post বা YouTube video চান, ও আপনার brand আর আগের পোস্ট পড়ে, তারপর তৈরি ফাইল দিয়ে উত্তর দেয়।',
+      'একটা উদাহরণ চ্যাট: আপনি Content OS-এর কাছে carousel, reel, text post বা YouTube video চান, ও আপনার brand আর আগের পোস্ট পড়ে, তারপর তৈরি ফাইল দিয়ে উত্তর দেয়',
     pause: 'চ্যাট থামান',
     play: 'চ্যাট চালান',
     chats: [
@@ -69,7 +69,7 @@ export const bn: ContentOsCopy = {
           '৩টা concept-এ স্কোর, সবচেয়ে শক্তটা বাছাই',
           '৯টা স্লাইড ডিজাইন আর চেক করা হলো',
         ],
-        reply: 'হয়ে গেছে: ৯টা স্লাইড, ২টা cover অপশন, caption আর hashtag। QA পাস।',
+        reply: 'হয়ে গেছে: ৯টা স্লাইড, ২টা cover অপশন, caption আর hashtag, QA পাস',
         show: 'carousel',
       },
       {
@@ -81,19 +81,19 @@ export const bn: ContentOsCopy = {
           'Storyboard: ৬টা সিন',
           '9:16-এ render, safe area চেক করা',
         ],
-        reply: 'আপনার reel রেডি। YouTube-এর জন্য 16:9 কাটও লাগবে?',
+        reply: 'আপনার reel রেডি, YouTube-এর জন্য 16:9 কাটও লাগবে?',
         show: 'reel',
       },
       {
         chip: 'Text post',
         chipIcon: { icon: 'pen' },
-        prompt: 'আজকের পোস্টটা লেখো। আমার আসল কাজ থেকে কিছু',
+        prompt: 'আজকের পোস্টটা লেখো, আমার আসল কাজ থেকে কিছু',
         steps: [
           'আপনার experience log-এ পাওয়া গেছে',
           '১২ শব্দের কমে hook',
           'আপনার template-এ graphic, ৪টা hashtag-সহ caption',
         ],
-        reply: 'পোস্ট আর graphic রেডি। বানানো তথ্য নেই: সব আপনার নিজের নোট থেকে।',
+        reply: 'পোস্ট আর graphic রেডি, বানানো তথ্য নেই: সব আপনার নিজের নোট থেকে',
         show: 'post',
       },
       {
@@ -101,7 +101,7 @@ export const bn: ContentOsCopy = {
         chipIcon: { platform: 'YouTube' },
         prompt: 'আমার চ্যানেলের জন্য একটা YouTube explainer বানাও',
         steps: ['৫৯টা landscape format থেকে বাছাই', 'Chapter, thumbnail, end screen'],
-        reply: '16:9-এ render হয়েছে। সাথে ৩টা Shorts-ও কাটা হয়েছে।',
+        reply: '16:9-এ render হয়েছে, সাথে ৩টা Shorts-ও কাটা হয়েছে',
         show: 'youtube',
       },
     ],
@@ -109,47 +109,47 @@ export const bn: ContentOsCopy = {
 
   makes: {
     eyebrow: 'যা বানায়',
-    title: 'একটা bot। সব ধরনের পোস্ট।',
-    rest: 'শুধু চাইলেই হবে।',
+    title: 'একটাই bot',
+    rest: 'সব ধরনের পোস্ট',
     kinds: [
       {
         title: 'Carousel',
-        body: 'স্ক্রল থামানো cover, ৬–১০টা স্লাইড, পরিষ্কার CTA।',
+        body: 'স্ক্রল থামানো cover, ৬–১০টা স্লাইড, পরিষ্কার CTA',
         examples: ['Instagram 4:5', 'LinkedIn ডকুমেন্ট', 'Facebook', '২–৩টা cover অপশন'],
         icon: 'grid',
         tone: 'build',
       },
       {
         title: 'Text post',
-        body: 'আপনার voice। ১২ শব্দের কমে hook। ৪টা hashtag।',
+        body: 'আপনার voice, ১২ শব্দের কমে hook, ৪টা hashtag',
         examples: ['LinkedIn পোস্ট', 'X থ্রেড', 'Facebook পোস্ট', 'Threads'],
         icon: 'pen',
         tone: 'signal',
       },
       {
         title: 'Graphic',
-        body: '৩০টা template, সব আপনার brand kit-এ।',
+        body: '৩০টা template, সব আপনার brand kit-এ',
         examples: ['ইমেজ পোস্ট', 'Quote', 'Story 9:16', 'ঘোষণা'],
         icon: 'palette',
         tone: 'idea',
       },
       {
         title: 'Reel আর শর্ট ভিডিও',
-        body: 'স্ক্রিপ্ট, voice, সিন, render। ৮০+ vertical format।',
+        body: 'স্ক্রিপ্ট, voice, সিন, render, ৮০+ vertical format',
         examples: ['Instagram Reel', 'TikTok', 'YouTube Short', 'Facebook Reel'],
         icon: 'video',
         tone: 'create',
       },
       {
         title: 'YouTube ভিডিও',
-        body: '৫৯টা landscape format, thumbnail-সহ।',
+        body: '৫৯টা landscape format, thumbnail-সহ',
         examples: ['Explainer', 'Tutorial', 'Case study', 'Thumbnail'],
         icon: 'play',
         tone: 'spark',
       },
       {
         title: 'Voice, মিউজিক আর ছবি',
-        body: 'আপনার clone করা voice, মিউজিক আর AI ছবি, যখন লাগে।',
+        body: 'আপনার clone করা voice, মিউজিক আর AI ছবি, যখন লাগে',
         examples: ['Voiceover', 'Music bed', 'Transcript', 'AI ছবি'],
         icon: 'mic',
         tone: 'build',
@@ -159,15 +159,15 @@ export const bn: ContentOsCopy = {
 
   carousels: {
     eyebrow: 'Carousel',
-    title: 'আসলগুলো swipe করে দেখুন।',
-    rest: 'আসল brand kit-এ।',
-    intro: 'Shimanto-র জন্য Content OS-এর বানানো। একটা বেছে swipe করুন।',
+    title: 'আসল carousel',
+    rest: 'swipe করে দেখুন',
+    intro: 'Shimanto-র জন্য Content OS-এর বানানো, একটা বেছে swipe করুন',
     pick: 'একটা carousel বাছুন',
     slideOf: 'স্লাইড {n} / {total}',
     prev: 'আগের',
     next: 'পরের',
     captionLabel: 'Caption',
-    note: 'সবগুলো Shimanto-র বাংলা পেজ থেকে নেওয়া।',
+    note: 'সবগুলো Shimanto-র বাংলা পেজ থেকে নেওয়া',
     points: [
       { text: 'প্রতিবার hook থেকে CTA', icon: 'target' },
       { text: 'প্রতি carousel-এ ৩+ লেআউট', icon: 'layers' },
@@ -177,10 +177,10 @@ export const bn: ContentOsCopy = {
 
   posts: {
     eyebrow: 'Text post আর graphic',
-    title: 'দিনে একটা পোস্ট।',
-    rest: 'আপনার চেহারা আর voice-এ।',
-    intro: 'Graphic, caption আর hashtag, এক সেটে।',
-    note: 'আসল পোস্ট। আসল ছবি। আসল সিরিজ।',
+    title: 'রোজ একটা পোস্ট',
+    rest: 'আপনার চেহারা, আপনার ভাষায়',
+    intro: 'Graphic, caption আর hashtag, এক সেটে',
+    note: 'আসল পোস্ট, আসল ছবি, আসল সিরিজ',
     readMore: 'Caption পড়ুন',
     points: [
       { text: 'আপনার ছবি', icon: 'user' },
@@ -191,23 +191,23 @@ export const bn: ContentOsCopy = {
 
   gallery: {
     eyebrow: 'সব ডেমো',
-    title: '{videos}টা ভিডিও। সব কোডে বানানো।',
-    rest: 'একটা স্টাইল বাছুন। প্লে চাপুন।',
-    intro: 'প্রতিটা format-এর ডেমো আছে। আপনারটা আসবে আপনার brand-এ।',
+    title: '{videos}টা ভিডিও, সব কোডে',
+    rest: 'স্টাইল বাছুন, প্লে চাপুন',
+    intro: 'প্রতিটা format-এর ডেমো আছে, আপনারটা আসবে আপনার brand-এ',
     all: 'সব',
     showMore: 'আরও দেখুন',
     close: 'বন্ধ করুন',
     vertical: '9:16',
     landscape: '16:9',
     wideToo: '16:9-ও',
-    note: 'Hover করে প্রিভিউ। ক্লিক করে দেখুন।',
+    note: 'Hover করে প্রিভিউ, ক্লিক করে দেখুন',
   },
 
   beyond: {
     eyebrow: 'Format-এর বাইরেও',
-    title: 'যা কল্পনা করতে পারেন,',
-    rest: 'তা-ই বানাতে পারে।',
-    intro: '২০০+ format তো কেবল শুরু। একটা স্টাইল বলুন, একটা reel দেখান বা লোগো দিন।',
+    title: 'যা ভাবতে পারেন',
+    rest: 'তা-ই বানাতে পারে',
+    intro: '২০০+ format তো কেবল শুরু — একটা স্টাইল বলুন, একটা reel দেখান বা লোগো দিন',
     asks: [
       'গল্পের বইয়ের মতো হাতে আঁকা লুক দাও',
       'এই reel-এর pacing কপি করো, content না',
@@ -220,71 +220,71 @@ export const bn: ContentOsCopy = {
       {
         id: 'hand-painted',
         title: 'হাতে আঁকা',
-        body: 'তুলির টান আর কাগজের টেক্সচার, ফ্রেম ধরে ধরে।',
+        body: 'তুলির টান আর কাগজের টেক্সচার, ফ্রেম ধরে ধরে',
       },
       {
         id: 'collage-broll',
         title: 'Collage b-roll',
-        body: 'হাফটোন কাট-আউট আর সরে যাওয়া কাগজের লেয়ার।',
+        body: 'হাফটোন কাট-আউট আর সরে যাওয়া কাগজের লেয়ার',
       },
       {
         id: 'film-style',
         title: 'Editorial film',
-        body: 'ম্যাগাজিনের টাইপ আর শান্ত, সিনেমাটিক pacing।',
+        body: 'ম্যাগাজিনের টাইপ আর শান্ত, সিনেমাটিক pacing',
       },
       {
         id: 'newsroom-explainer',
         title: 'Newsroom explainer',
-        body: 'চলমান কাট-আউটের ওপর ransom-note স্টাইলের অক্ষর।',
+        body: 'চলমান কাট-আউটের ওপর ransom-note স্টাইলের অক্ষর',
       },
       {
         id: 'handdraw-story',
         title: 'পেন্সিলের গল্প',
-        body: 'স্কেচবুকের গল্প, চলতে চলতে আঁকা হয়।',
+        body: 'স্কেচবুকের গল্প, চলতে চলতে আঁকা হয়',
       },
       {
         id: 'image-to-3d',
         title: 'ছবি থেকে 3D',
-        body: 'একটা প্রোডাক্ট ছবি হয়ে যায় ঘুরন্ত 3D মডেল।',
+        body: 'একটা প্রোডাক্ট ছবি হয়ে যায় ঘুরন্ত 3D মডেল',
       },
       {
         id: 'code-animation',
         title: 'UI motion',
-        body: 'প্রোডাক্টের মুহূর্ত, সরাসরি কোড থেকে অ্যানিমেট।',
+        body: 'প্রোডাক্টের মুহূর্ত, সরাসরি কোড থেকে অ্যানিমেট',
       },
       {
         id: 'shot-recipe',
         title: 'Shot recipe',
-        body: '১২৪টা রেসিপির লাইব্রেরি থেকে ক্যামেরা মুভ।',
+        body: '১২৪টা রেসিপির লাইব্রেরি থেকে ক্যামেরা মুভ',
       },
       {
         id: 'anidoodle',
         title: 'Doodle অ্যানিমেশন',
-        body: 'হাতে আঁকা doodle, লাফিয়ে জীবন্ত হয়।',
+        body: 'হাতে আঁকা doodle, লাফিয়ে জীবন্ত হয়',
       },
-      { id: 'dream-loop', title: 'Dream loop', body: 'নরম লাইন আর্ট, চলতেই থাকে loop-এ।' },
+      { id: 'dream-loop', title: 'Dream loop', body: 'নরম লাইন আর্ট, চলতেই থাকে loop-এ' },
     ],
     host: {
       title: 'আপনার লোগো, হোস্ট হিসেবে',
-      body: 'Dot Mirror-এর লোগো থেকে আঁকা। সব আবেগ, একই চরিত্র, প্রতিবার।',
+      body: 'Dot Mirror-এর লোগো থেকে আঁকা, সব আবেগ, একই চরিত্র, প্রতিবার',
       sheet: 'Mirro-র model sheet',
       emotions: 'Mirro যত আবেগ দেখাতে পারে',
     },
-    note: 'কিছু স্টাইলে একটা optional API key লাগে।',
+    note: 'কিছু স্টাইলে একটা optional API key লাগে',
   },
 
   real: {
     eyebrow: 'আসল কাজ',
-    title: 'আসল reel।',
-    rest: 'আসল brand-এর জন্য।',
-    intro: 'Dot Mirror-এর জন্য বানানো। যেমন ছিল, তেমনই পোস্ট।',
+    title: 'আসল reel',
+    rest: 'আসল brand-এর জন্য',
+    intro: 'Dot Mirror-এর জন্য বানানো, যেমন ছিল, তেমনই পোস্ট',
   },
 
   memory: {
     eyebrow: 'Brand memory',
-    title: 'ও আপনার brand চেনে।',
-    rest: 'প্রতিটা পেজের আলাদা ব্রেইন।',
-    intro: 'Voice, audience, রং, নিয়ম, আগের পোস্ট। পেজ বদলান, দেখুন সব বদলে যায়।',
+    title: 'আপনার brand ও মনে রাখে',
+    rest: 'প্রতিটা পেজের আলাদা মগজ',
+    intro: 'Voice, audience, রং, নিয়ম, আগের পোস্ট, পেজ বদলান, দেখুন সব বদলে যায়',
     switchLabel: 'একটা পেজ বাছুন',
     categories: [
       'Brand',
@@ -301,7 +301,7 @@ export const bn: ContentOsCopy = {
       'ইতিহাস',
       'নলেজ',
     ],
-    hint: 'ঘোরাতে টানুন। জাগাতে ক্লিক করুন।',
+    hint: 'ঘোরাতে টানুন, জাগাতে ক্লিক করুন',
     labels: {
       voice: 'Voice',
       audience: 'Audience',
@@ -330,7 +330,7 @@ export const bn: ContentOsCopy = {
         voice: 'প্র্যাকটিক্যাল, সৎ, সরাসরি, builder-first',
         audience: 'বিজনেস বিল্ডার: founder, agency owner, SaaS builder',
         pillars: 'বিজনেস · মার্কেটিং · বিল্ডিং · AI + অটোমেশন · সিস্টেম ও স্কেল · Founder journey',
-        rule: 'আসল কাজ দেখাও: কী বানালাম, কী ভাঙল, কীভাবে ঠিক করলাম, ফল কী।',
+        rule: 'আসল কাজ দেখাও: কী বানালাম, কী ভাঙল, কীভাবে ঠিক করলাম, ফল কী',
       },
       {
         id: 'dotmirror',
@@ -350,22 +350,22 @@ export const bn: ContentOsCopy = {
         audience: 'SaaS founder, agency owner, SEO manager, growth lead',
         pillars:
           'Competitor intelligence · Search & AI · Digital PR · Link value · Business of visibility',
-        rule: 'রিপোর্ট না, তদন্ত: ডেটা, প্যাটার্ন, insight, তারপর করণীয়।',
+        rule: 'রিপোর্ট না, তদন্ত: ডেটা, প্যাটার্ন, insight, তারপর করণীয়',
       },
     ],
-    note: 'দুটো আসল পেজের আসল context।',
+    note: 'দুটো আসল পেজের আসল context',
     visualLabel:
-      'একটা পেজের brand memory-র অ্যানিমেশন: তেরো ধরনের context একটা উজ্জ্বল কোরের চারপাশে ঘোরে আর তাতে মিশে যায়, আর কোর থেকে সেই brand-এর রঙে carousel, reel আর পোস্ট বের হয়।',
+      'একটা পেজের brand memory-র অ্যানিমেশন: তেরো ধরনের context একটা উজ্জ্বল কোরের চারপাশে ঘোরে আর তাতে মিশে যায়, আর কোর থেকে সেই brand-এর রঙে carousel, reel আর পোস্ট বের হয়',
   },
 
   abilities: {
     eyebrow: 'যা যা পারে',
-    title: 'পুরো একটা content টিম।',
-    rest: 'একটা bot-এ।',
+    title: 'পুরো একটা content টিম',
+    rest: 'একটা bot-এর ভেতরে',
     groups: [
       {
         title: 'প্ল্যান',
-        blurb: 'জানে কী কাজ করেছে, কী বাকি।',
+        blurb: 'জানে কী কাজ করেছে, কী বাকি',
         icon: 'bulb',
         tone: 'spark',
         items: [
@@ -379,7 +379,7 @@ export const bn: ContentOsCopy = {
       },
       {
         title: 'রিসার্চ',
-        blurb: 'আসল সোর্স, প্রমাণসহ রাখা।',
+        blurb: 'আসল সোর্স, প্রমাণসহ রাখা',
         icon: 'search',
         tone: 'signal',
         items: [
@@ -393,7 +393,7 @@ export const bn: ContentOsCopy = {
       },
       {
         title: 'ভাইরাল',
-        blurb: 'বোঝে reel কেন ছড়ায়।',
+        blurb: 'বোঝে reel কেন ছড়ায়',
         icon: 'flask',
         tone: 'create',
         items: [
@@ -407,7 +407,7 @@ export const bn: ContentOsCopy = {
       },
       {
         title: 'লেখা',
-        blurb: 'আপনার voice, সব প্ল্যাটফর্মে।',
+        blurb: 'আপনার voice, সব প্ল্যাটফর্মে',
         icon: 'pen',
         tone: 'idea',
         items: [
@@ -421,7 +421,7 @@ export const bn: ContentOsCopy = {
       },
       {
         title: 'ডিজাইন',
-        blurb: 'প্রতিবার আপনার brand kit।',
+        blurb: 'প্রতিবার আপনার brand kit',
         icon: 'palette',
         tone: 'build',
         items: [
@@ -435,7 +435,7 @@ export const bn: ContentOsCopy = {
       },
       {
         title: 'ভিডিও',
-        blurb: 'আপনার নিজের কম্পিউটারে render।',
+        blurb: 'আপনার নিজের কম্পিউটারে render',
         icon: 'video',
         tone: 'create',
         items: [
@@ -449,7 +449,7 @@ export const bn: ContentOsCopy = {
       },
       {
         title: 'Voice আর সাউন্ড',
-        blurb: 'লেখা মেলে voice-এর সাথে।',
+        blurb: 'লেখা মেলে voice-এর সাথে',
         icon: 'mic',
         tone: 'signal',
         items: [
@@ -463,7 +463,7 @@ export const bn: ContentOsCopy = {
       },
       {
         title: 'চেক আর ডেলিভারি',
-        blurb: 'আপনি দেখার আগেই চেক করা।',
+        blurb: 'আপনি দেখার আগেই চেক করা',
         icon: 'shield',
         tone: 'build',
         items: [
@@ -480,33 +480,33 @@ export const bn: ContentOsCopy = {
 
   how: {
     eyebrow: 'কীভাবে কাজ করে',
-    title: 'সিদ্ধান্ত আপনার।',
-    rest: 'বাকিটা bot-এর।',
+    title: 'সিদ্ধান্ত আপনার',
+    rest: 'খাটুনি bot-এর',
     steps: [
       {
         title: 'প্রতিটা পেজকে একটা notebook দিন',
-        body: 'Voice, নিয়ম আর brand kit। এক পেজ আরেক পেজে মেশে না।',
+        body: 'Voice, নিয়ম আর brand kit, এক পেজ আরেক পেজে মেশে না',
         command: '/new-page "Dot Mirror" en linkedin',
         icon: 'book',
         tone: 'build',
       },
       {
         title: 'সহজ কথায় বলুন',
-        body: 'Claude Code-এ। প্রতিটা আইডিয়ার সাথে কারণ থাকে।',
+        body: 'Claude Code-এ, প্রতিটা আইডিয়ার সাথে কারণ থাকে',
         command: '/next-post shimanto',
         icon: 'chat',
         tone: 'signal',
       },
       {
         title: 'বানায়, তারপর চেক করে',
-        body: 'আপনার মেশিনে render, তারপর ২৮টা কোয়ালিটি চেক।',
+        body: 'আপনার মেশিনে render, তারপর ২৮টা কোয়ালিটি চেক',
         command: '/carousels shimanto 10',
         icon: 'shield',
         tone: 'idea',
       },
       {
         title: 'Approve করে পোস্ট দিন',
-        body: 'মিডিয়া, caption আর hashtag, এক প্যাকেজে।',
+        body: 'মিডিয়া, caption আর hashtag, এক প্যাকেজে',
         command: '/export shimanto <id>',
         icon: 'download',
         tone: 'spark',
@@ -516,54 +516,54 @@ export const bn: ContentOsCopy = {
 
   different: {
     eyebrow: 'কেন আলাদা',
-    title: 'আগে context।',
-    rest: 'Prompt box না।',
+    title: 'আগে context',
+    rest: 'শুধু prompt box না',
     items: [
       {
         title: 'প্রতিটা পেজের নিজস্ব memory',
-        body: 'Voice, ইতিহাস আর asset নিজের পেজেই থাকে।',
+        body: 'Voice, ইতিহাস আর asset নিজের পেজেই থাকে',
         icon: 'book',
         tone: 'build',
       },
       {
         title: 'আপনার পছন্দ শেখে',
-        body: '/teach দিয়ে একবার বলুন। চিরদিনের নিয়ম হয়ে যায়।',
+        body: '/teach দিয়ে একবার বলুন, চিরদিনের নিয়ম হয়ে যায়',
         icon: 'spark',
         tone: 'spark',
       },
       {
         title: 'আপনার কাজই content',
-        body: 'আইডিয়া আসে আপনি সত্যি যা বানিয়েছেন তা থেকে।',
+        body: 'আইডিয়া আসে আপনি সত্যি যা বানিয়েছেন তা থেকে',
         icon: 'briefcase',
         tone: 'signal',
       },
       {
         title: 'বানানো তথ্য নেই',
-        body: 'সংখ্যা আসে আপনার ফাইল বা আসল সোর্স থেকে।',
+        body: 'সংখ্যা আসে আপনার ফাইল বা আসল সোর্স থেকে',
         icon: 'shield',
         tone: 'idea',
       },
       {
         title: 'স্ট্র্যাটেজি, এলোমেলো টপিক না',
-        body: 'প্রতিটা আইডিয়া বলে কেন। রিপিট ধরা পড়ে।',
+        body: 'প্রতিটা আইডিয়া বলে কেন, রিপিট ধরা পড়ে',
         icon: 'target',
         tone: 'create',
       },
       {
         title: 'সাধারণ ফাইল, মালিক আপনি',
-        body: 'আপনার কম্পিউটারে সাধারণ ফাইল। কোনো lock-in নেই।',
+        body: 'আপনার কম্পিউটারে সাধারণ ফাইল, কোনো lock-in নেই',
         icon: 'file',
         tone: 'build',
       },
       {
         title: 'আপনার চেনা AI-এর সাথেই চলে',
-        body: 'Claude Code, Codex বা Gemini।',
+        body: 'Claude Code, Codex বা Gemini',
         icon: 'cpu',
         tone: 'signal',
       },
       {
         title: 'AI-এর খরচ শুধু দরকার হলে',
-        body: 'আগে কোড। Paid API সবার শেষে, কারণসহ।',
+        body: 'আগে কোড, Paid API সবার শেষে, কারণসহ',
         icon: 'refund',
         tone: 'spark',
       },
@@ -572,16 +572,16 @@ export const bn: ContentOsCopy = {
 
   commands: {
     eyebrow: 'Shortcut পছন্দ?',
-    title: 'এক লাইন।',
-    rest: 'এক দিনের কাজ।',
-    intro: 'সহজ কথাতেই চলে। Shortcut আরও দ্রুত।',
+    title: 'এক লাইন লিখুন',
+    rest: 'সারাদিনের কাজ শেষ',
+    intro: 'সহজ কথাতেই চলে, Shortcut আরও দ্রুত',
     list: [
       {
         command: '/next-post shimanto',
         does: 'পরের পোস্টের concept, প্রতিটার কারণসহ',
         icon: 'bulb',
         draft: 'আজই আপনার ব্যবসায় AI-এর শক্তি আনলক করুন!',
-        human: 'আমার সবচেয়ে বাজে ৫টা কাজ AI-কে দিলাম। ৩টায় ফেল।',
+        human: 'আমার সবচেয়ে বাজে ৫টা কাজ AI-কে দিলাম, ৩টায় ফেল',
         result: '৩টা concept, প্রতিটার কারণসহ',
       },
       {
@@ -597,7 +597,7 @@ export const bn: ContentOsCopy = {
         does: 'স্ক্রিপ্ট, voice, সিন আর তৈরি reel',
         icon: 'video',
         draft: 'নিয়ে এলাম আমাদের যুগান্তকারী নতুন লঞ্চ!',
-        human: 'রাত ২টায় লঞ্চ দিলাম। যা যা ভাঙল, বলছি।',
+        human: 'রাত ২টায় লঞ্চ দিলাম, যা যা ভাঙল, বলছি',
         result: '৪৫ সেকেন্ডের reel, 9:16, voice আর মিউজিক',
       },
       {
@@ -605,7 +605,7 @@ export const bn: ContentOsCopy = {
         does: 'এক আইডিয়া, প্রতিটা প্ল্যাটফর্মের মতো করে লেখা',
         icon: 'repeat',
         draft: 'আমাদের সর্বশেষ পোস্টটি দেখে নিন!',
-        human: 'একই আইডিয়া, যে প্ল্যাটফর্মে মানুষ যেভাবে পড়ে।',
+        human: 'একই আইডিয়া, যে প্ল্যাটফর্মে মানুষ যেভাবে পড়ে',
         result: 'LinkedIn পোস্ট + X থ্রেড',
       },
       {
@@ -613,15 +613,15 @@ export const bn: ContentOsCopy = {
         does: 'Feedback, যা স্থায়ী নিয়ম হয়ে যায়',
         icon: 'spark',
         draft: 'আপনি কি কখনো ভেবে দেখেছেন কেন…?',
-        human: 'বুঝেছি: এই পেজে আর কখনো প্রশ্ন দিয়ে hook না।',
+        human: 'বুঝেছি: এই পেজে আর কখনো প্রশ্ন দিয়ে hook না',
         result: 'স্থায়ী নিয়ম হিসেবে সেভ',
       },
       {
         command: '/experience "shipped X, Y broke, fixed with Z"',
         does: 'আপনার আসল কাজ, material হিসেবে সেভ',
         icon: 'briefcase',
-        draft: 'পরিশ্রম কখনো বৃথা যায় না।',
-        human: '২ দিন পেমেন্ট ফেল করছিল। একটা header-এ ঠিক হলো।',
+        draft: 'পরিশ্রম কখনো বৃথা যায় না',
+        human: '২ দিন পেমেন্ট ফেল করছিল, একটা header-এ ঠিক হলো',
         result: 'Material হিসেবে সেভ',
       },
       {
@@ -629,7 +629,7 @@ export const bn: ContentOsCopy = {
         does: 'বিজনেস অ্যাঙ্গেলসহ কাজের খবর',
         icon: 'megaphone',
         draft: 'এই সপ্তাহে AI-তে বিশাল খবর!',
-        human: 'Google একটা জিনিস বদলেছে। আপনার ক্লিকে এর মানে কী, বলছি।',
+        human: 'Google একটা জিনিস বদলেছে, আপনার ক্লিকে এর মানে কী, বলছি',
         result: 'বিজনেস অ্যাঙ্গেলসহ ৩টা খবর',
       },
       {
@@ -637,7 +637,7 @@ export const bn: ContentOsCopy = {
         does: 'সব চেক করে, যা ফেল করে ঠিক করে',
         icon: 'shield',
         draft: 'স্লাইড ৪-এ টেক্সট বাইরে চলে গেছে',
-        human: 'স্লাইড ৪ ঠিক: hook এখন ৯ শব্দের।',
+        human: 'স্লাইড ৪ ঠিক: hook এখন ৯ শব্দের',
         result: 'সব চেক পাস',
       },
     ],
@@ -655,8 +655,8 @@ export const bn: ContentOsCopy = {
 
   platforms: {
     eyebrow: 'প্ল্যাটফর্ম',
-    title: 'সব প্ল্যাটফর্ম।',
-    rest: 'মাপমতো, safe area মেনে।',
+    title: 'সব প্ল্যাটফর্মে',
+    rest: 'ঠিক মাপে, ঠিক জায়গায়',
     list: [
       {
         name: 'Instagram',
@@ -703,29 +703,29 @@ export const bn: ContentOsCopy = {
       },
       { name: 'Threads', formats: [{ label: 'পোস্ট', icon: 'pen' }] },
     ],
-    languageNote: 'প্রতিটা পেজ নিজের ভাষা বাছে, বাংলাও।',
+    languageNote: 'প্রতিটা পেজ নিজের ভাষা বাছে, বাংলাও',
   },
 
   audience: {
     eyebrow: 'কার জন্য',
-    title: 'একজন মানুষ।',
-    rest: 'অনেক brand।',
+    title: 'একজন মানুষ',
+    rest: 'অনেকগুলো brand',
     list: [
       {
         title: 'Founder আর creator',
-        body: 'পার্সোনাল আর কোম্পানি পেজ। দুই voice, টিম ছাড়াই।',
+        body: 'পার্সোনাল আর কোম্পানি পেজ, দুই voice, টিম ছাড়াই',
         icon: 'rocket',
         tone: 'build',
       },
       {
         title: 'Agency আর social media manager',
-        body: 'প্রতিটা ক্লায়েন্ট তার নিজের জায়গায়।',
+        body: 'প্রতিটা ক্লায়েন্ট তার নিজের জায়গায়',
         icon: 'users',
         tone: 'signal',
       },
       {
         title: 'ছোট টিম',
-        body: 'Owner, editor আর viewer role-সহ optional sync।',
+        body: 'Owner, editor আর viewer role-সহ optional sync',
         icon: 'cloud',
         tone: 'idea',
       },
@@ -734,11 +734,11 @@ export const bn: ContentOsCopy = {
 
   pricing: {
     eyebrow: 'দাম',
-    title: 'একবার দিন। Bot আপনার।',
-    rest: 'কোনো সাবস্ক্রিপশন নেই।',
+    title: 'একবার কিনুন',
+    rest: 'সারাজীবন আপনার',
     plan: 'Content OS',
     priceNote: 'একবারই পেমেন্ট, টাকায়',
-    offer: 'বাংলাদেশের জন্য ৫০% ছাড়',
+    offer: 'বাংলাদেশের জন্য বিশেষ দাম',
     included: [
       { text: 'Content OS-এর পুরো সোর্স কোড', icon: 'code' },
       { text: 'Studio, engine আর cos command line', icon: 'monitor' },
@@ -753,17 +753,17 @@ export const bn: ContentOsCopy = {
     comingSoon: 'শিগগিরই আসছে',
     refund: {
       before:
-        'যেমন বলা আছে তেমন কাজ না করলে, আর আমরা ঠিক করতে না পারলে? ১৪ দিনের মধ্যে পুরো টাকা ফেরত। বিস্তারিত: ',
+        'যেমন বলা আছে তেমন কাজ না করলে, আর আমরা ঠিক করতে না পারলে? ১৪ দিনের মধ্যে পুরো টাকা ফেরত — বিস্তারিত: ',
       link: 'refund policy',
-      after: '।',
+      after: '',
     },
   },
 
   requirements: {
     eyebrow: 'কেনার আগে',
-    title: 'যা লাগবে।',
-    rest: 'বেশি কিছু না।',
-    intro: 'আপনার কম্পিউটার আর নিজের AI অ্যাকাউন্ট।',
+    title: 'যা যা লাগবে',
+    rest: 'খুব বেশি কিছু না',
+    intro: 'আপনার কম্পিউটার আর নিজের AI অ্যাকাউন্ট',
     needed: {
       title: 'যা লাগবেই',
       list: [
@@ -794,58 +794,58 @@ export const bn: ContentOsCopy = {
         { key: 'fal.ai', unlocks: 'ছবি থেকে 3D মডেল', icon: 'box' },
       ],
     },
-    costs: 'Key নেই তো ফিচার নেই। Paid API-এর বিল আপনার, আর আগে জিজ্ঞেস করে নেয়।',
+    costs: 'Key নেই তো ফিচার নেই, Paid API-এর বিল আপনার, আর আগে জিজ্ঞেস করে নেয়',
   },
 
   faq: {
     eyebrow: 'প্রশ্ন',
-    title: 'ভালো প্রশ্ন।',
-    rest: 'সোজা উত্তর।',
+    title: 'আপনার প্রশ্ন',
+    rest: 'সোজা উত্তর',
     list: [
       {
         q: 'এটা কি লগইন করে চালানোর chatbot?',
-        a: 'এটা একটা bot, যা চলে আপনার নিজের কম্পিউটারে। Claude Code (VS Code)-এ ওর সাথে কথা বলবেন, আর Studio, একটা লোকাল web app, সেখানে সব দেখবেন, রিভিউ করবেন, export করবেন। কোনো অ্যাকাউন্ট নেই, cloud-এ আটকে থাকার ঝামেলা নেই।',
+        a: 'এটা একটা bot, যা চলে আপনার নিজের কম্পিউটারে — Claude Code (VS Code)-এ ওর সাথে কথা বলবেন, আর Studio, একটা লোকাল web app, সেখানে সব দেখবেন, রিভিউ করবেন, export করবেন — কোনো অ্যাকাউন্ট নেই, cloud-এ আটকে থাকার ঝামেলা নেই',
       },
       {
         q: 'কোডিং জানতে হবে?',
-        a: 'না। সহজ কথায় বলবেন, বা /carousels, /video-র মতো ছোট কমান্ড দেবেন। সেটআপ গাইড একবারেই সব ইনস্টল করিয়ে দেয়। VS Code-এ একটু অভ্যাস থাকলে সুবিধা।',
+        a: 'না — সহজ কথায় বলবেন, বা /carousels, /video-র মতো ছোট কমান্ড দেবেন — সেটআপ গাইড একবারেই সব ইনস্টল করিয়ে দেয় — VS Code-এ একটু অভ্যাস থাকলে সুবিধা',
       },
       {
         q: 'আমার হয়ে পোস্ট করে দেয়?',
-        a: 'না। Content OS-এর কাজ export পর্যন্ত: মিডিয়া, caption আর hashtag-সহ পোস্টের জন্য রেডি প্যাকেজ পাবেন, পোস্ট নিজে করবেন বা scheduler-এ তুলবেন।',
+        a: 'না — Content OS-এর কাজ export পর্যন্ত: মিডিয়া, caption আর hashtag-সহ পোস্টের জন্য রেডি প্যাকেজ পাবেন, পোস্ট নিজে করবেন বা scheduler-এ তুলবেন',
       },
       {
         q: 'চালাতে খরচ কত?',
-        a: 'আপনার Claude plan, আর যে optional media API চালু করবেন (ছবি, voice, AI ভিডিও), সেগুলোর বিল আপনার নিজের অ্যাকাউন্টে। Content OS নিজে একবারের {price}।',
+        a: 'আপনার Claude plan, আর যে optional media API চালু করবেন (ছবি, voice, AI ভিডিও), সেগুলোর বিল আপনার নিজের অ্যাকাউন্টে — Content OS নিজে একবারের {price}',
       },
       {
         q: 'কয়টা পেজ বা brand চালানো যাবে?',
-        a: 'যত খুশি। প্রতিটা পেজ পায় নিজের context, brand kit, voice, asset আর ইতিহাস, আর এক পেজের জিনিস অন্য পেজে যায় না।',
+        a: 'যত খুশি — প্রতিটা পেজ পায় নিজের context, brand kit, voice, asset আর ইতিহাস, আর এক পেজের জিনিস অন্য পেজে যায় না',
       },
       {
         q: 'কেনার পর কীভাবে পাব?',
-        a: 'কাস্টমার অ্যাকাউন্টে আপনার GitHub অ্যাকাউন্ট কানেক্ট করুন, সাথে সাথে private repository-তে invite পাবেন। আপডেট আসে git pull দিয়ে।',
+        a: 'কাস্টমার অ্যাকাউন্টে আপনার GitHub অ্যাকাউন্ট কানেক্ট করুন, সাথে সাথে private repository-তে invite পাবেন — আপডেট আসে git pull দিয়ে',
       },
       {
         q: 'বাংলায় কাজ করে?',
-        a: 'হ্যাঁ। প্রতিটা পেজ নিজের ভাষা ঠিক করে, আর বাংলা পেজ পায় বাংলার জন্য ঠিকঠাক টাইপোগ্রাফি আর বাংলা ট্রান্সক্রিপশন। এই পেজের carousel আর পোস্টগুলো Shimanto-র বাংলা পেজ থেকেই নেওয়া।',
+        a: 'হ্যাঁ — প্রতিটা পেজ নিজের ভাষা ঠিক করে, আর বাংলা পেজ পায় বাংলার জন্য ঠিকঠাক টাইপোগ্রাফি আর বাংলা ট্রান্সক্রিপশন — এই পেজের carousel আর পোস্টগুলো Shimanto-র বাংলা পেজ থেকেই নেওয়া',
       },
       {
         q: 'আমার টিম ব্যবহার করতে পারবে?',
-        a: 'হ্যাঁ। একটা optional sync সার্ভার, যেটা আপনি নিজে হোস্ট করবেন, owner, editor আর viewer role দিয়ে পেজগুলো sync রাখে।',
+        a: 'হ্যাঁ — একটা optional sync সার্ভার, যেটা আপনি নিজে হোস্ট করবেন, owner, editor আর viewer role দিয়ে পেজগুলো sync রাখে',
       },
     ],
   },
 
   final: {
-    title: 'AI-কে আর জিজ্ঞেস করবেন না কী পোস্ট করবেন।',
-    rest: 'এমন bot নিন, যে নিজেই জানে।',
+    title: 'কী পোস্ট করবেন, AI-কে আর জিজ্ঞেস নয়',
+    rest: 'এমন bot নিন, যে নিজেই জানে',
     buy: 'Content OS নিন · {price}',
     note: 'একবারই পেমেন্ট · আজীবন আপডেট · Private GitHub repository',
   },
 
   footer: {
-    by: 'Content OS বানিয়েছেন Shimanto।',
+    by: 'Content OS বানিয়েছেন Shimanto',
     back: 'shimanto.xyz-এ ফিরে যান',
     links: [
       { href: '/legal/terms', label: 'শর্তাবলি' },

@@ -107,7 +107,7 @@ export function ContentOsGuides({
             <BotMark className="size-6 rounded-full text-[9px]" />
             {g.hero.badge}
           </p>
-          <h1 className="mt-7 text-[clamp(46px,7vw,100px)] leading-[0.92] font-medium tracking-[-0.06em] text-balance">
+          <h1 className="cos-display mt-7 text-[clamp(46px,7vw,100px)] leading-[0.92] font-medium tracking-[-0.06em] text-balance">
             <span className="block">{g.hero.title}</span>
             <span className="from-signal via-idea to-build block bg-gradient-to-r bg-clip-text pb-[0.06em] text-transparent">
               {g.hero.rest}

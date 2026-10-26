@@ -392,6 +392,46 @@ body:has(main[data-standalone]) {
   background: var(--canvas);
   color-scheme: dark;
 }
+/*
+ * The Bangla Content OS pages (fonts loaded in app/bn/content-os/layout.tsx): Hind Siliguri to
+ * read, Anek Bangla (a touch condensed) for display headlines with Tiro Bangla italic on the
+ * gradient line, Galada for the offer. Bangla stacks vowel signs above and below the letters, so
+ * it gets normal tracking and more line height than the Latin display type.
+ */
+.cos-bn {
+  font-family: var(--font-hind-siliguri), var(--font-noto-bengali), sans-serif;
+}
+.cos-bn :is(h1, h2, h3) {
+  font-family: var(--font-anek-bangla), var(--font-noto-bengali), sans-serif;
+  letter-spacing: 0;
+}
+.cos-bn .cos-display {
+  font-weight: 700;
+  font-variation-settings: 'wdth' 88;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
+.cos-bn h1.cos-display {
+  font-size: clamp(40px, 6vw, 86px);
+}
+.cos-bn h2.cos-display {
+  font-size: clamp(32px, 4.4vw, 64px);
+}
+.cos-bn .cos-display > .bg-clip-text {
+  font-family: var(--font-tiro-bangla), var(--font-noto-bengali), serif;
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: normal;
+  padding-bottom: 0.12em;
+}
+.cos-bn .cos-script {
+  font-family: var(--font-galada), var(--font-noto-bengali), sans-serif;
+  font-weight: 400;
+}
+.cos-bn :is(code, pre, .font-mono) {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
 /* App-like on phones: no grey tap flash; swipe rows keep their scroll and hide the bar. */
 .cos-dark {
   -webkit-tap-highlight-color: transparent;
