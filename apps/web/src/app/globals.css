@@ -442,6 +442,25 @@ body:has(main[data-standalone]) {
 .cos-caret {
   animation: cos-blink 1s step-end infinite;
 }
+/* The words under a slide, coming in from the side it moved to (Studio tour). */
+@keyframes cos-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(32px);
+  }
+}
+@keyframes cos-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+}
+.cos-in-right {
+  animation: cos-in-right 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.cos-in-left {
+  animation: cos-in-left 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
 /* A slide changing (Studio tour). */
 @keyframes cos-fade {
   from {
