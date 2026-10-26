@@ -19,6 +19,7 @@ const nextConfig: NextConfig = {
       { source: '/wins', destination: '/about', permanent: true },
       // Content OS has its own sales page.
       { source: '/products/content-os', destination: '/content-os', permanent: false },
+      { source: '/products/content-os-bd', destination: '/bn/content-os', permanent: false },
     ];
   },
 };

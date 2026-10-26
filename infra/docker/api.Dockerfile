@@ -28,4 +28,5 @@ EXPOSE 4000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=30s   CMD wget -qO /dev/null http://127.0.0.1:4000/health || exit 1
 # Applies pending migrations (advisory-locked, safe with several replicas), creates the first
 # super admin when ADMIN_EMAIL / ADMIN_PASSWORD are set (idempotent), then starts the API.
-CMD ["sh", "-c", "node_modules/.bin/prisma migrate deploy && node dist/scripts/seed.js && exec node dist/main.js"]
+# The Content OS products are made once if missing; a failure there never stops the API.
+CMD ["sh", "-c", "node_modules/.bin/prisma migrate deploy && node dist/scripts/seed.js && (node dist/scripts/content-os-products.js || true) && exec node dist/main.js"]
