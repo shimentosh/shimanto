@@ -58,8 +58,19 @@ export type WinType = z.infer<typeof WinTypeSchema>;
 export const WorldSchema = z.enum(['build', 'create', 'spark', 'signal', 'idea']);
 export type World = z.infer<typeof WorldSchema>;
 
-export const ProductTypeSchema = z.enum(['SOFTWARE', 'DIGITAL_PRODUCT', 'SOURCE_CODE']);
+export const ProductTypeSchema = z.enum([
+  'SOFTWARE',
+  'DIGITAL_PRODUCT',
+  'SOURCE_CODE',
+  'EBOOK',
+  'TEMPLATE',
+  'COURSE',
+]);
 export type ProductType = z.infer<typeof ProductTypeSchema>;
+
+/** LISTED shows in the store, sitemap and search; UNLISTED is reachable only by its link. */
+export const ProductVisibilitySchema = z.enum(['LISTED', 'UNLISTED']);
+export type ProductVisibility = z.infer<typeof ProductVisibilitySchema>;
 
 export const ProductStatusSchema = z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']);
 export type ProductStatus = z.infer<typeof ProductStatusSchema>;

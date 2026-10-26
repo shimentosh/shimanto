@@ -191,11 +191,14 @@ export class MediaService {
   async remove(id: string, actor: Actor) {
     const media = await this.prisma.media.findUnique({
       where: { id },
-      include: { _count: { select: { productFiles: true } } },
+      include: { _count: { select: { productFiles: true, galleryOf: true } } },
     });
     if (!media) throw new NotFoundException('Media not found');
     if (media._count.productFiles > 0) {
       unprocessable('This file is delivered by a product. Remove it from the product first.');
+    }
+    if (media._count.galleryOf > 0) {
+      unprocessable('This image is in a product gallery. Remove it from the product first.');
     }
     const variants = (media.variants as unknown as MediaVariant[]) ?? [];
     await this.prisma.media.delete({ where: { id } });

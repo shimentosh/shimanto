@@ -1,4 +1,4 @@
-import { type PublicProduct, PublicProductSchema } from '@shimanto/types';
+import { type PublicProduct, PublicProductSchema, youtubeId } from '@shimanto/types';
 import type { Accent } from '@shimanto/ui';
 import {
   type ProductContent,
@@ -7,6 +7,7 @@ import {
   productContent,
   tierSlugs,
 } from '@/content/products';
+import type { ToolImage } from '@/content/tools';
 import { hash } from './blog';
 
 export interface StoreTier extends ProductTier {
@@ -28,6 +29,16 @@ export interface StoreProduct extends Omit<ProductContent, 'tiers'> {
   cover?: { url: string; alt: string };
   purchasable: boolean;
   status: 'available' | 'coming-soon' | 'sample';
+  /** False for unlisted products: reachable by link only, never in listings or search. */
+  listed: boolean;
+  /** Short label from the admin, e.g. "New". */
+  badge?: string;
+  /** Long description, paragraphs split on blank lines. */
+  description?: string;
+  gallery: ToolImage[];
+  /** YouTube id, played over the first gallery image. */
+  videoId?: string;
+  demoUrl?: string;
 }
 
 /** Minor units → major units ("1900" USD → 19), respecting zero-decimal currencies. */
@@ -79,22 +90,55 @@ async function fetchApiProducts(): Promise<PublicProduct[] | null> {
 
 const worlds: Accent[] = ['build', 'create', 'signal', 'idea', 'spark'];
 
+const kinds: Record<PublicProduct['type'], ProductKind> = {
+  SOFTWARE: 'software',
+  DIGITAL_PRODUCT: 'digital',
+  SOURCE_CODE: 'source-code',
+  EBOOK: 'ebook',
+  TEMPLATE: 'template',
+  COURSE: 'course',
+};
+
+/** Specs for an admin-made product: what it is, how it arrives, what it needs. */
+function specsFor(api: PublicProduct): ProductContent['specs'] {
+  const delivery = [
+    api.deliveryMethods.includes('R2') &&
+      (api.fileCount > 0
+        ? `${api.fileCount} download${api.fileCount === 1 ? '' : 's'}`
+        : 'Download'),
+    api.requiresGithub && 'Private GitHub repository',
+  ].filter(Boolean);
+  return [
+    ...(api.version ? [{ label: 'Version', value: api.version }] : []),
+    ...(delivery.length ? [{ label: 'Delivery', value: delivery.join(' + ') }] : []),
+    ...(api.requirements.length ? [{ label: 'Requires', value: api.requirements.join(', ') }] : []),
+    { label: 'Updates', value: 'Included, in your account' },
+  ];
+}
+
 /** Sales content for a product that exists only in the API (added from the admin). */
 function genericContent(api: PublicProduct): ProductContent {
   return {
     slug: api.slug,
     name: api.name,
-    kind: 'digital' satisfies ProductKind,
-    tagline: api.summary ?? 'Available now.',
+    kind: kinds[api.type],
+    tagline: api.tagline ?? api.summary ?? 'Available now.',
     summary: api.summary ?? '',
     world: worlds[hash(api.slug) % worlds.length]!,
-    highlights: [
-      api.fileCount > 0
-        ? `${api.fileCount} file${api.fileCount === 1 ? '' : 's'}`
-        : 'Instant access',
-      'Secure checkout',
-      'Delivered by email',
-    ],
+    highlights: api.highlights.length
+      ? api.highlights
+      : [
+          api.fileCount > 0
+            ? `${api.fileCount} file${api.fileCount === 1 ? '' : 's'}`
+            : 'Instant access',
+          'Secure checkout',
+          'Delivered by email',
+        ],
+    features: api.benefits.length ? api.benefits : undefined,
+    included: api.features.length ? api.features : undefined,
+    specs: specsFor(api),
+    faq: api.faq.length ? api.faq : undefined,
+    featured: api.featured,
   };
 }
 
@@ -136,6 +180,17 @@ function merge(content: ProductContent, api: Map<string, PublicProduct>): StoreP
     cover: own?.cover ? { url: own.cover.url, alt: own.cover.alt ?? content.name } : undefined,
     purchasable,
     status: content.sample ? 'sample' : purchasable ? 'available' : 'coming-soon',
+    listed: own?.listed ?? true,
+    badge: own?.badge ?? undefined,
+    description: own?.description ?? undefined,
+    gallery: (own?.gallery ?? []).map((m) => ({
+      src: m.url,
+      alt: m.alt ?? content.name,
+      width: m.width ?? 1600,
+      height: m.height ?? 1000,
+    })),
+    videoId: (own?.videoUrl && youtubeId(own.videoUrl)) || undefined,
+    demoUrl: own?.demoUrl ?? undefined,
   };
 }
 
@@ -150,8 +205,31 @@ export async function getStoreProducts(): Promise<StoreProduct[]> {
   return [...productContent, ...extras].map((content) => merge(content, api));
 }
 
+/** One published product by slug, listed or not (the API list leaves unlisted ones out). */
+async function fetchApiProduct(slug: string): Promise<PublicProduct | null> {
+  const apiUrl = process.env.API_URL;
+  if (!apiUrl || !/^[a-z0-9-]{1,120}$/.test(slug)) return null;
+  try {
+    const res = await fetch(`${apiUrl.replace(/\/+$/, '')}/v1/products/${slug}`, {
+      next: { tags: ['products', `products:${slug}`], revalidate: 3600 },
+      signal: AbortSignal.timeout(3000),
+    });
+    if (!res.ok) return null;
+    const parsed = PublicProductSchema.safeParse(await res.json());
+    return parsed.success ? parsed.data : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function getStoreProduct(slug: string): Promise<StoreProduct | undefined> {
-  return (await getStoreProducts()).find((p) => p.slug === slug);
+  const found = (await getStoreProducts()).find((p) => p.slug === slug);
+  if (found?.status === 'available' || found?.status === 'sample') return found;
+  // Not in the list: maybe unlisted. Ask for it by slug.
+  const api = await fetchApiProduct(slug);
+  if (!api) return found;
+  const content = productContent.find((p) => p.slug === slug) ?? genericContent(api);
+  return merge(content, new Map([[slug, api]]));
 }
 
 /**

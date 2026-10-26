@@ -1,10 +1,12 @@
-import { Button, Chip, Container, accentBg, cn } from '@shimanto/ui';
+import { Button, Chip, Container, Icon, accentBg, cn } from '@shimanto/ui';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Breadcrumbs } from '@/components/page/breadcrumbs';
 import { JsonLd } from '@/components/page/json-ld';
+import { ScreenshotSlider } from '@/components/page/screenshot-slider';
 import { Section, SectionTitle } from '@/components/page/section';
+import { YouTubeLite } from '@/components/page/youtube-lite';
 import { CancelledNotice } from '@/components/store/cancelled-notice';
 import { type OrderOption, OrderPanel } from '@/components/store/order-panel';
 import { TrackViewItem } from '@/components/analytics/analytics';
@@ -42,7 +44,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: `${product.tagline} ${product.summary}`.trim(),
       path: `/products/${product.slug}`,
     }),
-    ...(product.status === 'sample' ? { robots: { index: false, follow: false } } : {}),
+    // Samples and unlisted products are reachable, never indexed.
+    ...(product.status === 'sample' || !product.listed
+      ? { robots: { index: false, follow: false } }
+      : {}),
   };
 }
 
@@ -101,8 +106,7 @@ function orderOptions(product: StoreProduct): OrderOption[] {
 
 export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
-  const all = await getStoreProducts();
-  const product = all.find((p) => p.slug === slug);
+  const [product, all] = await Promise.all([getStoreProduct(slug), getStoreProducts()]);
   if (!product) notFound();
   const tone = product.world;
   const faq = faqFor(product);
@@ -185,6 +189,11 @@ export default async function ProductPage({ params }: Props) {
                 <Chip variant="status" tone={tone}>
                   {kindLabel[product.kind]}
                 </Chip>
+                {product.badge && (
+                  <Chip variant="status" tone="spark">
+                    {product.badge}
+                  </Chip>
+                )}
                 <StatusChip product={product} />
               </div>
               <h1 className="mt-4 text-[clamp(38px,5vw,64px)] leading-[1.02] font-medium tracking-[-0.045em] text-balance">
@@ -215,15 +224,58 @@ export default async function ProductPage({ params }: Props) {
                         : 'No card needed'}
                   </p>
                 </div>
-                <Button href="#order">{buyLabel}</Button>
+                <div className="flex flex-wrap gap-3">
+                  {product.demoUrl && (
+                    <a
+                      href={product.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="border-ink/20 hover:border-ink/50 rounded-pill inline-flex items-center gap-2 border px-5 py-3 font-medium transition-colors"
+                    >
+                      Live demo
+                      <Icon name="external" className="size-4" />
+                      <span className="sr-only">(opens in a new tab)</span>
+                    </a>
+                  )}
+                  <Button href="#order">{buyLabel}</Button>
+                </div>
               </div>
             </div>
           </div>
         </Container>
       </section>
 
+      {/* Preview: the gallery (with the video over the first image), or the video alone */}
+      {(product.gallery.length > 0 || product.videoId) && (
+        <Section divided labelledBy="preview-title">
+          <SectionTitle id="preview-title" eyebrow="Preview" title="See it before you buy." />
+          <div className="mx-auto mt-10 max-w-5xl">
+            {product.gallery.length > 0 ? (
+              <ScreenshotSlider
+                shots={product.gallery}
+                unoptimized
+                video={
+                  product.videoId
+                    ? { id: product.videoId, title: `${product.name} video` }
+                    : undefined
+                }
+              />
+            ) : (
+              <YouTubeLite
+                id={product.videoId!}
+                title={`${product.name} video`}
+                className="rounded-card overflow-hidden"
+              />
+            )}
+          </div>
+        </Section>
+      )}
+
       {/* What it is */}
-      {(product.summary || product.included?.length || product.specs?.length) && (
+      {(product.summary ||
+        product.description ||
+        product.included?.length ||
+        product.specs?.length) && (
         <Section divided labelledBy="what-title">
           <div className="grid gap-10 md:grid-cols-[1fr_1.2fr] md:gap-16">
             <div>
@@ -234,6 +286,19 @@ export default async function ProductPage({ params }: Props) {
               >
                 {product.summary || product.tagline}
               </h2>
+              {product.description && (
+                <div className="text-ink-soft mt-5 space-y-4 text-lg leading-relaxed">
+                  {product.description
+                    .split(/\n\s*\n/)
+                    .map((paragraph) => paragraph.trim())
+                    .filter(Boolean)
+                    .map((paragraph) => (
+                      <p key={paragraph} className="whitespace-pre-line">
+                        {paragraph}
+                      </p>
+                    ))}
+                </div>
+              )}
             </div>
             <div className="space-y-10">
               {product.included && product.included.length > 0 && (

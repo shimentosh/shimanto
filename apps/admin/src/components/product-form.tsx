@@ -11,10 +11,13 @@ import {
   Section,
   Select,
   Textarea,
+  cn,
 } from '@shimanto/ui';
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, type ReactNode, useState } from 'react';
 import { api } from '@/lib/api';
 import { useAction } from '@/lib/use-action';
+import { type Pair, PairList, filledPairs } from './pair-list';
+import { type GalleryImage, ProductGallery } from './product-gallery';
 import { ProductFiles } from './product-files';
 
 const toMinor = (value: string) => (value.trim() === '' ? null : Math.round(Number(value) * 100));
@@ -36,6 +39,51 @@ const slugify = (value: string) =>
 interface MediaUpload {
   id: string;
   url: string;
+}
+
+const TYPES: Array<{ value: AdminProduct['type']; label: string }> = [
+  { value: 'DIGITAL_PRODUCT', label: 'Digital product' },
+  { value: 'SOFTWARE', label: 'Software' },
+  { value: 'SOURCE_CODE', label: 'Source code' },
+  { value: 'TEMPLATE', label: 'Template' },
+  { value: 'EBOOK', label: 'Ebook' },
+  { value: 'COURSE', label: 'Course' },
+];
+
+/** One of two choices, as a card with a native radio (keyboard and screen-reader friendly). */
+function Choice({
+  name,
+  checked,
+  onSelect,
+  title,
+  children,
+}: {
+  name: string;
+  checked: boolean;
+  onSelect: () => void;
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <label
+      className={cn(
+        'flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition-colors',
+        checked ? 'border-ink bg-ink/[0.03]' : 'border-ink/15 hover:border-ink/30',
+      )}
+    >
+      <input
+        type="radio"
+        name={name}
+        checked={checked}
+        onChange={onSelect}
+        className="accent-ink mt-1 size-4 shrink-0"
+      />
+      <span className="text-[15px] leading-snug">
+        <span className="block font-medium">{title}</span>
+        <span className="text-ink-soft mt-0.5 block">{children}</span>
+      </span>
+    </label>
+  );
 }
 
 /**
@@ -68,7 +116,23 @@ export function ProductForm({
     deliverGithub: product?.deliverGithub ?? false,
     githubOwner: product?.githubOwner ?? '',
     githubRepo: product?.githubRepo ?? '',
+    visibility: product?.visibility ?? 'LISTED',
+    featured: product?.featured ?? false,
+    tagline: product?.tagline ?? '',
+    badge: product?.badge ?? '',
+    highlights: (product?.highlights ?? []).join('\n'),
+    demoUrl: product?.demoUrl ?? '',
+    videoUrl: product?.videoUrl ?? '',
   });
+  const [benefits, setBenefits] = useState<Pair[]>(
+    (product?.benefits ?? []).map((b) => ({ first: b.title, second: b.body })),
+  );
+  const [faq, setFaq] = useState<Pair[]>(
+    (product?.faq ?? []).map((item) => ({ first: item.q, second: item.a })),
+  );
+  const [gallery, setGallery] = useState<GalleryImage[]>(
+    (product?.gallery ?? []).map((m) => ({ id: m.id, url: m.url, alt: m.alt })),
+  );
   const [slugTouched, setSlugTouched] = useState(editing);
   const [cover, setCover] = useState<{ id: string | null; url: string | null }>({
     id: product?.cover?.id ?? null,
@@ -118,6 +182,16 @@ export function ProductForm({
       deliverGithub: form.deliverGithub,
       githubOwner: form.githubOwner.trim() || null,
       githubRepo: form.githubRepo.trim() || null,
+      visibility: form.visibility,
+      featured: form.featured,
+      tagline: form.tagline.trim() || null,
+      badge: form.badge.trim() || null,
+      highlights: lines(form.highlights),
+      benefits: filledPairs(benefits).map((b) => ({ title: b.first, body: b.second })),
+      faq: filledPairs(faq).map((item) => ({ q: item.first, a: item.second })),
+      demoUrl: form.demoUrl.trim() || null,
+      videoUrl: form.videoUrl.trim() || null,
+      galleryIds: gallery.map((image) => image.id),
     };
     const saved = await action.run(
       () =>
@@ -186,9 +260,11 @@ export function ProductForm({
                   value={form.type}
                   onChange={(e) => set('type')(e.target.value as typeof form.type)}
                 >
-                  <option value="SOFTWARE">Software</option>
-                  <option value="DIGITAL_PRODUCT">Digital product</option>
-                  <option value="SOURCE_CODE">Source code</option>
+                  {TYPES.map((t) => (
+                    <option key={t.value} value={t.value}>
+                      {t.label}
+                    </option>
+                  ))}
                 </Select>
               )}
             </Field>
@@ -203,6 +279,22 @@ export function ProductForm({
               )}
             </Field>
           </div>
+          <Field
+            label="Tagline"
+            optional
+            error={f.tagline}
+            hint="The headline under the name on the product page. Falls back to the summary."
+          >
+            {(p) => (
+              <Input
+                {...p}
+                maxLength={160}
+                value={form.tagline}
+                onChange={(e) => set('tagline')(e.target.value)}
+                placeholder="e.g. Everything you need to launch in a weekend."
+              />
+            )}
+          </Field>
           <Field
             label="Summary"
             optional
@@ -219,7 +311,12 @@ export function ProductForm({
               />
             )}
           </Field>
-          <Field label="Description" optional error={f.description}>
+          <Field
+            label="Description"
+            optional
+            error={f.description}
+            hint="The longer story on the product page. Blank lines start new paragraphs."
+          >
             {(p) => (
               <Textarea
                 {...p}
@@ -229,32 +326,58 @@ export function ProductForm({
               />
             )}
           </Field>
+        </div>
+      </Section>
+
+      <Section
+        title="Store listing"
+        description="Where the product shows up. Unlisted products can still be bought from their link."
+      >
+        <div className="grid gap-5">
+          <fieldset className="grid gap-3 sm:grid-cols-2">
+            <legend className="sr-only">Visibility</legend>
+            <Choice
+              name="visibility"
+              title="Listed in the store"
+              checked={form.visibility === 'LISTED'}
+              onSelect={() => set('visibility')('LISTED')}
+            >
+              On /products, in search and the sitemap.
+            </Choice>
+            <Choice
+              name="visibility"
+              title="Unlisted"
+              checked={form.visibility === 'UNLISTED'}
+              onSelect={() => set('visibility')('UNLISTED')}
+            >
+              Only people with the link can see and buy it. Hidden from search engines.
+            </Choice>
+          </fieldset>
           <div className="grid gap-5 sm:grid-cols-2">
-            <Field label="Features" optional error={f.features} hint="One per line.">
-              {(p) => (
-                <Textarea
-                  {...p}
-                  rows={5}
-                  value={form.features}
-                  onChange={(e) => set('features')(e.target.value)}
-                />
-              )}
-            </Field>
             <Field
-              label="Requirements"
+              label="Badge"
               optional
-              error={f.requirements}
-              hint="One per line (e.g. Node 20+)."
+              error={f.badge}
+              hint="A short label on the card and page, e.g. New or Bestseller."
             >
               {(p) => (
-                <Textarea
+                <Input
                   {...p}
-                  rows={5}
-                  value={form.requirements}
-                  onChange={(e) => set('requirements')(e.target.value)}
+                  maxLength={24}
+                  value={form.badge}
+                  onChange={(e) => set('badge')(e.target.value)}
+                  placeholder="New"
                 />
               )}
             </Field>
+            <div className="sm:pt-8">
+              <Checkbox
+                label="Featured"
+                description="Shown first in the store."
+                checked={form.featured}
+                onChange={(e) => set('featured')(e.target.checked)}
+              />
+            </div>
           </div>
         </div>
       </Section>
@@ -302,7 +425,150 @@ export function ProductForm({
         </div>
       </Section>
 
-      <Section title="Cover image" description="A public image from the media library.">
+      <Section
+        title="Sales page"
+        description="Everything that makes the product page convincing. Leave anything empty to hide it."
+      >
+        <div className="grid gap-6">
+          <Field
+            label="Highlights"
+            optional
+            error={f.highlights}
+            hint="Up to 4 short points beside the price, one per line."
+          >
+            {(p) => (
+              <Textarea
+                {...p}
+                rows={4}
+                value={form.highlights}
+                onChange={(e) => set('highlights')(e.target.value)}
+                placeholder={'40 ready-made templates\nWorks in Notion and Figma'}
+              />
+            )}
+          </Field>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field
+              label="What’s included"
+              optional
+              error={f.features}
+              hint="One per line. Also the list on the order card."
+            >
+              {(p) => (
+                <Textarea
+                  {...p}
+                  rows={5}
+                  value={form.features}
+                  onChange={(e) => set('features')(e.target.value)}
+                />
+              )}
+            </Field>
+            <Field
+              label="Requirements"
+              optional
+              error={f.requirements}
+              hint="One per line (e.g. Node 20+)."
+            >
+              {(p) => (
+                <Textarea
+                  {...p}
+                  rows={5}
+                  value={form.requirements}
+                  onChange={(e) => set('requirements')(e.target.value)}
+                />
+              )}
+            </Field>
+          </div>
+          <div className="grid gap-2">
+            <p className="text-[15px] font-medium">
+              Feature blocks <span className="text-ink-soft font-normal">(optional)</span>
+            </p>
+            <p className="text-ink-soft -mt-1 text-sm">
+              A title and a sentence each, shown as a grid. 3 or 4 look best.
+            </p>
+            {f.benefits && <p className="text-create text-sm font-medium">{f.benefits}</p>}
+            <PairList
+              items={benefits}
+              onChange={setBenefits}
+              firstLabel="Title"
+              secondLabel="Description"
+              addLabel="Add a feature block"
+              max={8}
+              firstMax={80}
+              secondMax={400}
+            />
+          </div>
+          <div className="grid gap-2">
+            <p className="text-[15px] font-medium">
+              Questions <span className="text-ink-soft font-normal">(optional)</span>
+            </p>
+            <p className="text-ink-soft -mt-1 text-sm">
+              Shown first in the FAQ, before the store-wide questions (delivery, payment, refunds).
+            </p>
+            {f.faq && <p className="text-create text-sm font-medium">{f.faq}</p>}
+            <PairList
+              items={faq}
+              onChange={setFaq}
+              firstLabel="Question"
+              secondLabel="Answer"
+              addLabel="Add a question"
+              max={12}
+              firstMax={200}
+              secondMax={1500}
+            />
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field
+              label="Live demo link"
+              optional
+              error={f.demoUrl}
+              hint="Adds a “Live demo” button next to Buy."
+            >
+              {(p) => (
+                <Input
+                  {...p}
+                  type="url"
+                  value={form.demoUrl}
+                  onChange={(e) => set('demoUrl')(e.target.value)}
+                  placeholder="https://demo.example.com"
+                />
+              )}
+            </Field>
+            <Field
+              label="Video"
+              optional
+              error={f.videoUrl}
+              hint="A YouTube link. It plays over the first gallery image."
+            >
+              {(p) => (
+                <Input
+                  {...p}
+                  type="url"
+                  value={form.videoUrl}
+                  onChange={(e) => set('videoUrl')(e.target.value)}
+                  placeholder="https://youtu.be/…"
+                />
+              )}
+            </Field>
+          </div>
+        </div>
+      </Section>
+
+      <Section
+        title="Gallery"
+        description="Screenshots or previews, shown as a slider on the product page. The first one is the video poster."
+      >
+        {f.galleryIds && (
+          <Notice tone="danger" className="mb-4">
+            {f.galleryIds}
+          </Notice>
+        )}
+        <ProductGallery images={gallery} onChange={setGallery} productName={form.name} />
+      </Section>
+
+      <Section
+        title="Cover image"
+        description="The card image in the store and the main image on the product page."
+      >
         <div className="grid gap-4 sm:grid-cols-[12rem_minmax(0,1fr)]">
           <div className="bg-canvas aspect-[4/3] overflow-hidden rounded-[14px]">
             {cover.url ? (

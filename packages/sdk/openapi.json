@@ -3743,7 +3743,10 @@
                         "enum": [
                           "SOFTWARE",
                           "DIGITAL_PRODUCT",
-                          "SOURCE_CODE"
+                          "SOURCE_CODE",
+                          "EBOOK",
+                          "TEMPLATE",
+                          "COURSE"
                         ]
                       },
                       "price": {
@@ -3861,6 +3864,147 @@
                       },
                       "requiresGithub": {
                         "type": "boolean"
+                      },
+                      "listed": {
+                        "type": "boolean"
+                      },
+                      "featured": {
+                        "type": "boolean"
+                      },
+                      "tagline": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "badge": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "highlights": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "benefits": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "title": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80
+                            },
+                            "body": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 400
+                            }
+                          },
+                          "required": [
+                            "title",
+                            "body"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "faq": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "q": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 200
+                            },
+                            "a": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 1500
+                            }
+                          },
+                          "required": [
+                            "q",
+                            "a"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "demoUrl": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "videoUrl": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gallery": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "url": {
+                              "type": "string"
+                            },
+                            "mimeType": {
+                              "type": "string"
+                            },
+                            "width": {
+                              "nullable": true,
+                              "type": "number"
+                            },
+                            "height": {
+                              "nullable": true,
+                              "type": "number"
+                            },
+                            "alt": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "blurDataUrl": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "variants": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "url": {
+                                    "type": "string"
+                                  },
+                                  "width": {
+                                    "type": "number"
+                                  },
+                                  "height": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "url",
+                                  "width",
+                                  "height"
+                                ],
+                                "additionalProperties": false
+                              }
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "url",
+                            "mimeType",
+                            "width",
+                            "height",
+                            "alt",
+                            "blurDataUrl",
+                            "variants"
+                          ],
+                          "additionalProperties": false
+                        }
                       }
                     },
                     "required": [
@@ -3879,7 +4023,17 @@
                       "requirements",
                       "deliveryMethods",
                       "fileCount",
-                      "requiresGithub"
+                      "requiresGithub",
+                      "listed",
+                      "featured",
+                      "tagline",
+                      "badge",
+                      "highlights",
+                      "benefits",
+                      "faq",
+                      "demoUrl",
+                      "videoUrl",
+                      "gallery"
                     ],
                     "additionalProperties": false
                   }
@@ -3933,7 +4087,10 @@
                       "enum": [
                         "SOFTWARE",
                         "DIGITAL_PRODUCT",
-                        "SOURCE_CODE"
+                        "SOURCE_CODE",
+                        "EBOOK",
+                        "TEMPLATE",
+                        "COURSE"
                       ]
                     },
                     "price": {
@@ -4051,6 +4208,147 @@
                     },
                     "requiresGithub": {
                       "type": "boolean"
+                    },
+                    "listed": {
+                      "type": "boolean"
+                    },
+                    "featured": {
+                      "type": "boolean"
+                    },
+                    "tagline": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "badge": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "highlights": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "benefits": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80
+                          },
+                          "body": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 400
+                          }
+                        },
+                        "required": [
+                          "title",
+                          "body"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "faq": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "q": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 200
+                          },
+                          "a": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 1500
+                          }
+                        },
+                        "required": [
+                          "q",
+                          "a"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "demoUrl": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "videoUrl": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "gallery": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "mimeType": {
+                            "type": "string"
+                          },
+                          "width": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "height": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "alt": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "blurDataUrl": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "variants": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "url": {
+                                  "type": "string"
+                                },
+                                "width": {
+                                  "type": "number"
+                                },
+                                "height": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "url",
+                                "width",
+                                "height"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "url",
+                          "mimeType",
+                          "width",
+                          "height",
+                          "alt",
+                          "blurDataUrl",
+                          "variants"
+                        ],
+                        "additionalProperties": false
+                      }
                     }
                   },
                   "required": [
@@ -4069,7 +4367,17 @@
                     "requirements",
                     "deliveryMethods",
                     "fileCount",
-                    "requiresGithub"
+                    "requiresGithub",
+                    "listed",
+                    "featured",
+                    "tagline",
+                    "badge",
+                    "highlights",
+                    "benefits",
+                    "faq",
+                    "demoUrl",
+                    "videoUrl",
+                    "gallery"
                   ],
                   "additionalProperties": false
                 }
@@ -4118,7 +4426,10 @@
                         "enum": [
                           "SOFTWARE",
                           "DIGITAL_PRODUCT",
-                          "SOURCE_CODE"
+                          "SOURCE_CODE",
+                          "EBOOK",
+                          "TEMPLATE",
+                          "COURSE"
                         ]
                       },
                       "status": {
@@ -4128,6 +4439,151 @@
                           "PUBLISHED",
                           "ARCHIVED"
                         ]
+                      },
+                      "visibility": {
+                        "type": "string",
+                        "enum": [
+                          "LISTED",
+                          "UNLISTED"
+                        ]
+                      },
+                      "featured": {
+                        "type": "boolean"
+                      },
+                      "tagline": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "badge": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "highlights": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "benefits": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "title": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80
+                            },
+                            "body": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 400
+                            }
+                          },
+                          "required": [
+                            "title",
+                            "body"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "faq": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "q": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 200
+                            },
+                            "a": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 1500
+                            }
+                          },
+                          "required": [
+                            "q",
+                            "a"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "demoUrl": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "videoUrl": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gallery": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "url": {
+                              "type": "string"
+                            },
+                            "mimeType": {
+                              "type": "string"
+                            },
+                            "width": {
+                              "nullable": true,
+                              "type": "number"
+                            },
+                            "height": {
+                              "nullable": true,
+                              "type": "number"
+                            },
+                            "alt": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "blurDataUrl": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "variants": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "url": {
+                                    "type": "string"
+                                  },
+                                  "width": {
+                                    "type": "number"
+                                  },
+                                  "height": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "url",
+                                  "width",
+                                  "height"
+                                ],
+                                "additionalProperties": false
+                              }
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "url",
+                            "mimeType",
+                            "width",
+                            "height",
+                            "alt",
+                            "blurDataUrl",
+                            "variants"
+                          ],
+                          "additionalProperties": false
+                        }
                       },
                       "price": {
                         "type": "integer",
@@ -4304,6 +4760,16 @@
                       "description",
                       "type",
                       "status",
+                      "visibility",
+                      "featured",
+                      "tagline",
+                      "badge",
+                      "highlights",
+                      "benefits",
+                      "faq",
+                      "demoUrl",
+                      "videoUrl",
+                      "gallery",
                       "price",
                       "compareAtPrice",
                       "currency",
@@ -4383,7 +4849,10 @@
                     "enum": [
                       "SOFTWARE",
                       "DIGITAL_PRODUCT",
-                      "SOURCE_CODE"
+                      "SOURCE_CODE",
+                      "EBOOK",
+                      "TEMPLATE",
+                      "COURSE"
                     ]
                   },
                   "price": {
@@ -4477,6 +4946,106 @@
                         "mediaId"
                       ]
                     }
+                  },
+                  "visibility": {
+                    "default": "LISTED",
+                    "type": "string",
+                    "enum": [
+                      "LISTED",
+                      "UNLISTED"
+                    ]
+                  },
+                  "featured": {
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "tagline": {
+                    "nullable": true,
+                    "type": "string",
+                    "maxLength": 160
+                  },
+                  "badge": {
+                    "nullable": true,
+                    "type": "string",
+                    "maxLength": 24
+                  },
+                  "highlights": {
+                    "default": [],
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60
+                    }
+                  },
+                  "benefits": {
+                    "default": [],
+                    "maxItems": 8,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 80
+                        },
+                        "body": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 400
+                        }
+                      },
+                      "required": [
+                        "title",
+                        "body"
+                      ]
+                    }
+                  },
+                  "faq": {
+                    "default": [],
+                    "maxItems": 12,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "a": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1500
+                        }
+                      },
+                      "required": [
+                        "q",
+                        "a"
+                      ]
+                    }
+                  },
+                  "demoUrl": {
+                    "nullable": true,
+                    "type": "string",
+                    "maxLength": 300,
+                    "format": "uri"
+                  },
+                  "videoUrl": {
+                    "nullable": true,
+                    "type": "string",
+                    "maxLength": 300,
+                    "format": "uri"
+                  },
+                  "galleryIds": {
+                    "default": [],
+                    "maxItems": 12,
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   }
                 },
                 "required": [
@@ -4518,7 +5087,10 @@
                       "enum": [
                         "SOFTWARE",
                         "DIGITAL_PRODUCT",
-                        "SOURCE_CODE"
+                        "SOURCE_CODE",
+                        "EBOOK",
+                        "TEMPLATE",
+                        "COURSE"
                       ]
                     },
                     "status": {
@@ -4528,6 +5100,151 @@
                         "PUBLISHED",
                         "ARCHIVED"
                       ]
+                    },
+                    "visibility": {
+                      "type": "string",
+                      "enum": [
+                        "LISTED",
+                        "UNLISTED"
+                      ]
+                    },
+                    "featured": {
+                      "type": "boolean"
+                    },
+                    "tagline": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "badge": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "highlights": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "benefits": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80
+                          },
+                          "body": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 400
+                          }
+                        },
+                        "required": [
+                          "title",
+                          "body"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "faq": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "q": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 200
+                          },
+                          "a": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 1500
+                          }
+                        },
+                        "required": [
+                          "q",
+                          "a"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "demoUrl": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "videoUrl": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "gallery": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "mimeType": {
+                            "type": "string"
+                          },
+                          "width": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "height": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "alt": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "blurDataUrl": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "variants": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "url": {
+                                  "type": "string"
+                                },
+                                "width": {
+                                  "type": "number"
+                                },
+                                "height": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "url",
+                                "width",
+                                "height"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "url",
+                          "mimeType",
+                          "width",
+                          "height",
+                          "alt",
+                          "blurDataUrl",
+                          "variants"
+                        ],
+                        "additionalProperties": false
+                      }
                     },
                     "price": {
                       "type": "integer",
@@ -4704,6 +5421,16 @@
                     "description",
                     "type",
                     "status",
+                    "visibility",
+                    "featured",
+                    "tagline",
+                    "badge",
+                    "highlights",
+                    "benefits",
+                    "faq",
+                    "demoUrl",
+                    "videoUrl",
+                    "gallery",
                     "price",
                     "compareAtPrice",
                     "currency",
@@ -4789,7 +5516,10 @@
                       "enum": [
                         "SOFTWARE",
                         "DIGITAL_PRODUCT",
-                        "SOURCE_CODE"
+                        "SOURCE_CODE",
+                        "EBOOK",
+                        "TEMPLATE",
+                        "COURSE"
                       ]
                     },
                     "status": {
@@ -4799,6 +5529,151 @@
                         "PUBLISHED",
                         "ARCHIVED"
                       ]
+                    },
+                    "visibility": {
+                      "type": "string",
+                      "enum": [
+                        "LISTED",
+                        "UNLISTED"
+                      ]
+                    },
+                    "featured": {
+                      "type": "boolean"
+                    },
+                    "tagline": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "badge": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "highlights": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "benefits": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80
+                          },
+                          "body": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 400
+                          }
+                        },
+                        "required": [
+                          "title",
+                          "body"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "faq": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "q": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 200
+                          },
+                          "a": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 1500
+                          }
+                        },
+                        "required": [
+                          "q",
+                          "a"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "demoUrl": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "videoUrl": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "gallery": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "mimeType": {
+                            "type": "string"
+                          },
+                          "width": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "height": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "alt": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "blurDataUrl": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "variants": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "url": {
+                                  "type": "string"
+                                },
+                                "width": {
+                                  "type": "number"
+                                },
+                                "height": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "url",
+                                "width",
+                                "height"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "url",
+                          "mimeType",
+                          "width",
+                          "height",
+                          "alt",
+                          "blurDataUrl",
+                          "variants"
+                        ],
+                        "additionalProperties": false
+                      }
                     },
                     "price": {
                       "type": "integer",
@@ -4975,6 +5850,16 @@
                     "description",
                     "type",
                     "status",
+                    "visibility",
+                    "featured",
+                    "tagline",
+                    "badge",
+                    "highlights",
+                    "benefits",
+                    "faq",
+                    "demoUrl",
+                    "videoUrl",
+                    "gallery",
                     "price",
                     "compareAtPrice",
                     "currency",
@@ -5061,7 +5946,10 @@
                     "enum": [
                       "SOFTWARE",
                       "DIGITAL_PRODUCT",
-                      "SOURCE_CODE"
+                      "SOURCE_CODE",
+                      "EBOOK",
+                      "TEMPLATE",
+                      "COURSE"
                     ]
                   },
                   "price": {
@@ -5149,6 +6037,100 @@
                         "mediaId"
                       ]
                     }
+                  },
+                  "visibility": {
+                    "type": "string",
+                    "enum": [
+                      "LISTED",
+                      "UNLISTED"
+                    ]
+                  },
+                  "featured": {
+                    "type": "boolean"
+                  },
+                  "tagline": {
+                    "nullable": true,
+                    "type": "string",
+                    "maxLength": 160
+                  },
+                  "badge": {
+                    "nullable": true,
+                    "type": "string",
+                    "maxLength": 24
+                  },
+                  "highlights": {
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60
+                    }
+                  },
+                  "benefits": {
+                    "maxItems": 8,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 80
+                        },
+                        "body": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 400
+                        }
+                      },
+                      "required": [
+                        "title",
+                        "body"
+                      ]
+                    }
+                  },
+                  "faq": {
+                    "maxItems": 12,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "a": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1500
+                        }
+                      },
+                      "required": [
+                        "q",
+                        "a"
+                      ]
+                    }
+                  },
+                  "demoUrl": {
+                    "nullable": true,
+                    "type": "string",
+                    "maxLength": 300,
+                    "format": "uri"
+                  },
+                  "videoUrl": {
+                    "nullable": true,
+                    "type": "string",
+                    "maxLength": 300,
+                    "format": "uri"
+                  },
+                  "galleryIds": {
+                    "maxItems": 12,
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   }
                 }
               }
@@ -5185,7 +6167,10 @@
                       "enum": [
                         "SOFTWARE",
                         "DIGITAL_PRODUCT",
-                        "SOURCE_CODE"
+                        "SOURCE_CODE",
+                        "EBOOK",
+                        "TEMPLATE",
+                        "COURSE"
                       ]
                     },
                     "status": {
@@ -5195,6 +6180,151 @@
                         "PUBLISHED",
                         "ARCHIVED"
                       ]
+                    },
+                    "visibility": {
+                      "type": "string",
+                      "enum": [
+                        "LISTED",
+                        "UNLISTED"
+                      ]
+                    },
+                    "featured": {
+                      "type": "boolean"
+                    },
+                    "tagline": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "badge": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "highlights": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "benefits": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80
+                          },
+                          "body": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 400
+                          }
+                        },
+                        "required": [
+                          "title",
+                          "body"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "faq": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "q": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 200
+                          },
+                          "a": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 1500
+                          }
+                        },
+                        "required": [
+                          "q",
+                          "a"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "demoUrl": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "videoUrl": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "gallery": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "mimeType": {
+                            "type": "string"
+                          },
+                          "width": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "height": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "alt": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "blurDataUrl": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "variants": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "url": {
+                                  "type": "string"
+                                },
+                                "width": {
+                                  "type": "number"
+                                },
+                                "height": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "url",
+                                "width",
+                                "height"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "url",
+                          "mimeType",
+                          "width",
+                          "height",
+                          "alt",
+                          "blurDataUrl",
+                          "variants"
+                        ],
+                        "additionalProperties": false
+                      }
                     },
                     "price": {
                       "type": "integer",
@@ -5371,6 +6501,16 @@
                     "description",
                     "type",
                     "status",
+                    "visibility",
+                    "featured",
+                    "tagline",
+                    "badge",
+                    "highlights",
+                    "benefits",
+                    "faq",
+                    "demoUrl",
+                    "videoUrl",
+                    "gallery",
                     "price",
                     "compareAtPrice",
                     "currency",
@@ -5491,7 +6631,10 @@
                       "enum": [
                         "SOFTWARE",
                         "DIGITAL_PRODUCT",
-                        "SOURCE_CODE"
+                        "SOURCE_CODE",
+                        "EBOOK",
+                        "TEMPLATE",
+                        "COURSE"
                       ]
                     },
                     "status": {
@@ -5501,6 +6644,151 @@
                         "PUBLISHED",
                         "ARCHIVED"
                       ]
+                    },
+                    "visibility": {
+                      "type": "string",
+                      "enum": [
+                        "LISTED",
+                        "UNLISTED"
+                      ]
+                    },
+                    "featured": {
+                      "type": "boolean"
+                    },
+                    "tagline": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "badge": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "highlights": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "benefits": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80
+                          },
+                          "body": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 400
+                          }
+                        },
+                        "required": [
+                          "title",
+                          "body"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "faq": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "q": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 200
+                          },
+                          "a": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 1500
+                          }
+                        },
+                        "required": [
+                          "q",
+                          "a"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "demoUrl": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "videoUrl": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "gallery": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "mimeType": {
+                            "type": "string"
+                          },
+                          "width": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "height": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "alt": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "blurDataUrl": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "variants": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "url": {
+                                  "type": "string"
+                                },
+                                "width": {
+                                  "type": "number"
+                                },
+                                "height": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "url",
+                                "width",
+                                "height"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "url",
+                          "mimeType",
+                          "width",
+                          "height",
+                          "alt",
+                          "blurDataUrl",
+                          "variants"
+                        ],
+                        "additionalProperties": false
+                      }
                     },
                     "price": {
                       "type": "integer",
@@ -5677,6 +6965,16 @@
                     "description",
                     "type",
                     "status",
+                    "visibility",
+                    "featured",
+                    "tagline",
+                    "badge",
+                    "highlights",
+                    "benefits",
+                    "faq",
+                    "demoUrl",
+                    "videoUrl",
+                    "gallery",
                     "price",
                     "compareAtPrice",
                     "currency",
@@ -5762,7 +7060,10 @@
                       "enum": [
                         "SOFTWARE",
                         "DIGITAL_PRODUCT",
-                        "SOURCE_CODE"
+                        "SOURCE_CODE",
+                        "EBOOK",
+                        "TEMPLATE",
+                        "COURSE"
                       ]
                     },
                     "status": {
@@ -5772,6 +7073,151 @@
                         "PUBLISHED",
                         "ARCHIVED"
                       ]
+                    },
+                    "visibility": {
+                      "type": "string",
+                      "enum": [
+                        "LISTED",
+                        "UNLISTED"
+                      ]
+                    },
+                    "featured": {
+                      "type": "boolean"
+                    },
+                    "tagline": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "badge": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "highlights": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "benefits": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80
+                          },
+                          "body": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 400
+                          }
+                        },
+                        "required": [
+                          "title",
+                          "body"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "faq": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "q": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 200
+                          },
+                          "a": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 1500
+                          }
+                        },
+                        "required": [
+                          "q",
+                          "a"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "demoUrl": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "videoUrl": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "gallery": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "mimeType": {
+                            "type": "string"
+                          },
+                          "width": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "height": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "alt": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "blurDataUrl": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "variants": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "url": {
+                                  "type": "string"
+                                },
+                                "width": {
+                                  "type": "number"
+                                },
+                                "height": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "url",
+                                "width",
+                                "height"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "url",
+                          "mimeType",
+                          "width",
+                          "height",
+                          "alt",
+                          "blurDataUrl",
+                          "variants"
+                        ],
+                        "additionalProperties": false
+                      }
                     },
                     "price": {
                       "type": "integer",
@@ -5948,6 +7394,16 @@
                     "description",
                     "type",
                     "status",
+                    "visibility",
+                    "featured",
+                    "tagline",
+                    "badge",
+                    "highlights",
+                    "benefits",
+                    "faq",
+                    "demoUrl",
+                    "videoUrl",
+                    "gallery",
                     "price",
                     "compareAtPrice",
                     "currency",
@@ -6033,7 +7489,10 @@
                       "enum": [
                         "SOFTWARE",
                         "DIGITAL_PRODUCT",
-                        "SOURCE_CODE"
+                        "SOURCE_CODE",
+                        "EBOOK",
+                        "TEMPLATE",
+                        "COURSE"
                       ]
                     },
                     "status": {
@@ -6043,6 +7502,151 @@
                         "PUBLISHED",
                         "ARCHIVED"
                       ]
+                    },
+                    "visibility": {
+                      "type": "string",
+                      "enum": [
+                        "LISTED",
+                        "UNLISTED"
+                      ]
+                    },
+                    "featured": {
+                      "type": "boolean"
+                    },
+                    "tagline": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "badge": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "highlights": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "benefits": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80
+                          },
+                          "body": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 400
+                          }
+                        },
+                        "required": [
+                          "title",
+                          "body"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "faq": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "q": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 200
+                          },
+                          "a": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 1500
+                          }
+                        },
+                        "required": [
+                          "q",
+                          "a"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "demoUrl": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "videoUrl": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "gallery": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "mimeType": {
+                            "type": "string"
+                          },
+                          "width": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "height": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "alt": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "blurDataUrl": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "variants": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "url": {
+                                  "type": "string"
+                                },
+                                "width": {
+                                  "type": "number"
+                                },
+                                "height": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "url",
+                                "width",
+                                "height"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "url",
+                          "mimeType",
+                          "width",
+                          "height",
+                          "alt",
+                          "blurDataUrl",
+                          "variants"
+                        ],
+                        "additionalProperties": false
+                      }
                     },
                     "price": {
                       "type": "integer",
@@ -6219,6 +7823,16 @@
                     "description",
                     "type",
                     "status",
+                    "visibility",
+                    "featured",
+                    "tagline",
+                    "badge",
+                    "highlights",
+                    "benefits",
+                    "faq",
+                    "demoUrl",
+                    "videoUrl",
+                    "gallery",
                     "price",
                     "compareAtPrice",
                     "currency",
@@ -6868,7 +8482,10 @@
                             "enum": [
                               "SOFTWARE",
                               "DIGITAL_PRODUCT",
-                              "SOURCE_CODE"
+                              "SOURCE_CODE",
+                              "EBOOK",
+                              "TEMPLATE",
+                              "COURSE"
                             ]
                           },
                           "unitPrice": {
@@ -8176,7 +9793,10 @@
                             "enum": [
                               "SOFTWARE",
                               "DIGITAL_PRODUCT",
-                              "SOURCE_CODE"
+                              "SOURCE_CODE",
+                              "EBOOK",
+                              "TEMPLATE",
+                              "COURSE"
                             ]
                           },
                           "unitPrice": {
@@ -9091,7 +10711,10 @@
                             "enum": [
                               "SOFTWARE",
                               "DIGITAL_PRODUCT",
-                              "SOURCE_CODE"
+                              "SOURCE_CODE",
+                              "EBOOK",
+                              "TEMPLATE",
+                              "COURSE"
                             ]
                           },
                           "unitPrice": {
@@ -9897,7 +11520,10 @@
                             "enum": [
                               "SOFTWARE",
                               "DIGITAL_PRODUCT",
-                              "SOURCE_CODE"
+                              "SOURCE_CODE",
+                              "EBOOK",
+                              "TEMPLATE",
+                              "COURSE"
                             ]
                           },
                           "unitPrice": {
@@ -10685,7 +12311,10 @@
                             "enum": [
                               "SOFTWARE",
                               "DIGITAL_PRODUCT",
-                              "SOURCE_CODE"
+                              "SOURCE_CODE",
+                              "EBOOK",
+                              "TEMPLATE",
+                              "COURSE"
                             ]
                           },
                           "unitPrice": {
@@ -11473,7 +13102,10 @@
                             "enum": [
                               "SOFTWARE",
                               "DIGITAL_PRODUCT",
-                              "SOURCE_CODE"
+                              "SOURCE_CODE",
+                              "EBOOK",
+                              "TEMPLATE",
+                              "COURSE"
                             ]
                           },
                           "unitPrice": {
@@ -12281,7 +13913,10 @@
                             "enum": [
                               "SOFTWARE",
                               "DIGITAL_PRODUCT",
-                              "SOURCE_CODE"
+                              "SOURCE_CODE",
+                              "EBOOK",
+                              "TEMPLATE",
+                              "COURSE"
                             ]
                           },
                           "unitPrice": {
@@ -13130,7 +14765,10 @@
                             "enum": [
                               "SOFTWARE",
                               "DIGITAL_PRODUCT",
-                              "SOURCE_CODE"
+                              "SOURCE_CODE",
+                              "EBOOK",
+                              "TEMPLATE",
+                              "COURSE"
                             ]
                           },
                           "unitPrice": {
@@ -13918,7 +15556,10 @@
                             "enum": [
                               "SOFTWARE",
                               "DIGITAL_PRODUCT",
-                              "SOURCE_CODE"
+                              "SOURCE_CODE",
+                              "EBOOK",
+                              "TEMPLATE",
+                              "COURSE"
                             ]
                           },
                           "unitPrice": {
@@ -15546,7 +17187,10 @@
                             "enum": [
                               "SOFTWARE",
                               "DIGITAL_PRODUCT",
-                              "SOURCE_CODE"
+                              "SOURCE_CODE",
+                              "EBOOK",
+                              "TEMPLATE",
+                              "COURSE"
                             ]
                           },
                           "version": {
@@ -15977,7 +17621,10 @@
                             "enum": [
                               "SOFTWARE",
                               "DIGITAL_PRODUCT",
-                              "SOURCE_CODE"
+                              "SOURCE_CODE",
+                              "EBOOK",
+                              "TEMPLATE",
+                              "COURSE"
                             ]
                           },
                           "unitPrice": {
@@ -16491,7 +18138,10 @@
                             "enum": [
                               "SOFTWARE",
                               "DIGITAL_PRODUCT",
-                              "SOURCE_CODE"
+                              "SOURCE_CODE",
+                              "EBOOK",
+                              "TEMPLATE",
+                              "COURSE"
                             ]
                           },
                           "unitPrice": {
@@ -16894,7 +18544,10 @@
                         "enum": [
                           "SOFTWARE",
                           "DIGITAL_PRODUCT",
-                          "SOURCE_CODE"
+                          "SOURCE_CODE",
+                          "EBOOK",
+                          "TEMPLATE",
+                          "COURSE"
                         ]
                       },
                       "version": {

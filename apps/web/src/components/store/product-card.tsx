@@ -40,6 +40,11 @@ export function ProductCard({
       <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1">
         <span className="text-ink-soft text-sm">{kindLabel[product.kind]}</span>
         <StatusChip product={product} />
+        {product.badge && (
+          <Chip variant="status" tone="spark">
+            {product.badge}
+          </Chip>
+        )}
       </div>
       <Heading className="mt-1 text-xl leading-snug font-medium tracking-[-0.02em] group-hover:underline">
         {product.name}

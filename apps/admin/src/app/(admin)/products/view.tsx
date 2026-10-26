@@ -90,8 +90,19 @@ export function ProductsView() {
               header: 'Product',
               cell: (p) => (
                 <div className="min-w-0">
-                  <p className="truncate">{p.name}</p>
-                  <p className="text-ink-soft truncate text-sm font-normal">/{p.slug}</p>
+                  <p className="truncate">
+                    {p.featured && (
+                      <span aria-label="Featured" title="Featured" className="mr-1.5">
+                        ★
+                      </span>
+                    )}
+                    {p.name}
+                  </p>
+                  <p className="text-ink-soft truncate text-sm font-normal">
+                    /{p.slug}
+                    {p.visibility === 'UNLISTED' && ' · Unlisted'}
+                    {p.badge && ` · `}
+                  </p>
                 </div>
               ),
             },

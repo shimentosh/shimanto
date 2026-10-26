@@ -3,11 +3,13 @@
  * minor units (cents); discounts are rounded per line and never exceed a line's total.
  */
 
+import type { ProductType } from '@shimanto/types';
+
 export interface PricedProduct {
   id: string;
   slug: string;
   name: string;
-  type: 'SOFTWARE' | 'DIGITAL_PRODUCT' | 'SOURCE_CODE';
+  type: ProductType;
   price: number;
   currency: string;
   deliverFiles: boolean;

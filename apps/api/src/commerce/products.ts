@@ -14,6 +14,8 @@ import { ApiTags } from '@nestjs/swagger';
 import {
   type AdminProduct,
   AdminProductSchema,
+  ProductBenefitSchema,
+  ProductFaqSchema,
   type ProductInput,
   ProductInputSchema,
   ProductUpdateSchema,
@@ -36,8 +38,11 @@ import { StorageService } from '../media/storage.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { ENTITLED_ORDER } from './status.js';
 
+const images = { orderBy: { order: 'asc' }, include: { media: true } } as const;
+
 const adminInclude = {
   cover: true,
+  images,
   files: { orderBy: { order: 'asc' }, include: { media: true } },
   _count: {
     select: { orderItems: { where: { order: { status: { in: ENTITLED_ORDER } } } } },
@@ -48,10 +53,15 @@ type AdminRow = Prisma.ProductGetPayload<{ include: typeof adminInclude }>;
 
 const publicInclude = {
   cover: true,
+  images,
   _count: { select: { files: true } },
 } satisfies Prisma.ProductInclude;
 
 type PublicRow = Prisma.ProductGetPayload<{ include: typeof publicInclude }>;
+
+/** Stored JSON read back leniently: anything malformed shows as empty rather than failing a page. */
+const benefitsOf = (value: unknown) => z.array(ProductBenefitSchema).catch([]).parse(value);
+const faqOf = (value: unknown) => z.array(ProductFaqSchema).catch([]).parse(value);
 
 @Injectable()
 export class ProductsService {
@@ -65,11 +75,12 @@ export class ProductsService {
 
   // ───────────── Public ─────────────
 
+  /** Published and listed. Unlisted products are only reachable by slug. */
   async publicList(): Promise<PublicProduct[]> {
     const products = await this.prisma.product.findMany({
-      where: { status: 'PUBLISHED' },
+      where: { status: 'PUBLISHED', visibility: 'LISTED' },
       include: publicInclude,
-      orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
+      orderBy: [{ featured: 'desc' }, { publishedAt: 'desc' }, { createdAt: 'desc' }],
     });
     return products.map((p) => this.toPublic(p));
   }
@@ -104,6 +115,24 @@ export class ProductsService {
       ],
       fileCount: p.deliverFiles ? p._count.files : 0,
       requiresGithub: p.deliverGithub,
+      listed: p.visibility === 'LISTED',
+      ...this.salesPage(p),
+    };
+  }
+
+  private salesPage(p: PublicRow | AdminRow) {
+    return {
+      featured: p.featured,
+      tagline: p.tagline,
+      badge: p.badge,
+      highlights: p.highlights,
+      benefits: benefitsOf(p.benefits),
+      faq: faqOf(p.faq),
+      demoUrl: p.demoUrl,
+      videoUrl: p.videoUrl,
+      gallery: p.images
+        .map((image) => toPublicMedia(image.media, this.storage.publicUrl))
+        .filter((media) => media !== null),
     };
   }
 
@@ -118,6 +147,8 @@ export class ProductsService {
       description: p.description,
       type: p.type,
       status: p.status,
+      visibility: p.visibility,
+      ...this.salesPage(p),
       price: p.price,
       compareAtPrice: p.compareAtPrice,
       currency: p.currency,
@@ -166,6 +197,7 @@ export class ProductsService {
   async create(input: z.output<typeof ProductInputSchema>, actor: Actor): Promise<AdminProduct> {
     await this.assertFiles(input.files);
     await this.assertCover(input.coverId);
+    await this.assertGallery(input.galleryIds);
     try {
       const product = await this.prisma.product.create({
         data: {
@@ -186,6 +218,16 @@ export class ProductsService {
           githubOwner: input.githubOwner ?? null,
           githubRepo: input.githubRepo ?? null,
           files: { create: await this.fileRows(input.files) },
+          visibility: input.visibility,
+          featured: input.featured,
+          tagline: input.tagline ?? null,
+          badge: input.badge ?? null,
+          highlights: input.highlights,
+          benefits: input.benefits,
+          faq: input.faq,
+          demoUrl: input.demoUrl ?? null,
+          videoUrl: input.videoUrl ?? null,
+          images: { create: input.galleryIds.map((mediaId, order) => ({ mediaId, order })) },
         },
         include: adminInclude,
       });
@@ -202,6 +244,7 @@ export class ProductsService {
     const before = await this.row(id);
     if (input.files) await this.assertFiles(input.files);
     if (input.coverId) await this.assertCover(input.coverId);
+    if (input.galleryIds) await this.assertGallery(input.galleryIds);
 
     const next = {
       price: input.price ?? before.price,
@@ -227,6 +270,12 @@ export class ProductsService {
             data: (await this.fileRows(input.files)).map((row) => ({ ...row, productId: id })),
           });
         }
+        if (input.galleryIds) {
+          await tx.productImage.deleteMany({ where: { productId: id } });
+          await tx.productImage.createMany({
+            data: input.galleryIds.map((mediaId, order) => ({ productId: id, mediaId, order })),
+          });
+        }
         return tx.product.update({
           where: { id },
           data: {
@@ -246,6 +295,15 @@ export class ProductsService {
             deliverGithub: input.deliverGithub,
             githubOwner: input.githubOwner,
             githubRepo: input.githubRepo,
+            visibility: input.visibility,
+            featured: input.featured,
+            tagline: input.tagline,
+            badge: input.badge,
+            highlights: input.highlights,
+            benefits: input.benefits,
+            faq: input.faq,
+            demoUrl: input.demoUrl,
+            videoUrl: input.videoUrl,
           },
           include: adminInclude,
         });
@@ -325,6 +383,20 @@ export class ProductsService {
     const cover = await this.prisma.media.findUnique({ where: { id: coverId } });
     if (!cover || !cover.mimeType.startsWith('image/') || cover.key.startsWith('private/')) {
       unprocessable('The cover must be a public image from the media library', 'coverId');
+    }
+  }
+
+  /** Gallery images follow the cover's rule: public images from the media library, each once. */
+  private async assertGallery(ids: string[] = []) {
+    if (ids.length === 0) return;
+    if (new Set(ids).size !== ids.length)
+      unprocessable('The same image is in the gallery twice', 'galleryIds');
+    const media = await this.prisma.media.findMany({ where: { id: { in: ids } } });
+    const ok = media.filter(
+      (m) => m.mimeType.startsWith('image/') && !m.key.startsWith('private/'),
+    );
+    if (ok.length !== ids.length) {
+      unprocessable('Gallery images must be public images from the media library', 'galleryIds');
     }
   }
 

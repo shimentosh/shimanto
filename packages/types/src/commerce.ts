@@ -12,6 +12,7 @@ import {
   PaymentStatusSchema,
   ProductStatusSchema,
   ProductTypeSchema,
+  ProductVisibilitySchema,
 } from './enums.js';
 
 export const SlugSchema = z
@@ -54,6 +55,46 @@ export const GitHubRepoSchema = z
   .max(100)
   .regex(/^[A-Za-z0-9._-]+$/, 'a GitHub repository name');
 
+/** The video id from a YouTube link (watch, youtu.be, embed or shorts), or null. */
+export function youtubeId(url: string): string | null {
+  const match = url.match(
+    /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]{11})/,
+  );
+  return match?.[1] ?? null;
+}
+
+/** A feature block on the sales page. */
+export const ProductBenefitSchema = z.object({
+  title: z.string().trim().min(1).max(80),
+  body: z.string().trim().min(1).max(400),
+});
+export type ProductBenefit = z.infer<typeof ProductBenefitSchema>;
+
+/** A product-specific question, shown before the store-wide ones. */
+export const ProductFaqSchema = z.object({
+  q: z.string().trim().min(1).max(200),
+  a: z.string().trim().min(1).max(1500),
+});
+export type ProductFaq = z.infer<typeof ProductFaqSchema>;
+
+const WebUrlSchema = z.url({ protocol: /^https?$/ }).max(300);
+const YouTubeUrlSchema = WebUrlSchema.refine((v) => youtubeId(v) !== null, 'a YouTube video link');
+
+/** Sales-page fields, shared by create (with defaults) and update (all optional). */
+const salesPage = {
+  visibility: ProductVisibilitySchema,
+  featured: z.boolean(),
+  tagline: z.string().trim().max(160).nullish(),
+  badge: z.string().trim().max(24).nullish(),
+  highlights: z.array(z.string().trim().min(1).max(60)).max(4),
+  benefits: z.array(ProductBenefitSchema).max(8),
+  faq: z.array(ProductFaqSchema).max(12),
+  demoUrl: WebUrlSchema.nullish(),
+  videoUrl: YouTubeUrlSchema.nullish(),
+  /** Public images for the gallery, in order. Replaces the whole gallery. */
+  galleryIds: z.array(z.string()).max(12),
+};
+
 /** What the public site needs to render a product: sales info, price and how it is delivered. */
 export const PublicProductSchema = z.object({
   slug: z.string(),
@@ -75,6 +116,17 @@ export const PublicProductSchema = z.object({
   fileCount: z.number().int(),
   /** Delivered as GitHub repository access: the buyer needs a connected GitHub account. */
   requiresGithub: z.boolean(),
+  /** False for unlisted products: reachable by link, kept out of listings and search. */
+  listed: z.boolean(),
+  featured: z.boolean(),
+  tagline: z.string().nullable(),
+  badge: z.string().nullable(),
+  highlights: z.array(z.string()),
+  benefits: z.array(ProductBenefitSchema),
+  faq: z.array(ProductFaqSchema),
+  demoUrl: z.string().nullable(),
+  videoUrl: z.string().nullable(),
+  gallery: z.array(PublicMediaSchema),
 });
 export type PublicProduct = z.infer<typeof PublicProductSchema>;
 
@@ -103,6 +155,16 @@ export const ProductInputSchema = z
     githubOwner: GitHubOwnerSchema.nullish(),
     githubRepo: GitHubRepoSchema.nullish(),
     files: z.array(ProductFileInputSchema).max(50).default([]),
+    visibility: salesPage.visibility.default('LISTED'),
+    featured: salesPage.featured.default(false),
+    tagline: salesPage.tagline,
+    badge: salesPage.badge,
+    highlights: salesPage.highlights.default([]),
+    benefits: salesPage.benefits.default([]),
+    faq: salesPage.faq.default([]),
+    demoUrl: salesPage.demoUrl,
+    videoUrl: salesPage.videoUrl,
+    galleryIds: salesPage.galleryIds.default([]),
   })
   .superRefine((p, ctx) => {
     if (p.deliverGithub && (!p.githubOwner || !p.githubRepo)) {
@@ -141,6 +203,16 @@ export const ProductUpdateSchema = z.object({
   githubOwner: GitHubOwnerSchema.nullish(),
   githubRepo: GitHubRepoSchema.nullish(),
   files: z.array(ProductFileInputSchema).max(50).optional(),
+  visibility: salesPage.visibility.optional(),
+  featured: salesPage.featured.optional(),
+  tagline: salesPage.tagline,
+  badge: salesPage.badge,
+  highlights: salesPage.highlights.optional(),
+  benefits: salesPage.benefits.optional(),
+  faq: salesPage.faq.optional(),
+  demoUrl: salesPage.demoUrl,
+  videoUrl: salesPage.videoUrl,
+  galleryIds: salesPage.galleryIds.optional(),
 });
 export type ProductUpdate = z.input<typeof ProductUpdateSchema>;
 
@@ -152,6 +224,16 @@ export const AdminProductSchema = z.object({
   description: z.string().nullable(),
   type: ProductTypeSchema,
   status: ProductStatusSchema,
+  visibility: ProductVisibilitySchema,
+  featured: z.boolean(),
+  tagline: z.string().nullable(),
+  badge: z.string().nullable(),
+  highlights: z.array(z.string()),
+  benefits: z.array(ProductBenefitSchema),
+  faq: z.array(ProductFaqSchema),
+  demoUrl: z.string().nullable(),
+  videoUrl: z.string().nullable(),
+  gallery: z.array(PublicMediaSchema),
   price: z.number().int(),
   compareAtPrice: z.number().int().nullable(),
   currency: z.string(),

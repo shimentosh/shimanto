@@ -38,6 +38,15 @@ enum ProductType {
   SOFTWARE
   DIGITAL_PRODUCT
   SOURCE_CODE
+  EBOOK
+  TEMPLATE
+  COURSE
+}
+
+/// LISTED shows in the store, sitemap and search. UNLISTED is reachable only by its link.
+enum ProductVisibility {
+  LISTED
+  UNLISTED
 }
 
 enum OrderStatus {
@@ -218,6 +227,7 @@ model Media {
   uploadedBy    User?            @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
   productFiles  ProductFile[]
   coverOf       Product[]
+  galleryOf     ProductImage[]
   attachments   SupportMessage[]
   paymentProofs Payment[]
 }
@@ -225,41 +235,71 @@ model Media {
 // ─────────────────────────────── Products ───────────────────────────────
 
 model Product {
-  id             String        @id @default(cuid())
+  id             String            @id @default(cuid())
   /// URL slug. The sales page is built in the web app at /products/<slug>.
-  slug           String        @unique
+  slug           String            @unique
   name           String
   /// Short description: checkout, receipts, portal.
   summary        String?
   /// Full description (plain text / light markdown).
   description    String?
-  type           ProductType   @default(DIGITAL_PRODUCT)
-  status         ProductStatus @default(DRAFT)
+  type           ProductType       @default(DIGITAL_PRODUCT)
+  status         ProductStatus     @default(DRAFT)
+  visibility     ProductVisibility @default(LISTED)
+  /// Shown first in the store, with a "Featured" mark.
+  featured       Boolean           @default(false)
+  /// Headline under the name on the sales page.
+  tagline        String?
+  /// Short label on the card and page, e.g. "New" or "Bestseller".
+  badge          String?
+  /// Up to four short points beside the price in the hero.
+  highlights     String[]          @default([])
+  /// Feature blocks: [{ title, body }].
+  benefits       Json              @default("[]")
+  /// Product-specific questions: [{ q, a }], shown before the store-wide ones.
+  faq            Json              @default("[]")
+  demoUrl        String?
+  /// YouTube link, played over the first gallery image.
+  videoUrl       String?
   /// Minor units (cents). 0 = free: still a normal order, with payment NOT_REQUIRED.
   price          Int
   /// Optional "was" price shown struck through.
   compareAtPrice Int?
-  currency       String        @default("USD")
+  currency       String            @default("USD")
   coverId        String?
-  features       String[]      @default([])
-  requirements   String[]      @default([])
+  features       String[]          @default([])
+  requirements   String[]          @default([])
   version        String?
   /// Delivery configuration: private R2 files, a GitHub repository, or both.
-  deliverFiles   Boolean       @default(false)
-  deliverGithub  Boolean       @default(false)
+  deliverFiles   Boolean           @default(false)
+  deliverGithub  Boolean           @default(false)
   /// Trusted repository, set by an admin only. Never taken from customer input.
   githubOwner    String?
   githubRepo     String?
   publishedAt    DateTime?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
 
   cover      Media?          @relation(fields: [coverId], references: [id], onDelete: SetNull)
   files      ProductFile[]
+  images     ProductImage[]
   orderItems OrderItem[]
   deliveries Delivery[]
   coupons    Coupon[]        @relation("CouponProducts")
   tickets    SupportTicket[]
+}
+
+/// Screenshots for the sales page gallery, in order. Each is a public image Media.
+model ProductImage {
+  id        String @id @default(cuid())
+  productId String
+  mediaId   String
+  order     Int    @default(0)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  media   Media   @relation(fields: [mediaId], references: [id], onDelete: Restrict)
+
+  @@unique([productId, mediaId])
 }
 
 /// Files a buyer receives (the product's R2 assets). Each links to a private Media object.

@@ -3487,7 +3487,7 @@ export interface operations {
                         summary: string | null;
                         description: string | null;
                         /** @enum {string} */
-                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                         price: number;
                         compareAtPrice: number | null;
                         currency: string;
@@ -3512,6 +3512,35 @@ export interface operations {
                         deliveryMethods: ("R2" | "GITHUB")[];
                         fileCount: number;
                         requiresGithub: boolean;
+                        listed: boolean;
+                        featured: boolean;
+                        tagline: string | null;
+                        badge: string | null;
+                        highlights: string[];
+                        benefits: {
+                            title: string;
+                            body: string;
+                        }[];
+                        faq: {
+                            q: string;
+                            a: string;
+                        }[];
+                        demoUrl: string | null;
+                        videoUrl: string | null;
+                        gallery: {
+                            id: string;
+                            url: string;
+                            mimeType: string;
+                            width: number | null;
+                            height: number | null;
+                            alt: string | null;
+                            blurDataUrl: string | null;
+                            variants: {
+                                url: string;
+                                width: number;
+                                height: number;
+                            }[];
+                        }[];
                     }[];
                 };
             };
@@ -3540,7 +3569,7 @@ export interface operations {
                         summary: string | null;
                         description: string | null;
                         /** @enum {string} */
-                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                         price: number;
                         compareAtPrice: number | null;
                         currency: string;
@@ -3565,6 +3594,35 @@ export interface operations {
                         deliveryMethods: ("R2" | "GITHUB")[];
                         fileCount: number;
                         requiresGithub: boolean;
+                        listed: boolean;
+                        featured: boolean;
+                        tagline: string | null;
+                        badge: string | null;
+                        highlights: string[];
+                        benefits: {
+                            title: string;
+                            body: string;
+                        }[];
+                        faq: {
+                            q: string;
+                            a: string;
+                        }[];
+                        demoUrl: string | null;
+                        videoUrl: string | null;
+                        gallery: {
+                            id: string;
+                            url: string;
+                            mimeType: string;
+                            width: number | null;
+                            height: number | null;
+                            alt: string | null;
+                            blurDataUrl: string | null;
+                            variants: {
+                                url: string;
+                                width: number;
+                                height: number;
+                            }[];
+                        }[];
                     };
                 };
             };
@@ -3592,9 +3650,39 @@ export interface operations {
                         summary: string | null;
                         description: string | null;
                         /** @enum {string} */
-                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                         /** @enum {string} */
                         status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+                        /** @enum {string} */
+                        visibility: "LISTED" | "UNLISTED";
+                        featured: boolean;
+                        tagline: string | null;
+                        badge: string | null;
+                        highlights: string[];
+                        benefits: {
+                            title: string;
+                            body: string;
+                        }[];
+                        faq: {
+                            q: string;
+                            a: string;
+                        }[];
+                        demoUrl: string | null;
+                        videoUrl: string | null;
+                        gallery: {
+                            id: string;
+                            url: string;
+                            mimeType: string;
+                            width: number | null;
+                            height: number | null;
+                            alt: string | null;
+                            blurDataUrl: string | null;
+                            variants: {
+                                url: string;
+                                width: number;
+                                height: number;
+                            }[];
+                        }[];
                         price: number;
                         compareAtPrice: number | null;
                         currency: string;
@@ -3669,7 +3757,7 @@ export interface operations {
                      * @default DIGITAL_PRODUCT
                      * @enum {string}
                      */
-                    type?: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                    type?: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                     price: number;
                     compareAtPrice?: number | null;
                     /** @default USD */
@@ -3692,6 +3780,33 @@ export interface operations {
                         label?: string;
                         version?: string;
                     }[];
+                    /**
+                     * @default LISTED
+                     * @enum {string}
+                     */
+                    visibility?: "LISTED" | "UNLISTED";
+                    /** @default false */
+                    featured?: boolean;
+                    tagline?: string | null;
+                    badge?: string | null;
+                    /** @default [] */
+                    highlights?: string[];
+                    /** @default [] */
+                    benefits?: {
+                        title: string;
+                        body: string;
+                    }[];
+                    /** @default [] */
+                    faq?: {
+                        q: string;
+                        a: string;
+                    }[];
+                    /** Format: uri */
+                    demoUrl?: string | null;
+                    /** Format: uri */
+                    videoUrl?: string | null;
+                    /** @default [] */
+                    galleryIds?: string[];
                 };
             };
         };
@@ -3709,9 +3824,39 @@ export interface operations {
                         summary: string | null;
                         description: string | null;
                         /** @enum {string} */
-                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                         /** @enum {string} */
                         status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+                        /** @enum {string} */
+                        visibility: "LISTED" | "UNLISTED";
+                        featured: boolean;
+                        tagline: string | null;
+                        badge: string | null;
+                        highlights: string[];
+                        benefits: {
+                            title: string;
+                            body: string;
+                        }[];
+                        faq: {
+                            q: string;
+                            a: string;
+                        }[];
+                        demoUrl: string | null;
+                        videoUrl: string | null;
+                        gallery: {
+                            id: string;
+                            url: string;
+                            mimeType: string;
+                            width: number | null;
+                            height: number | null;
+                            alt: string | null;
+                            blurDataUrl: string | null;
+                            variants: {
+                                url: string;
+                                width: number;
+                                height: number;
+                            }[];
+                        }[];
                         price: number;
                         compareAtPrice: number | null;
                         currency: string;
@@ -3792,9 +3937,39 @@ export interface operations {
                         summary: string | null;
                         description: string | null;
                         /** @enum {string} */
-                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                         /** @enum {string} */
                         status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+                        /** @enum {string} */
+                        visibility: "LISTED" | "UNLISTED";
+                        featured: boolean;
+                        tagline: string | null;
+                        badge: string | null;
+                        highlights: string[];
+                        benefits: {
+                            title: string;
+                            body: string;
+                        }[];
+                        faq: {
+                            q: string;
+                            a: string;
+                        }[];
+                        demoUrl: string | null;
+                        videoUrl: string | null;
+                        gallery: {
+                            id: string;
+                            url: string;
+                            mimeType: string;
+                            width: number | null;
+                            height: number | null;
+                            alt: string | null;
+                            blurDataUrl: string | null;
+                            variants: {
+                                url: string;
+                                width: number;
+                                height: number;
+                            }[];
+                        }[];
                         price: number;
                         compareAtPrice: number | null;
                         currency: string;
@@ -3901,7 +4076,7 @@ export interface operations {
                     summary?: string | null;
                     description?: string | null;
                     /** @enum {string} */
-                    type?: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                    type?: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                     price?: number;
                     compareAtPrice?: number | null;
                     currency?: string;
@@ -3918,6 +4093,25 @@ export interface operations {
                         label?: string;
                         version?: string;
                     }[];
+                    /** @enum {string} */
+                    visibility?: "LISTED" | "UNLISTED";
+                    featured?: boolean;
+                    tagline?: string | null;
+                    badge?: string | null;
+                    highlights?: string[];
+                    benefits?: {
+                        title: string;
+                        body: string;
+                    }[];
+                    faq?: {
+                        q: string;
+                        a: string;
+                    }[];
+                    /** Format: uri */
+                    demoUrl?: string | null;
+                    /** Format: uri */
+                    videoUrl?: string | null;
+                    galleryIds?: string[];
                 };
             };
         };
@@ -3935,9 +4129,39 @@ export interface operations {
                         summary: string | null;
                         description: string | null;
                         /** @enum {string} */
-                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                         /** @enum {string} */
                         status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+                        /** @enum {string} */
+                        visibility: "LISTED" | "UNLISTED";
+                        featured: boolean;
+                        tagline: string | null;
+                        badge: string | null;
+                        highlights: string[];
+                        benefits: {
+                            title: string;
+                            body: string;
+                        }[];
+                        faq: {
+                            q: string;
+                            a: string;
+                        }[];
+                        demoUrl: string | null;
+                        videoUrl: string | null;
+                        gallery: {
+                            id: string;
+                            url: string;
+                            mimeType: string;
+                            width: number | null;
+                            height: number | null;
+                            alt: string | null;
+                            blurDataUrl: string | null;
+                            variants: {
+                                url: string;
+                                width: number;
+                                height: number;
+                            }[];
+                        }[];
                         price: number;
                         compareAtPrice: number | null;
                         currency: string;
@@ -4018,9 +4242,39 @@ export interface operations {
                         summary: string | null;
                         description: string | null;
                         /** @enum {string} */
-                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                         /** @enum {string} */
                         status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+                        /** @enum {string} */
+                        visibility: "LISTED" | "UNLISTED";
+                        featured: boolean;
+                        tagline: string | null;
+                        badge: string | null;
+                        highlights: string[];
+                        benefits: {
+                            title: string;
+                            body: string;
+                        }[];
+                        faq: {
+                            q: string;
+                            a: string;
+                        }[];
+                        demoUrl: string | null;
+                        videoUrl: string | null;
+                        gallery: {
+                            id: string;
+                            url: string;
+                            mimeType: string;
+                            width: number | null;
+                            height: number | null;
+                            alt: string | null;
+                            blurDataUrl: string | null;
+                            variants: {
+                                url: string;
+                                width: number;
+                                height: number;
+                            }[];
+                        }[];
                         price: number;
                         compareAtPrice: number | null;
                         currency: string;
@@ -4101,9 +4355,39 @@ export interface operations {
                         summary: string | null;
                         description: string | null;
                         /** @enum {string} */
-                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                         /** @enum {string} */
                         status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+                        /** @enum {string} */
+                        visibility: "LISTED" | "UNLISTED";
+                        featured: boolean;
+                        tagline: string | null;
+                        badge: string | null;
+                        highlights: string[];
+                        benefits: {
+                            title: string;
+                            body: string;
+                        }[];
+                        faq: {
+                            q: string;
+                            a: string;
+                        }[];
+                        demoUrl: string | null;
+                        videoUrl: string | null;
+                        gallery: {
+                            id: string;
+                            url: string;
+                            mimeType: string;
+                            width: number | null;
+                            height: number | null;
+                            alt: string | null;
+                            blurDataUrl: string | null;
+                            variants: {
+                                url: string;
+                                width: number;
+                                height: number;
+                            }[];
+                        }[];
                         price: number;
                         compareAtPrice: number | null;
                         currency: string;
@@ -4184,9 +4468,39 @@ export interface operations {
                         summary: string | null;
                         description: string | null;
                         /** @enum {string} */
-                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                         /** @enum {string} */
                         status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+                        /** @enum {string} */
+                        visibility: "LISTED" | "UNLISTED";
+                        featured: boolean;
+                        tagline: string | null;
+                        badge: string | null;
+                        highlights: string[];
+                        benefits: {
+                            title: string;
+                            body: string;
+                        }[];
+                        faq: {
+                            q: string;
+                            a: string;
+                        }[];
+                        demoUrl: string | null;
+                        videoUrl: string | null;
+                        gallery: {
+                            id: string;
+                            url: string;
+                            mimeType: string;
+                            width: number | null;
+                            height: number | null;
+                            alt: string | null;
+                            blurDataUrl: string | null;
+                            variants: {
+                                url: string;
+                                width: number;
+                                height: number;
+                            }[];
+                        }[];
                         price: number;
                         compareAtPrice: number | null;
                         currency: string;
@@ -4498,7 +4812,7 @@ export interface operations {
                             slug: string;
                             name: string;
                             /** @enum {string} */
-                            type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                            type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                             unitPrice: number;
                             quantity: number;
                             discount: number;
@@ -4846,7 +5160,7 @@ export interface operations {
                             productName: string;
                             productSlug: string;
                             /** @enum {string} */
-                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                             unitPrice: number;
                             quantity: number;
                             discount: number;
@@ -5074,7 +5388,7 @@ export interface operations {
                             productName: string;
                             productSlug: string;
                             /** @enum {string} */
-                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                             unitPrice: number;
                             quantity: number;
                             discount: number;
@@ -5268,7 +5582,7 @@ export interface operations {
                             productName: string;
                             productSlug: string;
                             /** @enum {string} */
-                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                             unitPrice: number;
                             quantity: number;
                             discount: number;
@@ -5456,7 +5770,7 @@ export interface operations {
                             productName: string;
                             productSlug: string;
                             /** @enum {string} */
-                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                             unitPrice: number;
                             quantity: number;
                             discount: number;
@@ -5644,7 +5958,7 @@ export interface operations {
                             productName: string;
                             productSlug: string;
                             /** @enum {string} */
-                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                             unitPrice: number;
                             quantity: number;
                             discount: number;
@@ -5838,7 +6152,7 @@ export interface operations {
                             productName: string;
                             productSlug: string;
                             /** @enum {string} */
-                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                             unitPrice: number;
                             quantity: number;
                             discount: number;
@@ -6065,7 +6379,7 @@ export interface operations {
                             productName: string;
                             productSlug: string;
                             /** @enum {string} */
-                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                             unitPrice: number;
                             quantity: number;
                             discount: number;
@@ -6253,7 +6567,7 @@ export interface operations {
                             productName: string;
                             productSlug: string;
                             /** @enum {string} */
-                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                             unitPrice: number;
                             quantity: number;
                             discount: number;
@@ -6794,7 +7108,7 @@ export interface operations {
                             name: string;
                             slug: string;
                             /** @enum {string} */
-                            type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                            type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                             version: string | null;
                             purchasedAt: string;
                             orderNumber: number;
@@ -6922,7 +7236,7 @@ export interface operations {
                             productName: string;
                             productSlug: string;
                             /** @enum {string} */
-                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                             unitPrice: number;
                             quantity: number;
                             discount: number;
@@ -7052,7 +7366,7 @@ export interface operations {
                             productName: string;
                             productSlug: string;
                             /** @enum {string} */
-                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                            productType: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                             unitPrice: number;
                             quantity: number;
                             discount: number;
@@ -7152,7 +7466,7 @@ export interface operations {
                         name: string;
                         slug: string;
                         /** @enum {string} */
-                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE";
+                        type: "SOFTWARE" | "DIGITAL_PRODUCT" | "SOURCE_CODE" | "EBOOK" | "TEMPLATE" | "COURSE";
                         version: string | null;
                         purchasedAt: string;
                         orderNumber: number;

@@ -41,9 +41,12 @@ function Chevron({ dir }: { dir: 'left' | 'right' }) {
 export function ScreenshotSlider({
   shots,
   video,
+  unoptimized = false,
 }: {
   shots: ToolImage[];
   video?: { id: string; title: string };
+  /** Images served as-is (uploaded media on the storage CDN), not through the image optimizer. */
+  unoptimized?: boolean;
 }) {
   const track = useRef<HTMLUListElement>(null);
   const thumbs = useRef<HTMLUListElement>(null);
@@ -157,6 +160,7 @@ export function ScreenshotSlider({
                   width={shot.width}
                   height={shot.height}
                   priority={i === 0}
+                  unoptimized={unoptimized}
                   sizes="(min-width: 1024px) 700px, 100vw"
                   className="h-auto w-full"
                 />
@@ -239,6 +243,7 @@ export function ScreenshotSlider({
                     width={shot.width}
                     height={shot.height}
                     sizes="96px"
+                    unoptimized={unoptimized}
                     className="h-auto w-full"
                   />
                   {video && i === 0 && (
