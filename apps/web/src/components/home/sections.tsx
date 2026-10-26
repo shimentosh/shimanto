@@ -115,7 +115,7 @@ export function HeroSection() {
             <span aria-hidden="true" className="bg-build size-2 rounded-full" />
             {hero.eyebrow}
           </p>
-          <h1 className="mt-6 text-[clamp(40px,5vw,80px)] leading-[0.95] font-medium tracking-[-0.055em]">
+          <h1 className="font-display mt-6 text-[clamp(40px,5vw,80px)] leading-[0.95] font-semibold tracking-[-0.045em]">
             <KineticWord i={0}>I</KineticWord> <KineticWord i={1}>build</KineticWord>
             <br />
             <KineticWord i={2} accent="build" turn={0} tile="briefcase">
@@ -763,7 +763,7 @@ export function CreativeSection() {
               href={musicChannel.url}
               target="_blank"
               rel="noopener"
-              className="bg-create text-on-world rounded-pill inline-flex items-center gap-2 px-5 py-2.5 font-medium transition-opacity hover:opacity-90"
+              className="text-on-world rounded-pill via-create inline-flex items-center gap-2 bg-gradient-to-b from-[#ff9584] to-[#e4523b] px-5 py-2.5 font-medium shadow-[inset_0_1px_0_rgba(255,255,255,0.45),inset_0_-2px_0_rgba(0,0,0,0.2),0_12px_28px_-12px_rgba(255,112,89,0.85)] transition-[translate,filter] hover:brightness-105 active:translate-y-px motion-safe:hover:-translate-y-px"
             >
               <svg viewBox="0 0 24 24" className="size-4" fill="currentColor" aria-hidden="true">
                 <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z" />

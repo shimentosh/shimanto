@@ -1,6 +1,13 @@
 import { CustomCursor, FloatingNav, Footer, Logo, ThemeScript } from '@shimanto/ui';
 import type { Metadata, Viewport } from 'next';
-import { Inter_Tight, JetBrains_Mono, Noto_Sans_Bengali, Unbounded } from 'next/font/google';
+import {
+  Instrument_Sans,
+  Instrument_Serif,
+  Inter_Tight,
+  JetBrains_Mono,
+  Noto_Sans_Bengali,
+  Unbounded,
+} from 'next/font/google';
 import {
   accountNav,
   ctaNav,
@@ -23,6 +30,19 @@ import './globals.css';
 const interTight = Inter_Tight({
   subsets: ['latin'],
   variable: '--font-inter-tight',
+  display: 'swap',
+});
+// Display headlines: Instrument Sans, with Instrument Serif italic for the softer accent line.
+const instrumentSans = Instrument_Sans({
+  subsets: ['latin'],
+  variable: '--font-instrument-sans',
+  display: 'swap',
+});
+const instrumentSerif = Instrument_Serif({
+  weight: '400',
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+  variable: '--font-instrument-serif',
   display: 'swap',
 });
 // Logo face only: one weight, preloaded because the wordmark is above the fold on every page.
@@ -72,7 +92,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${interTight.variable} ${unbounded.variable} ${notoBengali.variable} ${jetbrainsMono.variable}`}
+      className={`${interTight.variable} ${instrumentSans.variable} ${instrumentSerif.variable} ${unbounded.variable} ${notoBengali.variable} ${jetbrainsMono.variable}`}
     >
       <head>
         <ThemeScript />

@@ -393,6 +393,25 @@ body:has(main[data-standalone]) {
   color-scheme: dark;
 }
 /*
+ * The English Content OS pages (fonts loaded in app/layout.tsx): display headlines in
+ * Instrument Sans, the gradient accent line in Instrument Serif italic. Scoped to `.cos-en` so the
+ * Bangla pages below keep their own type.
+ */
+.cos-en .cos-display {
+  font-family: var(--font-instrument-sans), var(--font-inter-tight), sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 0.96;
+}
+.cos-en .cos-display > .bg-clip-text {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  padding-bottom: 0.1em;
+}
+
+/*
  * The Bangla Content OS pages (fonts loaded in app/bn/content-os/layout.tsx): Hind Siliguri to
  * read, Anek Bangla (a touch condensed) for display headlines with Tiro Bangla italic on the
  * gradient line, Galada for the offer. Bangla stacks vowel signs above and below the letters, so

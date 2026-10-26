@@ -245,7 +245,7 @@ export function FloatingNav({
             )}
             <Link
               href={cta.href}
-              className="bg-ink text-canvas rounded-pill ml-2 hidden px-4 py-2 text-sm font-medium transition-opacity hover:opacity-85 sm:inline-flex"
+              className="press-ink rounded-pill ml-2 hidden px-4 py-2 text-sm font-medium sm:inline-flex"
             >
               {cta.label}
             </Link>

@@ -40,7 +40,7 @@ export function PageHeader({
               {eyebrow}
             </div>
           )}
-          <h1 className="text-[clamp(28px,4vw,40px)] leading-[1.05] font-medium tracking-[-0.03em] text-balance">
+          <h1 className="font-display text-[clamp(28px,4vw,40px)] leading-[1.05] font-semibold tracking-[-0.025em] text-balance">
             {title}
           </h1>
           {description && <p className="text-ink-soft mt-2 max-w-2xl text-[16px]">{description}</p>}
@@ -78,7 +78,9 @@ export function Section({
       {(title || actions) && (
         <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
           <div>
-            {title && <h2 className="text-lg font-medium tracking-tight">{title}</h2>}
+            {title && (
+              <h2 className="font-display text-lg font-semibold tracking-tight">{title}</h2>
+            )}
             {description && <p className="text-ink-soft mt-1 text-[15px]">{description}</p>}
           </div>
           {actions && <div className="flex flex-wrap gap-2">{actions}</div>}

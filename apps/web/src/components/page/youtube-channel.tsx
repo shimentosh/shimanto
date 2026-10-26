@@ -27,7 +27,7 @@ export function YouTubeChannel() {
           href={channel.url}
           target="_blank"
           rel="noopener"
-          className="group bg-ink text-canvas rounded-pill inline-flex items-center gap-2 px-5 py-2.5 font-medium transition-opacity hover:opacity-85"
+          className="group press-ink rounded-pill inline-flex items-center gap-2 px-5 py-2.5 font-medium"
         >
           <span>Visit the channel</span>
           <Icon name="external" className="size-4" />

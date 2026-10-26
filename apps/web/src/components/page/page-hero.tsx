@@ -52,7 +52,7 @@ export function PageHero({
                 </>
               )}
             </p>
-            <h1 className="mt-4 max-w-[18ch] text-[clamp(38px,5.4vw,68px)] leading-[1.02] font-medium tracking-[-0.045em] text-balance">
+            <h1 className="font-display mt-4 max-w-[18ch] text-[clamp(38px,5.4vw,68px)] leading-[1.02] font-semibold tracking-[-0.035em] text-balance">
               {title}
             </h1>
             {intro && (

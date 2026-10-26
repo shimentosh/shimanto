@@ -1,6 +1,6 @@
 import { ThemeScript } from '@shimanto/ui';
 import type { Metadata, Viewport } from 'next';
-import { Inter_Tight } from 'next/font/google';
+import { Instrument_Sans, Inter_Tight, Unbounded } from 'next/font/google';
 import { PortalAnalytics } from '@/lib/analytics';
 import { SessionProvider } from '@/lib/session';
 import './globals.css';
@@ -8,6 +8,18 @@ import './globals.css';
 const interTight = Inter_Tight({
   subsets: ['latin'],
   variable: '--font-inter-tight',
+  display: 'swap',
+});
+// Headlines (`.font-display`) and the logo wordmark, as on the website.
+const instrumentSans = Instrument_Sans({
+  subsets: ['latin'],
+  variable: '--font-instrument-sans',
+  display: 'swap',
+});
+const unbounded = Unbounded({
+  subsets: ['latin'],
+  weight: '700',
+  variable: '--font-unbounded',
   display: 'swap',
 });
 
@@ -27,7 +39,11 @@ export const viewport: Viewport = {
 /** Customer portal. Every page renders in the browser and talks to the API with the session cookie. */
 export default function PortalRootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={interTight.variable} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${interTight.variable} ${instrumentSans.variable} ${unbounded.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <ThemeScript />
       </head>

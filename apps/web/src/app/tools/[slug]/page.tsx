@@ -64,7 +64,7 @@ function GetIt({ href, children }: { href: string; children: string }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group bg-ink text-canvas rounded-pill inline-flex items-center gap-2 px-5 py-3 font-medium whitespace-nowrap transition-opacity hover:opacity-85 md:px-6 md:text-[17px]"
+      className="group press-ink rounded-pill inline-flex items-center gap-2 px-5 py-3 font-medium whitespace-nowrap md:px-6 md:text-[17px]"
     >
       <span>{children}</span>
       <Icon name="external" className="size-4" />
@@ -80,7 +80,7 @@ function SourceLink({ href }: { href: string }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="border-ink/20 text-ink hover:border-ink/50 rounded-pill inline-flex items-center gap-2 border px-5 py-3 font-medium whitespace-nowrap transition-colors md:px-6 md:text-[17px]"
+      className="press-soft rounded-pill inline-flex items-center gap-2 px-5 py-3 font-medium whitespace-nowrap md:px-6 md:text-[17px]"
     >
       <Icon name="github" className="size-5" />
       <span>View source</span>

@@ -11,12 +11,13 @@ type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
 type Size = 'sm' | 'md';
 
 const buttonBase =
-  'inline-flex items-center justify-center gap-2 rounded-pill font-medium whitespace-nowrap transition-[opacity,background-color,border-color] disabled:pointer-events-none disabled:opacity-50';
+  'inline-flex items-center justify-center gap-2 rounded-pill font-medium whitespace-nowrap transition-[opacity,background-color,translate,box-shadow,filter] disabled:pointer-events-none disabled:opacity-50';
 const buttonVariants: Record<Variant, string> = {
-  primary: 'bg-ink text-canvas hover:opacity-85',
-  secondary: 'border border-ink/15 text-ink hover:border-ink/40 bg-transparent',
+  primary: 'press-ink',
+  secondary: 'press-soft',
   ghost: 'text-ink hover:bg-ink/[0.06]',
-  danger: 'bg-create text-on-world hover:opacity-90',
+  danger:
+    'text-on-world bg-gradient-to-b from-[#ff9584] via-create to-[#e4523b] shadow-[inset_0_1px_0_rgba(255,255,255,0.45),inset_0_-2px_0_rgba(0,0,0,0.2),0_10px_22px_-12px_rgba(255,112,89,0.8)] hover:brightness-105 active:translate-y-px',
 };
 const buttonSizes: Record<Size, string> = {
   sm: 'h-8 px-3.5 text-sm',
@@ -131,7 +132,7 @@ export function Field({ label, children, hint, error, optional, className }: Fie
   const errorId = error ? `${id}-error` : undefined;
   const describedBy = [hintId, errorId].filter(Boolean).join(' ') || undefined;
   return (
-    <div className={cn('grid gap-1.5', className)}>
+    <div className={cn('grid content-start gap-1.5', className)}>
       <label htmlFor={id} className="text-[15px] font-medium">
         {label}
         {optional && <span className="text-ink-soft font-normal"> (optional)</span>}

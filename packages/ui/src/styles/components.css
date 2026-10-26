@@ -185,3 +185,82 @@
     translate: 0 -8px;
   }
 }
+
+/* ── Pressed buttons ────────────────────────────────── */
+/*
+ * Tactile keys, like the Content OS buttons: a top-lit gradient, a thin highlight on top, a shade
+ * along the bottom edge, a soft cast shadow; they lift on hover and press in on click. Built from
+ * the theme tokens, so the ink key is dark on cream and cream on dark.
+ */
+@layer components {
+  .press-ink {
+    color: var(--canvas);
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--ink), white 16%),
+      var(--ink) 55%,
+      color-mix(in oklab, var(--ink), black 14%)
+    );
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.32),
+      inset 0 -2px 0 rgb(0 0 0 / 0.24),
+      0 1px 2px rgb(0 0 0 / 0.2),
+      0 12px 26px -12px color-mix(in oklab, var(--ink) 75%, transparent);
+  }
+  .press-soft {
+    color: var(--ink);
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--paper), white 8%),
+      color-mix(in oklab, var(--paper), var(--ink) 4%)
+    );
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.14),
+      inset 0 -2px 0 rgb(0 0 0 / 0.14),
+      0 0 0 1px color-mix(in oklab, var(--ink) 14%, transparent),
+      0 8px 18px -10px rgb(0 0 0 / 0.45);
+  }
+  .press-ink,
+  .press-soft {
+    transition:
+      translate 0.15s ease,
+      box-shadow 0.15s ease,
+      filter 0.15s ease;
+  }
+  .press-ink:hover,
+  .press-soft:hover {
+    filter: brightness(1.05);
+  }
+  .press-ink:active,
+  .press-soft:active {
+    translate: 0 1px;
+    box-shadow: inset 0 2px 5px rgb(0 0 0 / 0.32);
+  }
+  .press-ink:disabled,
+  .press-soft:disabled {
+    filter: none;
+    translate: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .press-ink:hover:not(:active, :disabled),
+    .press-soft:hover:not(:active, :disabled) {
+      translate: 0 -1px;
+    }
+  }
+}
+
+/* ── Display type ───────────────────────────────────── */
+/*
+ * Headlines in Instrument Sans; the softer accent line (a display title's second line) in
+ * Instrument Serif italic. Each app loads the faces with next/font as --font-instrument-sans and
+ * --font-instrument-serif; Bangla falls back to Noto Sans Bengali, which neither face covers.
+ */
+.font-display {
+  font-family:
+    var(--font-instrument-sans), var(--font-inter-tight), var(--font-noto-bengali), sans-serif;
+}
+.font-accent {
+  font-family: var(--font-instrument-serif), Georgia, var(--font-noto-bengali), serif;
+  font-style: italic;
+  font-weight: 400;
+}

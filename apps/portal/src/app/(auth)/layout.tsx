@@ -1,4 +1,4 @@
-import { Spot } from '@shimanto/ui';
+import { Logo, Spot } from '@shimanto/ui';
 import Link from 'next/link';
 import { SITE_URL } from '@/lib/config';
 
@@ -8,14 +8,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     <div className="grid min-h-dvh lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
       <div className="flex flex-col px-6 py-6 sm:px-10">
         <header className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
-            <span
-              aria-hidden="true"
-              className="bg-ink text-canvas grid size-8 place-items-center rounded-[10px] text-sm font-semibold"
-            >
-              S
-            </span>
-            <span className="text-[15px] font-semibold tracking-tight">Shimanto</span>
+          <Link href="/" className="group" aria-label="Shimanto, my account">
+            <Logo name="Shimanto" />
           </Link>
           <a href={SITE_URL} className="text-ink-soft hover:text-ink text-sm font-medium">
             Back to the store
@@ -33,7 +27,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <div className="absolute inset-x-12 top-16 mx-auto max-w-sm">
             <Spot name="package" float />
           </div>
-          <p className="text-[clamp(28px,3vw,40px)] leading-[1.05] font-medium tracking-[-0.03em]">
+          <p className="font-display text-[clamp(28px,3vw,40px)] leading-[1.05] font-semibold tracking-[-0.025em] text-balance">
             Everything you bought, in one place.
           </p>
           <p className="text-ink-soft mt-3 max-w-md">

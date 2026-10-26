@@ -97,7 +97,7 @@ export function ConsentBanner({
         <button
           type="button"
           onClick={() => onSave({ analytics: true, marketing: true })}
-          className="bg-ink text-canvas rounded-pill h-10 px-5 text-[15px] font-medium hover:opacity-85"
+          className="press-ink rounded-pill h-10 px-5 text-[15px] font-medium"
         >
           Accept all
         </button>

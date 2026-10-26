@@ -7,7 +7,9 @@ import { type FormEvent, type ReactNode, useState } from 'react';
 export function AuthHeading({ title, description }: { title: string; description?: ReactNode }) {
   return (
     <div className="mb-8">
-      <h1 className="text-[34px] leading-[1.05] font-medium tracking-[-0.03em]">{title}</h1>
+      <h1 className="font-display text-[34px] leading-[1.05] font-semibold tracking-[-0.025em]">
+        {title}
+      </h1>
       {description && <p className="text-ink-soft mt-2 text-[15px]">{description}</p>}
     </div>
   );

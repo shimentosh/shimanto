@@ -29,8 +29,8 @@ export function Section({
 }
 
 /**
- * Big two-line headline: a bright first line (usually with a Squiggle word and a small animated
- * motif beside it) over a softer second line.
+ * Big two-line headline: a bright first line in the display face (usually with a Squiggle word and
+ * a small animated motif beside it) over a softer second line in the serif italic accent.
  */
 export function DisplayTitle({
   lead,
@@ -53,7 +53,7 @@ export function DisplayTitle({
       id={id}
       className={cn(
         size === 'lg' ? 'text-[clamp(40px,5.4vw,80px)]' : 'text-[clamp(34px,4.2vw,60px)]',
-        'leading-[0.98] font-medium tracking-[-0.05em] text-balance',
+        'font-display leading-[0.98] font-semibold tracking-[-0.04em] text-balance',
         className,
       )}
     >
@@ -68,7 +68,7 @@ export function DisplayTitle({
           </span>
         )}
       </span>
-      {rest && <span className="text-ink-soft block">{rest}</span>}
+      {rest && <span className="font-accent text-ink-soft block tracking-[-0.015em]">{rest}</span>}
     </h2>
   );
 }
@@ -104,7 +104,7 @@ export function SectionTitle({
         ) : (
           <h2
             id={id}
-            className="mt-2 text-2xl leading-tight font-medium tracking-[-0.03em] text-balance md:text-4xl"
+            className="font-display mt-2 text-2xl leading-tight font-semibold tracking-[-0.025em] text-balance md:text-4xl"
           >
             {title}
           </h2>

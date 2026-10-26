@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { type ReactNode, useState } from 'react';
 import { cn } from '../lib/cn';
 import { Icon, type IconName } from '../components/art/icon';
+import { BrandMark } from '../components/brand-mark';
 
 export interface AppNavItem {
   label: string;
@@ -43,15 +44,13 @@ export function activeHref(pathname: string, hrefs: string[]): string | undefine
 
 function Brand({ brand }: { brand: AppShellProps['brand'] }) {
   return (
-    <Link href={brand.href} className="flex items-center gap-2.5 rounded-[10px] px-2 py-1.5">
-      <span
-        aria-hidden="true"
-        className="bg-ink text-canvas grid size-8 place-items-center rounded-[10px] text-sm font-semibold"
-      >
-        {brand.name.charAt(0)}
-      </span>
+    <Link href={brand.href} className="group flex items-center gap-2.5 rounded-[10px] px-2 py-1.5">
+      <BrandMark className="size-8 shrink-0 transition-transform duration-300 ease-out motion-safe:group-hover:-rotate-6" />
       <span className="leading-tight">
-        <span className="block text-[15px] font-semibold tracking-tight">{brand.name}</span>
+        <span className="font-logo block text-[16px] font-bold tracking-[-0.045em] lowercase">
+          {brand.name}
+          <span className="text-build">.</span>
+        </span>
         <span className="text-ink-soft block text-xs">{brand.area}</span>
       </span>
     </Link>

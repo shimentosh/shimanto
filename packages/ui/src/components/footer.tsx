@@ -46,7 +46,7 @@ export function Footer({
       <Container>
         <div className="grid gap-8 md:grid-cols-[1.2fr_1fr] md:items-end">
           <div>
-            <h2 className="text-4xl leading-[1.05] font-medium tracking-[-0.04em] md:text-6xl">
+            <h2 className="font-display text-4xl leading-[1.05] font-semibold tracking-[-0.035em] md:text-6xl">
               Let&apos;s <Squiggle world="build">build</Squiggle>.
             </h2>
             <p className="text-ink-soft mt-5 max-w-[40ch] text-lg">{invite}</p>
@@ -95,7 +95,7 @@ export function Footer({
                   />
                   <button
                     type="submit"
-                    className="bg-ink text-canvas rounded-pill px-4 py-2 text-sm font-medium"
+                    className="press-ink rounded-pill px-4 py-2 text-sm font-medium"
                   >
                     Subscribe
                   </button>

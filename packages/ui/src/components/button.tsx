@@ -4,7 +4,7 @@ import { cn } from '../lib/cn';
 
 type ButtonBaseProps = {
   children: ReactNode;
-  /** `primary`: solid pill. `secondary`: outlined pill. `text`: underlined inline action. */
+  /** `primary`: pressed ink key. `secondary`: pressed soft key. `text`: underlined inline action. */
   variant?: 'primary' | 'secondary' | 'text';
   className?: string;
 };
@@ -21,9 +21,9 @@ export type ButtonProps = ButtonAsLink | ButtonAsButton;
 
 const styles = {
   primary:
-    'group bg-ink text-canvas rounded-pill inline-flex items-center gap-2 px-5 py-2.5 font-medium transition-opacity hover:opacity-85 disabled:opacity-50',
+    'group press-ink rounded-pill inline-flex items-center gap-2 px-5 py-2.5 font-medium disabled:opacity-50',
   secondary:
-    'group border-ink/20 text-ink hover:border-ink/50 rounded-pill inline-flex items-center gap-2 border px-5 py-2.5 font-medium transition-colors disabled:opacity-50',
+    'group press-soft rounded-pill inline-flex items-center gap-2 px-5 py-2.5 font-medium disabled:opacity-50',
   text: 'group inline-flex items-center gap-1 font-medium underline decoration-1 underline-offset-[6px] hover:decoration-2',
 };
 
