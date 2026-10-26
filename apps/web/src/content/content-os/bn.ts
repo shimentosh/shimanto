@@ -738,6 +738,7 @@ export const bn: ContentOsCopy = {
     rest: 'সারাজীবন আপনার',
     plan: 'Content OS',
     priceNote: 'একবারই পেমেন্ট, টাকায়',
+    includedTitle: 'যা যা পাবেন',
     offer: 'বাংলাদেশের জন্য বিশেষ দাম',
     included: [
       { text: 'Content OS-এর পুরো সোর্স কোড', icon: 'code' },

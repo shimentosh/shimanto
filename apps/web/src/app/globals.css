@@ -412,36 +412,42 @@ body:has(main[data-standalone]) {
 }
 
 /*
- * The Bangla Content OS pages (fonts loaded in app/bn/content-os/layout.tsx): Hind Siliguri to
- * read, Anek Bangla (a touch condensed) for display headlines with Tiro Bangla italic on the
- * gradient line, Galada for the offer. Bangla stacks vowel signs above and below the letters, so
- * it gets normal tracking and more line height than the Latin display type.
+ * The Bangla Content OS pages (fonts loaded in app/bn/content-os/layout.tsx). Hind Siliguri for
+ * everything you read; Anek Bangla for headlines at its normal width; Galada, a hand-lettered
+ * Bangla face, for the gradient line under a headline and the offer. Bangla stacks vowel signs
+ * above and below the letters, so it gets normal tracking, smaller display sizes than the Latin
+ * pages and more line height.
  */
 .cos-bn {
   font-family: var(--font-hind-siliguri), var(--font-noto-bengali), sans-serif;
 }
+.cos-bn p,
+.cos-bn li {
+  line-height: 1.65;
+}
 .cos-bn :is(h1, h2, h3) {
   font-family: var(--font-anek-bangla), var(--font-noto-bengali), sans-serif;
   letter-spacing: 0;
+  line-height: 1.3;
 }
 .cos-bn .cos-display {
-  font-weight: 700;
-  font-variation-settings: 'wdth' 88;
-  line-height: 1.12;
-  letter-spacing: -0.01em;
+  font-weight: 600;
+  line-height: 1.22;
+  letter-spacing: -0.005em;
 }
 .cos-bn h1.cos-display {
-  font-size: clamp(40px, 6vw, 86px);
+  font-size: clamp(36px, 4.6vw, 66px);
 }
 .cos-bn h2.cos-display {
-  font-size: clamp(32px, 4.4vw, 64px);
+  font-size: clamp(30px, 3.6vw, 52px);
 }
 .cos-bn .cos-display > .bg-clip-text {
-  font-family: var(--font-tiro-bangla), var(--font-noto-bengali), serif;
-  font-style: italic;
+  font-family: var(--font-galada), var(--font-noto-bengali), sans-serif;
   font-weight: 400;
-  font-variation-settings: normal;
-  padding-bottom: 0.12em;
+  font-size: 1.08em;
+  line-height: 1.35;
+  margin-top: 0.12em;
+  padding-bottom: 0.18em;
 }
 .cos-bn .cos-script {
   font-family: var(--font-galada), var(--font-noto-bengali), sans-serif;

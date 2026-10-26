@@ -711,63 +711,84 @@ export function ContentOsLanding({
 
       {/* ───────────── Pricing ───────────── */}
       <Section divided labelledBy="cos-pricing" id="pricing" className="scroll-mt-8">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
-          <Headline
-            id="cos-pricing"
-            eyebrow={c.pricing.eyebrow}
-            icon="tag"
-            tone="spark"
-            title={c.pricing.title}
-            rest={c.pricing.rest}
-            className="self-start lg:sticky lg:top-12"
+        <Headline
+          id="cos-pricing"
+          eyebrow={c.pricing.eyebrow}
+          icon="tag"
+          tone="spark"
+          title={c.pricing.title}
+          rest={c.pricing.rest}
+          className="text-center"
+        />
+        <div className="relative mx-auto mt-10 max-w-5xl overflow-hidden rounded-[32px] bg-[#121417] shadow-[0_60px_140px_-50px_rgba(46,155,247,0.55)] ring-1 ring-white/15 md:mt-14">
+          {/* A blue glow behind the price */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-40 -left-24 size-[480px] rounded-full bg-[radial-gradient(circle,rgba(46,155,247,0.28),transparent_65%)]"
           />
-          <div className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#16304f] via-[#141618] to-[#141618] p-7 shadow-[0_40px_120px_-40px_rgba(46,155,247,0.6)] ring-1 ring-white/15 md:p-10">
-            <div className="flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <p className="text-ink-soft font-mono text-xs tracking-[0.16em] uppercase">
-                  {c.pricing.plan}
-                </p>
-                <p className="mt-3 text-[clamp(64px,8vw,104px)] leading-none font-medium tracking-[-0.06em]">
-                  {price}
-                </p>
-                {c.pricing.offer && fullPrice && (
-                  <p className="mt-2 flex flex-wrap items-center gap-2 text-sm">
-                    <s className="text-ink-soft text-lg">{fullPrice}</s>
-                    <span className="cos-script bg-spark rounded-pill px-2.5 py-0.5 font-semibold text-[#0E0F0C]">
-                      {c.pricing.offer}
-                    </span>
-                  </p>
-                )}
-                <p className="text-ink-soft mt-2">{c.pricing.priceNote}</p>
+          <div className="relative grid md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+            {/* The price and the way in */}
+            <div className="flex flex-col p-7 md:p-10">
+              <div className="flex items-center gap-3">
+                <BotMark className="size-10 rounded-[12px] text-sm" />
+                <p className="text-lg font-medium">{c.pricing.plan}</p>
               </div>
-              <BotMark className="size-14 rounded-[16px] text-lg" />
-            </div>
-            <ul className="mt-8 grid gap-3 border-t border-white/10 pt-8">
-              {c.pricing.included.map((item) => (
-                <li key={item.text} className="flex items-center gap-3 leading-snug">
-                  <span
-                    aria-hidden="true"
-                    className="bg-signal/15 text-signal grid size-8 shrink-0 place-items-center rounded-[10px]"
-                  >
-                    <Icon name={item.icon} className="size-4" />
+              <p className="mt-8 text-[clamp(60px,7vw,92px)] leading-none font-medium tracking-[-0.05em]">
+                {price}
+              </p>
+              {c.pricing.offer && fullPrice && (
+                <p className="mt-3 flex flex-wrap items-center gap-2.5">
+                  <s className="text-ink-soft text-lg">{fullPrice}</s>
+                  {saving !== undefined && (
+                    <span className="rounded-pill bg-white/10 px-2.5 py-0.5 text-sm font-semibold">
+                      −{saving}%
+                    </span>
+                  )}
+                  <span className="cos-script bg-spark rounded-pill px-3 py-0.5 text-[15px] text-[#0E0F0C]">
+                    {c.pricing.offer}
                   </span>
-                  {item.text}
-                </li>
-              ))}
-            </ul>
-            <BuyButton
-              href={buy}
-              label={fill(c.pricing.buy)}
-              comingSoon={c.pricing.comingSoon}
-              className="mt-8 w-full"
-            />
-            <p className="text-ink-soft mt-4 text-sm leading-relaxed">
-              {c.pricing.refund.before}
-              <Link href="/legal/refund" className="text-[#F3EFE4] underline underline-offset-4">
-                {c.pricing.refund.link}
-              </Link>
-              {c.pricing.refund.after}
-            </p>
+                </p>
+              )}
+              <p className="text-ink-soft mt-3">{c.pricing.priceNote}</p>
+              <BuyButton
+                href={buy}
+                label={fill(c.pricing.buy)}
+                comingSoon={c.pricing.comingSoon}
+                className="mt-8 w-full"
+              />
+              <ul className="text-ink-soft mt-6 grid grid-cols-2 gap-x-4 gap-y-2.5 text-sm">
+                {c.hero.points.map((point) => (
+                  <li key={point.text} className="flex items-center gap-2">
+                    <Icon name={point.icon} className="text-build size-4 shrink-0" />
+                    {point.text}
+                  </li>
+                ))}
+              </ul>
+              <p className="text-ink-soft mt-auto pt-6 text-[13px] leading-relaxed">
+                {c.pricing.refund.before}
+                <Link href="/legal/refund" className="text-[#F3EFE4] underline underline-offset-4">
+                  {c.pricing.refund.link}
+                </Link>
+                {c.pricing.refund.after}
+              </p>
+            </div>
+            {/* What's included */}
+            <div className="border-t border-white/10 bg-white/[0.02] p-7 md:border-t-0 md:border-l md:p-10">
+              <p className="text-sm font-medium">{c.pricing.includedTitle}</p>
+              <ul className="mt-5 grid gap-3.5">
+                {c.pricing.included.map((item) => (
+                  <li key={item.text} className="flex items-start gap-3 leading-snug">
+                    <span
+                      aria-hidden="true"
+                      className="bg-signal/15 text-signal grid size-8 shrink-0 place-items-center rounded-[10px]"
+                    >
+                      <Icon name={item.icon} className="size-4" />
+                    </span>
+                    <span className="pt-1">{item.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </Section>

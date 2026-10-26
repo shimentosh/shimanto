@@ -254,6 +254,8 @@ export interface ContentOsCopy {
     priceNote: string;
     /** An offer beside the price, with the full price struck through (the Bangladesh page). */
     offer?: string;
+    /** Heading over the list of what's included. */
+    includedTitle: string;
     included: Point[];
     buy: string;
     comingSoon: string;

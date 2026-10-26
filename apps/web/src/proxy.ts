@@ -33,6 +33,8 @@ function redirect(request: NextRequest, change: (url: URL) => void) {
 }
 
 export function proxy(request: NextRequest) {
+  // Files under /content-os (logo, screenshots) are the same for everyone: never redirect them.
+  if (/\.[a-z0-9]+$/i.test(request.nextUrl.pathname)) return NextResponse.next();
   const country = countryOf(request);
   if (!country) return NextResponse.next();
   const inBangladesh = country === 'BD';

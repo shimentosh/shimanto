@@ -738,6 +738,7 @@ export const en: ContentOsCopy = {
     rest: 'No subscription.',
     plan: 'Content OS',
     priceNote: 'One-time payment',
+    includedTitle: 'What you get',
     included: [
       { text: 'The full Content OS source code', icon: 'code' },
       { text: 'The Studio, the engine and the cos command line', icon: 'monitor' },
